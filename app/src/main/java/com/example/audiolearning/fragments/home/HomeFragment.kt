@@ -1,4 +1,4 @@
-package com.example.audiolearning.ui.home
+package com.example.audiolearning.fragments.home
 
 import android.os.Bundle
 import android.view.LayoutInflater

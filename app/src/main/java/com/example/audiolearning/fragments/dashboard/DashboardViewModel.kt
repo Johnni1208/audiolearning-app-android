@@ -1,4 +1,4 @@
-package com.example.audiolearning.ui.dashboard
+package com.example.audiolearning.fragments.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
