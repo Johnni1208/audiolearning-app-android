@@ -1,29 +1,35 @@
 package com.example.audiolearning
 
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.ViewPager
+import com.example.audiolearning.fragments.about_us.AboutUsFragment
+import com.example.audiolearning.fragments.recorder.RecorderFragment
+import com.example.audiolearning.fragments.subjects.SubjectsFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
+    private val fragments = arrayOf(AboutUsFragment(), RecorderFragment(), SubjectsFragment())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        val pager = findViewById<ViewPager>(R.id.pager)
 
-        val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
-            )
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+
+        val pageAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
+        pager.adapter = pageAdapter
+    }
+
+    private inner class ScreenSlidePagerAdapter(fm: FragmentManager): FragmentStatePagerAdapter(fm){
+        override fun getCount(): Int = fragments.size
+
+        override fun getItem(position: Int): Fragment {
+            return fragments[position]
+        }
     }
 }
