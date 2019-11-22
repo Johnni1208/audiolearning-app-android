@@ -1,6 +1,5 @@
 package com.example.audiolearning.mainActivity
 
-
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.swipeLeft
 import androidx.test.espresso.action.ViewActions.swipeRight
@@ -11,7 +10,6 @@ import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import com.example.audiolearning.MainActivity
 import com.example.audiolearning.R
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

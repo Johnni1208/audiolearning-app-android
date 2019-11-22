@@ -16,7 +16,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
     private val fragments = arrayOf(AboutUsFragment(), RecorderFragment(), SubjectsFragment())
-
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,24 +36,15 @@ class MainActivity : AppCompatActivity() {
         BottomNavigationView.OnNavigationItemSelectedListener {
         override fun onNavigationItemSelected(selectedItem: MenuItem): Boolean {
             val pager = binding.pager
-            when (selectedItem.itemId) {
-                R.id.navigation_about_us -> {
-                    pager.currentItem = 0
-                    return true
-                }
 
-                R.id.navigation_recorder -> {
-                    pager.currentItem = 1
-                    return true
-                }
+            val menuItemToPagerItemMap = mapOf(
+                R.id.navigation_about_us to fun(){ pager.currentItem = 0 },
+                R.id.navigation_recorder to fun(){ pager.currentItem = 1 },
+                R.id.navigation_subjects to fun(){ pager.currentItem = 2 }
+            )
 
-                R.id.navigation_subjects -> {
-                    pager.currentItem = 2
-                    return true
-                }
-
-                else -> return false
-            }
+            menuItemToPagerItemMap[selectedItem.itemId]?.invoke()
+            return true
         }
     }
 
