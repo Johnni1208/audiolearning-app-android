@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         binding.pager.apply {
             adapter = ScreenSlidePagerAdapter(supportFragmentManager)
             addOnPageChangeListener(OnPageChangeListener())
+            currentItem = 1
         }
     }
 
@@ -69,15 +70,16 @@ class MainActivity : AppCompatActivity() {
     private inner class OnPageChangeListener :
         ViewPager.OnPageChangeListener {
         private lateinit var previousMenuItem: MenuItem
+
         override fun onPageSelected(position: Int) {
             if (::previousMenuItem.isInitialized) {
                 previousMenuItem.isChecked = false
             } else {
                 binding.navView.menu.getItem(0).isChecked = false
             }
+
             binding.navView.menu.getItem(position).isChecked = true
             previousMenuItem = binding.navView.menu.getItem(position)
-
         }
 
         override fun onPageScrollStateChanged(state: Int) {}
