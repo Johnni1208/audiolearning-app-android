@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="@{ () -> viewModel.onPauseOrResume() }"
-            android:text="@{viewModel.pauseAndResumeButtonText }"
+            android:text="@{ viewModel.pauseAndResumeButtonText }"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

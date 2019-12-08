@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.audiolearning.audio.audio_recorder.AudioRecorder
 import com.example.audiolearning.audio.audio_recorder.IAudioRecorder
+import kotlinx.coroutines.runBlocking
 import java.io.File
 
 class RecorderViewModel : ViewModel() {
@@ -37,16 +38,17 @@ class RecorderViewModel : ViewModel() {
     fun onRecordOrStop() {
         if (isRecording) {
             stopRecording()
-            return
+        } else {
+            startRecording()
         }
-
-        startRecording()
 
         isRecording = !isRecording
     }
 
     private fun stopRecording() {
-        _recordedFile.value = audioRecorder.stop()
+        runBlocking {
+            _recordedFile.value = audioRecorder.stop()
+        }
         _recordAndStopButtonText.value = "Record"
     }
 
@@ -58,9 +60,9 @@ class RecorderViewModel : ViewModel() {
     fun onPauseOrResume() {
         if (isPausing) {
             resumeRecording()
+        } else {
+            pauseRecording()
         }
-
-        pauseRecording()
 
         isPausing = !isPausing
     }

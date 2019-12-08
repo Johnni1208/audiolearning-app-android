@@ -13,5 +13,5 @@ interface IAudioRecorder {
     @RequiresApi(Build.VERSION_CODES.N)
     fun resume()
 
-    fun stop(): File
+    suspend fun stop(): File
 }
