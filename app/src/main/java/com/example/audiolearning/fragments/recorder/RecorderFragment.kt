@@ -12,19 +12,20 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.audiolearning.R
+import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
 import com.example.audiolearning.databinding.FragmentRecorderBinding
-import java.util.jar.Attributes
 
 class RecorderFragment : Fragment() {
 
     private lateinit var recorderViewModel: RecorderViewModel
+    private lateinit var binding: FragmentRecorderBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<FragmentRecorderBinding>(
+        binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_recorder,
             container,
@@ -46,7 +47,7 @@ class RecorderFragment : Fragment() {
 
         recorderViewModel.recordedFile.observe(this, Observer { newFile ->
 
-            if(newFile != null){
+            if (newFile != null) {
                 var mediaPlayer = MediaPlayer().apply {
                     setAudioAttributes(
                         AudioAttributes
@@ -54,13 +55,46 @@ class RecorderFragment : Fragment() {
                             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                             .build()
                     )
-                    setDataSource(newFile!!.absolutePath)
+                    setDataSource(newFile.absolutePath)
                     prepare()
                     start()
                 }
             }
         })
 
+        switchButtonAppearancesOnAudioRecorderChange()
+
         return binding.root
+    }
+
+    private fun switchButtonAppearancesOnAudioRecorderChange() {
+        recorderViewModel.audioRecorderState.observe(this, Observer { newState ->
+            when (newState!!) {
+                AudioRecorderState.IDLING -> {
+                    binding.apply {
+                        pauseAndResumeButton.isEnabled = false
+                        pauseAndResumeButton.text = getString(R.string.pause_text)
+
+                        recordAndStopButton.text = getString(R.string.record_text)
+                    }
+                }
+
+                AudioRecorderState.RECORDING -> {
+                    binding.apply {
+                        pauseAndResumeButton.isEnabled = true
+                        recordAndStopButton.text = getString(R.string.stop_text)
+                    }
+                }
+
+                AudioRecorderState.PAUSING -> {
+                    binding.pauseAndResumeButton.text = getString(R.string.resume_text)
+                }
+
+                AudioRecorderState.RESUMING -> {
+                    binding.pauseAndResumeButton.text = getString(R.string.pause_text)
+                }
+            }
+
+        })
     }
 }

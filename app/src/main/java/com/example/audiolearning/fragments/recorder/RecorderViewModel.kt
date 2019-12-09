@@ -6,24 +6,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.audiolearning.audio.audio_recorder.AudioRecorder
+import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
 import com.example.audiolearning.audio.audio_recorder.IAudioRecorder
 import kotlinx.coroutines.runBlocking
 import java.io.File
 
 class RecorderViewModel : ViewModel() {
 
-    private val _recordAndStopButtonText = MutableLiveData<String>().apply {
-        value = "Record"
+    private val _audioRecorderState = MutableLiveData<AudioRecorderState>().apply {
+        value = AudioRecorderState.IDLING
     }
-    val recordAndStopButtonText: LiveData<String>
-        get() = _recordAndStopButtonText
+    val audioRecorderState: LiveData<AudioRecorderState>
+        get() = _audioRecorderState
 
-    private val _pauseAndResumeButtonText = MutableLiveData<String>().apply {
-        value = "Pause"
-    }
-    val pauseAndResumeButtonText: LiveData<String>
-        get() = _pauseAndResumeButtonText
-
+    /* Recorded file output */
     private val _recordedFile = MutableLiveData<File>().apply {
         value = null
     }
@@ -34,11 +30,14 @@ class RecorderViewModel : ViewModel() {
     private var isPausing = false
     private val audioRecorder: IAudioRecorder = AudioRecorder()
 
-
     fun onRecordOrStop() {
         if (isRecording) {
+            _audioRecorderState.value = AudioRecorderState.IDLING
+            isPausing = false
+
             stopRecording()
         } else {
+            _audioRecorderState.value = AudioRecorderState.RECORDING
             startRecording()
         }
 
@@ -49,18 +48,18 @@ class RecorderViewModel : ViewModel() {
         runBlocking {
             _recordedFile.value = audioRecorder.stop()
         }
-        _recordAndStopButtonText.value = "Record"
     }
 
     private fun startRecording() {
         audioRecorder.record()
-        _recordAndStopButtonText.value = "Stop"
     }
 
     fun onPauseOrResume() {
         if (isPausing) {
+            _audioRecorderState.value = AudioRecorderState.RESUMING
             resumeRecording()
         } else {
+            _audioRecorderState.value = AudioRecorderState.PAUSING
             pauseRecording()
         }
 
@@ -70,12 +69,10 @@ class RecorderViewModel : ViewModel() {
     @TargetApi(Build.VERSION_CODES.N)
     private fun pauseRecording() {
         audioRecorder.pause()
-        _pauseAndResumeButtonText.value = "Resume"
     }
 
     @TargetApi(Build.VERSION_CODES.N)
     private fun resumeRecording() {
         audioRecorder.resume()
-        _pauseAndResumeButtonText.value = "Pause"
     }
 }

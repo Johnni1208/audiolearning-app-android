@@ -3,4 +3,9 @@
     <string name="title_recorder">Recorder</string>
     <string name="title_about_us">Über uns</string>
     <string name="title_subjects">Fächer</string>
+
+    <string name="record_text">Record</string>
+    <string name="stop_text">Stop</string>
+    <string name="pause_text">Pause</string>
+    <string name="resume_text">Resume</string>
 </resources>
