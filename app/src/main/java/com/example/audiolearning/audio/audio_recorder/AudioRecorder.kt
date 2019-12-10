@@ -21,7 +21,7 @@ class AudioRecorder : IAudioRecorder {
     }
 
     override fun record() {
-        recorder = AudioRecorderProvider.getAudioRecorder(tempAudioFile)
+        recorder = getNewAudioRecorder(tempAudioFile)
 
         recorder.apply {
             prepare()
@@ -46,5 +46,16 @@ class AudioRecorder : IAudioRecorder {
             release()
         }
         return tempAudioFile
+    }
+
+    private fun getNewAudioRecorder(file: File): MediaRecorder {
+        return MediaRecorder().apply {
+            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            setAudioEncodingBitRate(64000)
+            setAudioSamplingRate(16000)
+            setOutputFile(file.absolutePath)
+        }
     }
 }
