@@ -41,7 +41,7 @@ class RecorderFragment : Fragment() {
         /* Hide PauseAndResumeButton since pausing and resuming MediaRecorders
         * is only available on API > 24 */
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            binding.pauseAndResumeButton.visibility = View.GONE
+            binding.btnPauseAndResume.visibility = View.GONE
         }
 
         recorderViewModel.recordedFile.observe(this, Observer { newFile ->

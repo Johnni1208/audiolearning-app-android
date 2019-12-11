@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.audiolearning.audio.audio_recorder.AudioRecorder
 import com.example.audiolearning.audio.audio_recorder.IAudioRecorder
+import com.example.audiolearning.util.timer.Timer
 import kotlinx.coroutines.runBlocking
 import java.io.File
 
@@ -30,6 +31,11 @@ class RecorderViewModel : ViewModel() {
     val recordedFile: LiveData<File>
         get() = _recordedFile
 
+    private val recordTimer: Timer =
+        Timer()
+    val recordedTime: LiveData<String>
+        get() = recordTimer.time
+
     private var isRecording = false
     private var isPausing = false
     private val audioRecorder: IAudioRecorder = AudioRecorder()
@@ -46,14 +52,16 @@ class RecorderViewModel : ViewModel() {
     }
 
     private fun stopRecording() {
+        recordTimer.stop()
+        _recordAndStopButtonText.value = "Record"
         runBlocking {
             _recordedFile.value = audioRecorder.stop()
         }
-        _recordAndStopButtonText.value = "Record"
     }
 
     private fun startRecording() {
         audioRecorder.record()
+        recordTimer.start()
         _recordAndStopButtonText.value = "Stop"
     }
 
@@ -70,12 +78,14 @@ class RecorderViewModel : ViewModel() {
     @TargetApi(Build.VERSION_CODES.N)
     private fun pauseRecording() {
         audioRecorder.pause()
+        recordTimer.pause()
         _pauseAndResumeButtonText.value = "Resume"
     }
 
     @TargetApi(Build.VERSION_CODES.N)
     private fun resumeRecording() {
         audioRecorder.resume()
+        recordTimer.resume()
         _pauseAndResumeButtonText.value = "Pause"
     }
 }
