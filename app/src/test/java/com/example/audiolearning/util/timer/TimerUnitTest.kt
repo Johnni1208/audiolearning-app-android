@@ -1,8 +1,6 @@
 package com.example.audiolearning.util.timer
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
-import com.mock
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -10,9 +8,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.ArgumentCaptor
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
 
 @ObsoleteCoroutinesApi
 @ExperimentalCoroutinesApi
@@ -21,30 +16,26 @@ class TimerUnitTest {
     val rule = InstantTaskExecutorRule()
 
     private lateinit var timer: Timer
-    private val observer: Observer<String> = mock()
-    private val captor: ArgumentCaptor<String> = ArgumentCaptor.forClass(String::class.java)
 
     @Before
     fun setUp() {
         // Setup KotlinCoroutines
         Dispatchers.setMain(newSingleThreadContext("TestingThread"))
 
-        // Setup Timer mock
         timer = Timer()
-        timer.time.observeForever(observer)
     }
 
     @After
-    fun stopTimer(){
-        try{
+    fun stopTimer() {
+        try {
             timer.stop()
-        }catch (illegalStateException: IllegalStateException){
+        } catch (illegalStateException: IllegalStateException) {
             // Do nothing, since this should only happen when testing
         }
     }
 
     @Test(expected = IllegalStateException::class)
-    fun start_ShouldNotBeCallableTwice(){
+    fun start_ShouldNotBeCallableTwice() {
         timer.start()
         timer.start()
     }
@@ -61,10 +52,7 @@ class TimerUnitTest {
             delay(testTime)
         }
 
-        captor.run {
-            verify(observer, times(3)).onChanged(capture())
-            assertEquals(expectedTimeString, value)
-        }
+        assertEquals(expectedTimeString, timer.time.value)
     }
 
     @Test(expected = IllegalStateException::class)
@@ -80,19 +68,16 @@ class TimerUnitTest {
 
         timer.start()
         timer.stop()
-        captor.run {
-            verify(observer, times(2)).onChanged(capture())
-            assertEquals(expectedTimeString, value)
-        }
+        assertEquals(expectedTimeString, timer.time.value)
     }
 
     @Test(expected = IllegalStateException::class)
-    fun pause_ShouldNotBeCallableBeforeStart(){
+    fun pause_ShouldNotBeCallableBeforeStart() {
         timer.pause()
     }
 
     @Test
-    fun pause_ShouldPauseTime(){
+    fun pause_ShouldPauseTime() {
         val testTime = 2100L
         val expectedTimeString = TimeMutableLiveData().apply {
             setValueFromMillis(testTime)
@@ -104,17 +89,14 @@ class TimerUnitTest {
         }
         timer.pause()
 
-        captor.run {
-            verify(observer, times(3)).onChanged(capture())
-            assertEquals(expectedTimeString, value)
-        }
+        assertEquals(expectedTimeString, timer.time.value)
     }
 
     @Test
-    fun resume_ShouldResumePausedTime(){
+    fun resume_ShouldResumePausedTime() {
         val testTime = 1100L
         val expectedTimeString = TimeMutableLiveData().apply {
-            setValueFromMillis(testTime*2)
+            setValueFromMillis(testTime * 2)
         }.value
 
         timer.start()
@@ -127,9 +109,6 @@ class TimerUnitTest {
             delay(testTime)
         }
 
-        captor.run {
-            verify(observer, times(3)).onChanged(capture())
-            assertEquals(expectedTimeString, value)
-        }
+        assertEquals(expectedTimeString, timer.time.value)
     }
 }
