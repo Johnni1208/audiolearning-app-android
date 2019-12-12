@@ -15,6 +15,8 @@ class Timer {
     private var timeInMillis: Long = 0L
 
     fun start() {
+        check(!isRunning) { "Timer already running." }
+
         isRunning = true
         currentTimerJob = CoroutineScope(Dispatchers.Main).launch {
             while (isRunning) {
@@ -26,6 +28,8 @@ class Timer {
     }
 
     fun stop() {
+        check(isRunning) { "Timer has not been started." }
+
         isRunning = false
         timeInMillis = 0
         _time.setValueFromMillis(timeInMillis)
@@ -36,6 +40,7 @@ class Timer {
     }
 
     fun pause() {
+        check(isRunning) { "Timer has not been started." }
         isRunning = false
 
         if (currentTimerJob != null && currentTimerJob?.isActive!!) {
