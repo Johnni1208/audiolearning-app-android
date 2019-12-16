@@ -4,7 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     compileOptions {
         sourceCompatibility = 1.8
@@ -18,7 +18,7 @@ android {
     defaultConfig {
         applicationId "com.example.audiolearning"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -52,4 +52,8 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    debugImplementation('androidx.fragment:fragment-testing:1.1.0'){
+        exclude group: 'androidx.test', module: 'core'
+    }
+    debugImplementation 'androidx.test:core-ktx:1.2.0'
 }
