@@ -2,6 +2,7 @@ package com.example.audiolearning.util.timer
 
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.*
+import java.lang.IllegalStateException
 
 class Timer {
 
@@ -12,14 +13,17 @@ class Timer {
 
     private var currentTimerJob: Job? = null
     private var isRunning: Boolean = false
+    private var isPausing: Boolean = false
     private var timeInMillis: Long = 0L
 
     fun start() {
-        check(!isRunning) { "Timer already running." }
+        if (currentTimerJob != null && currentTimerJob?.isActive!!) {
+            throw IllegalStateException("Timer already running.")
+        }
 
         isRunning = true
         currentTimerJob = CoroutineScope(Dispatchers.Main).launch {
-            while (isRunning) {
+            while (isRunning && !isPausing) {
                 delay(1000)
                 timeInMillis += 1000
                 _time.setValueFromMillis(timeInMillis)
@@ -31,6 +35,7 @@ class Timer {
         check(isRunning) { "Timer has not been started." }
 
         isRunning = false
+        isPausing = false
         timeInMillis = 0
         _time.setValueFromMillis(timeInMillis)
 
@@ -41,7 +46,8 @@ class Timer {
 
     fun pause() {
         check(isRunning) { "Timer has not been started." }
-        isRunning = false
+        check(!isPausing) { "Timer already paused." }
+        isPausing = true
 
         if (currentTimerJob != null && currentTimerJob?.isActive!!) {
             currentTimerJob?.cancel()
@@ -49,6 +55,9 @@ class Timer {
     }
 
     fun resume() {
+        check(isRunning) { "Timer has not been started." }
+        check(isPausing) { "Timer has not been paused." }
+        isPausing = false
         start()
     }
 }

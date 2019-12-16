@@ -55,11 +55,6 @@ class TimerUnitTest {
         assertEquals(expectedTimeString, timer.time.value)
     }
 
-    @Test(expected = IllegalStateException::class)
-    fun stop_ShouldNotBeCallableBeforeStart() {
-        timer.stop()
-    }
-
     @Test
     fun stop_ShouldStopAndResetTime() {
         val expectedTimeString = TimeMutableLiveData().apply {
@@ -73,6 +68,13 @@ class TimerUnitTest {
 
     @Test(expected = IllegalStateException::class)
     fun pause_ShouldNotBeCallableBeforeStart() {
+        timer.pause()
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun pause_ShouldNotBeCallableTwice(){
+        timer.start()
+        timer.pause()
         timer.pause()
     }
 
@@ -93,6 +95,30 @@ class TimerUnitTest {
     }
 
     @Test
+    fun pauseThenStop_ShouldResetTime(){
+        val expectedTimeString = TimeMutableLiveData().apply {
+            setValueFromMillis(0)
+        }.value
+
+        timer.start()
+        timer.pause()
+        timer.stop()
+
+        assertEquals(expectedTimeString, timer.time.value)
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun resume_ShouldNotBeCallableBeforeStart() {
+        timer.resume()
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun resume_ShouldNotBeCallableBeforePause(){
+        timer.start()
+        timer.resume()
+    }
+
+    @Test
     fun resume_ShouldResumePausedTime() {
         val testTime = 1100L
         val expectedTimeString = TimeMutableLiveData().apply {
@@ -108,6 +134,20 @@ class TimerUnitTest {
         runBlocking {
             delay(testTime)
         }
+
+        assertEquals(expectedTimeString, timer.time.value)
+    }
+
+    @Test
+    fun resumeThenStop_ShouldResetTime(){
+        val expectedTimeString = TimeMutableLiveData().apply {
+            setValueFromMillis(0)
+        }.value
+
+        timer.start()
+        timer.pause()
+        timer.resume()
+        timer.stop()
 
         assertEquals(expectedTimeString, timer.time.value)
     }
