@@ -11,7 +11,6 @@ import androidx.test.filters.LargeTest
 import com.example.audiolearning.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,7 +25,7 @@ enum class TestTime(val value: Long, val string: String) {
 class RecordTimerTest {
     // TODO: ALAE-10 Fix MediaRecorder Bug
 
-    private fun assertTvTimerEqualTo(timeString: TestTime){
+    private fun assertTvTimerEqualTo(timeString: TestTime) {
         onView(withId(R.id.tv_record_time))
             .check(matches(withText(timeString.string)))
     }
@@ -61,7 +60,7 @@ class RecordTimerTest {
     }
 
     @Test
-    fun testOnPauseButtonClicked_TimerShouldPause(){
+    fun testOnPauseButtonClicked_TimerShouldPause() {
         onView(withId(R.id.btn_record_and_stop))
             .perform(click())
         runBlocking {
@@ -78,12 +77,12 @@ class RecordTimerTest {
     }
 
     @Test
-    fun testOnResumeButtonClicked_TimerShouldResume(){
+    fun testOnResumeButtonClicked_TimerShouldResume() {
         onView(withId(R.id.btn_record_and_stop))
             .perform(click())
         onView(withId(R.id.btn_pause_and_resume))
             .perform(click())
-                // Resume
+            // Resume
             .perform(click())
 
         runBlocking {

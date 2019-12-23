@@ -7,8 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.audiolearning.audio.audio_recorder.AudioRecorder
 import com.example.audiolearning.audio.audio_recorder.IAudioRecorder
+import com.example.audiolearning.util.timer.ITimer
 import com.example.audiolearning.util.timer.Timer
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 
 class RecorderViewModel : ViewModel() {
@@ -31,7 +33,7 @@ class RecorderViewModel : ViewModel() {
     val recordedFile: LiveData<File>
         get() = _recordedFile
 
-    private val recordTimer: Timer =
+    private val recordTimer: ITimer =
         Timer()
     val recordedTime: LiveData<String>
         get() = recordTimer.time
@@ -42,11 +44,7 @@ class RecorderViewModel : ViewModel() {
 
 
     fun onRecordOrStop() {
-        if (isRecording) {
-            stopRecording()
-        } else {
-            startRecording()
-        }
+        if (isRecording) stopRecording() else startRecording()
 
         isRecording = !isRecording
     }
@@ -54,38 +52,35 @@ class RecorderViewModel : ViewModel() {
     private fun stopRecording() {
         recordTimer.stop()
         _recordAndStopButtonText.value = "Record"
-        runBlocking {
-            _recordedFile.value = audioRecorder.stop()
+        GlobalScope.launch {
+            val file = audioRecorder.stop()
+            _recordedFile.postValue(file)
         }
     }
 
     private fun startRecording() {
-        audioRecorder.record()
         recordTimer.start()
+        audioRecorder.record()
         _recordAndStopButtonText.value = "Stop"
     }
 
     fun onPauseOrResume() {
-        if (isPausing) {
-            resumeRecording()
-        } else {
-            pauseRecording()
-        }
+        if (isPausing) resumeRecording() else pauseRecording()
 
         isPausing = !isPausing
     }
 
     @TargetApi(Build.VERSION_CODES.N)
     private fun pauseRecording() {
-        audioRecorder.pause()
         recordTimer.pause()
+        audioRecorder.pause()
         _pauseAndResumeButtonText.value = "Resume"
     }
 
     @TargetApi(Build.VERSION_CODES.N)
     private fun resumeRecording() {
-        audioRecorder.resume()
         recordTimer.resume()
+        audioRecorder.resume()
         _pauseAndResumeButtonText.value = "Pause"
     }
 }

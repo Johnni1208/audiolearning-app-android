@@ -12,10 +12,11 @@ import org.junit.Test
 @ObsoleteCoroutinesApi
 @ExperimentalCoroutinesApi
 class TimerUnitTest {
-    @get:Rule
-    val rule = InstantTaskExecutorRule()
 
     private lateinit var timer: Timer
+
+    @get:Rule
+    val rule = InstantTaskExecutorRule()
 
     @Before
     fun setUp() {
@@ -34,6 +35,7 @@ class TimerUnitTest {
         }
     }
 
+    /* start() */
     @Test(expected = IllegalStateException::class)
     fun start_ShouldNotBeCallableTwice() {
         timer.start()
@@ -55,6 +57,7 @@ class TimerUnitTest {
         assertEquals(expectedTimeString, timer.time.value)
     }
 
+    /* stop() */
     @Test
     fun stop_ShouldStopAndResetTime() {
         val expectedTimeString = TimeMutableLiveData().apply {
@@ -66,13 +69,14 @@ class TimerUnitTest {
         assertEquals(expectedTimeString, timer.time.value)
     }
 
+    /* pause() */
     @Test(expected = IllegalStateException::class)
     fun pause_ShouldNotBeCallableBeforeStart() {
         timer.pause()
     }
 
     @Test(expected = IllegalStateException::class)
-    fun pause_ShouldNotBeCallableTwice(){
+    fun pause_ShouldNotBeCallableTwice() {
         timer.start()
         timer.pause()
         timer.pause()
@@ -95,7 +99,7 @@ class TimerUnitTest {
     }
 
     @Test
-    fun pauseThenStop_ShouldResetTime(){
+    fun pauseThenStop_ShouldResetTime() {
         val expectedTimeString = TimeMutableLiveData().apply {
             setValueFromMillis(0)
         }.value
@@ -107,13 +111,14 @@ class TimerUnitTest {
         assertEquals(expectedTimeString, timer.time.value)
     }
 
+    /* resume() */
     @Test(expected = IllegalStateException::class)
     fun resume_ShouldNotBeCallableBeforeStart() {
         timer.resume()
     }
 
     @Test(expected = IllegalStateException::class)
-    fun resume_ShouldNotBeCallableBeforePause(){
+    fun resume_ShouldNotBeCallableBeforePause() {
         timer.start()
         timer.resume()
     }
@@ -139,7 +144,7 @@ class TimerUnitTest {
     }
 
     @Test
-    fun resumeThenStop_ShouldResetTime(){
+    fun resumeThenStop_ShouldResetTime() {
         val expectedTimeString = TimeMutableLiveData().apply {
             setValueFromMillis(0)
         }.value

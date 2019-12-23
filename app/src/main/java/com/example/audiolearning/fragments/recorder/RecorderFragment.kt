@@ -13,7 +13,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.audiolearning.R
 import com.example.audiolearning.databinding.FragmentRecorderBinding
-import java.util.jar.Attributes
 
 class RecorderFragment : Fragment() {
 
@@ -44,17 +43,17 @@ class RecorderFragment : Fragment() {
             binding.btnPauseAndResume.visibility = View.GONE
         }
 
+        /* This is only for testing purposes */
         recorderViewModel.recordedFile.observe(this, Observer { newFile ->
-
-            if(newFile != null){
-                var mediaPlayer = MediaPlayer().apply {
+            if (newFile != null) {
+                MediaPlayer().apply {
                     setAudioAttributes(
                         AudioAttributes
                             .Builder()
                             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                             .build()
                     )
-                    setDataSource(newFile!!.absolutePath)
+                    setDataSource(newFile.absolutePath)
                     prepare()
                     start()
                 }

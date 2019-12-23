@@ -4,7 +4,6 @@
     android:id="@+id/fragment_recorder">
 
     <data>
-
         <variable
             name="viewModel"
             type="com.example.audiolearning.fragments.recorder.RecorderViewModel" />
@@ -24,7 +23,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
 
         <Button
             android:id="@+id/btn_record_and_stop"

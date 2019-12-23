@@ -12,7 +12,7 @@ class TimeMutableLiveDataTest {
     val rule = InstantTaskExecutorRule()
 
     @Test
-    fun class_HasRightStringInitially(){
+    fun class_HasRightStringInitially() {
         assertEquals(TimeMutableLiveData().value, "00:00:00")
     }
 
@@ -29,11 +29,11 @@ class TimeMutableLiveDataTest {
             setValueFromMillis(1000L)
         }.value
 
-        assertTrue(Pattern.matches(expectedFormat, outputTimeString))
+        assertTrue(Pattern.matches(expectedFormat, outputTimeString!!))
     }
 
     @Test
-    fun setValueFromMillis_ReturnsTheRightString(){
+    fun setValueFromMillis_ReturnsTheRightString() {
         val expectedString = "00:00:01"
         val outputTimeString = TimeMutableLiveData().apply {
             setValueFromMillis(1000L)
