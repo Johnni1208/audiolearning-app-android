@@ -4,6 +4,7 @@
     <string name="title_about_us">Über uns</string>
     <string name="title_subjects">Fächer</string>
 
+    <!-- Texts for recording buttons -->
     <string name="record_text">Record</string>
     <string name="stop_text">Stop</string>
     <string name="pause_text">Pause</string>
