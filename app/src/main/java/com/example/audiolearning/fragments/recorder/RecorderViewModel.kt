@@ -19,6 +19,7 @@ import java.io.File
  */
 class RecorderViewModel(private val audioRecorder: IAudioRecorder = AudioRecorder()) : ViewModel() {
 
+    /* AudioRecorder State */
     private val _audioRecorderState = MutableLiveData<AudioRecorderState>().apply {
         value = AudioRecorderState.IDLING
     }
@@ -32,21 +33,16 @@ class RecorderViewModel(private val audioRecorder: IAudioRecorder = AudioRecorde
     val recordedFile: LiveData<File>
         get() = _recordedFile
 
-    private var isRecording = false
-    private var isPausing = false
-
     fun onRecordOrStop() {
+        val isRecording = _audioRecorderState.value == AudioRecorderState.RECORDING
+
         if (isRecording) {
             _audioRecorderState.value = AudioRecorderState.IDLING
-            isPausing = false
-
             stopRecording()
         } else {
             _audioRecorderState.value = AudioRecorderState.RECORDING
             startRecording()
         }
-
-        isRecording = !isRecording
     }
 
     private fun stopRecording() {
@@ -60,6 +56,8 @@ class RecorderViewModel(private val audioRecorder: IAudioRecorder = AudioRecorde
     }
 
     fun onPauseOrResume() {
+        val isPausing = _audioRecorderState.value == AudioRecorderState.PAUSING
+
         if (isPausing) {
             _audioRecorderState.value = AudioRecorderState.RECORDING
             resumeRecording()
@@ -67,8 +65,6 @@ class RecorderViewModel(private val audioRecorder: IAudioRecorder = AudioRecorde
             _audioRecorderState.value = AudioRecorderState.PAUSING
             pauseRecording()
         }
-
-        isPausing = !isPausing
     }
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -82,6 +78,9 @@ class RecorderViewModel(private val audioRecorder: IAudioRecorder = AudioRecorde
     }
 
     fun onDestroy() {
-        if (audioRecorder.isActive) audioRecorder.onDestroy()
+        if (audioRecorder.isActive) {
+            audioRecorder.onDestroy()
+            _audioRecorderState.value = AudioRecorderState.IDLING
+        }
     }
 }

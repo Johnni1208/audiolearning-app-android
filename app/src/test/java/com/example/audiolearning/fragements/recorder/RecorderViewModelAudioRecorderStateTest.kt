@@ -2,8 +2,10 @@ package com.example.audiolearning.fragements.recorder
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
+import com.example.audiolearning.audio.audio_recorder.IAudioRecorder
 import com.example.audiolearning.fragments.recorder.RecorderViewModel
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -14,10 +16,12 @@ class RecorderViewModelAudioRecorderStateTest {
     val instantExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var viewModel: RecorderViewModel
+    private lateinit var mockAudioRecorder: IAudioRecorder
 
     @Before
     fun setUp() {
-        viewModel = RecorderViewModel(mock())
+        mockAudioRecorder = mock()
+        viewModel = RecorderViewModel(mockAudioRecorder)
     }
 
     @Test
@@ -53,5 +57,13 @@ class RecorderViewModelAudioRecorderStateTest {
         viewModel.onPauseOrResume()
 
         assertEquals(viewModel.audioRecorderState.value, AudioRecorderState.RECORDING)
+    }
+
+    @Test
+    fun onDestroy_StateShouldBeIDLING() {
+        whenever(mockAudioRecorder.isActive).thenReturn(true)
+        viewModel.onDestroy()
+
+        assertEquals(viewModel.audioRecorderState.value, AudioRecorderState.IDLING)
     }
 }
