@@ -25,32 +25,32 @@ class RecorderButtonsUIChangeTest {
 
     @Test
     fun testAreButtonsThere() {
-        onView(withId(R.id.record_and_stop_button))
+        onView(withId(R.id.btn_record_and_stop))
             .check(matches(isDisplayed()))
 
-        onView(withId(R.id.pause_and_resume_button))
+        onView(withId(R.id.btn_pause_and_resume))
             .check(matches(isDisplayed()))
     }
 
     /* AudioRecorder IDLING */
     @Test
     fun testAudioRecorderIdling_RecordButtonHasTextRecord() {
-        onView(withId(R.id.record_and_stop_button))
+        onView(withId(R.id.btn_record_and_stop))
             .check(matches(withText(R.string.record_text)))
     }
 
     @Test
     fun testAudioRecorderIdling_PauseButtonHasTextPause() {
-        onView(withId(R.id.pause_and_resume_button))
+        onView(withId(R.id.btn_pause_and_resume))
             .check(matches(withText(R.string.pause_text)))
     }
 
     @Test
     fun testAudioRecorderIdling_PauseButtonIsNotClickable() {
-        onView(withId(R.id.pause_and_resume_button))
+        onView(withId(R.id.btn_pause_and_resume))
             .check(matches(not(isEnabled())))
 
-        onView(withId(R.id.pause_and_resume_button))
+        onView(withId(R.id.btn_pause_and_resume))
             .check(matches(not(isClickable())))
     }
 
@@ -59,7 +59,7 @@ class RecorderButtonsUIChangeTest {
     fun testAudioRecorderRecording_RecordButtonHasTextStop() {
         startOrStop()
 
-        onView(withId(R.id.record_and_stop_button))
+        onView(withId(R.id.btn_record_and_stop))
             .check(matches(withText(R.string.stop_text)))
     }
 
@@ -67,9 +67,9 @@ class RecorderButtonsUIChangeTest {
     fun testAudioRecorderRecording_PauseButtonIsClickable() {
         startOrStop()
 
-        onView(withId(R.id.pause_and_resume_button))
+        onView(withId(R.id.btn_pause_and_resume))
             .check(matches(isEnabled()))
-        onView(withId(R.id.pause_and_resume_button))
+        onView(withId(R.id.btn_pause_and_resume))
             .check(matches(isClickable()))
     }
 
@@ -79,7 +79,7 @@ class RecorderButtonsUIChangeTest {
         startOrStop()
         pauseOrResume()
 
-        onView(withId(R.id.pause_and_resume_button))
+        onView(withId(R.id.btn_pause_and_resume))
             .check(matches(withText(R.string.resume_text)))
     }
 
@@ -88,7 +88,7 @@ class RecorderButtonsUIChangeTest {
         startOrStop()
         pauseOrResume()
 
-        onView(withId(R.id.record_and_stop_button))
+        onView(withId(R.id.btn_record_and_stop))
             .check(matches(withText(R.string.stop_text)))
     }
 
@@ -99,7 +99,7 @@ class RecorderButtonsUIChangeTest {
         pauseOrResume()
         pauseOrResume()
 
-        onView(withId(R.id.pause_and_resume_button))
+        onView(withId(R.id.btn_pause_and_resume))
             .check(matches(withText(R.string.pause_text)))
     }
 
@@ -109,7 +109,7 @@ class RecorderButtonsUIChangeTest {
         startOrStop()
         startOrStop()
 
-        onView(withId(R.id.record_and_stop_button))
+        onView(withId(R.id.btn_record_and_stop))
             .check(matches(withText(R.string.record_text)))
     }
 
@@ -118,7 +118,7 @@ class RecorderButtonsUIChangeTest {
         startOrStop()
         startOrStop()
 
-        onView(withId(R.id.pause_and_resume_button))
+        onView(withId(R.id.btn_pause_and_resume))
             .check(matches(withText(R.string.pause_text)))
     }
 
@@ -127,20 +127,20 @@ class RecorderButtonsUIChangeTest {
         startOrStop()
         startOrStop()
 
-        onView(withId(R.id.pause_and_resume_button))
+        onView(withId(R.id.btn_pause_and_resume))
             .check(matches(not(isEnabled())))
-        onView(withId(R.id.pause_and_resume_button))
+        onView(withId(R.id.btn_pause_and_resume))
             .check(matches(not(isClickable())))
     }
 
     /* Helper functions */
     private fun startOrStop() {
-        onView(withId(R.id.record_and_stop_button))
+        onView(withId(R.id.btn_record_and_stop))
             .perform(click())
     }
 
     private fun pauseOrResume() {
-        onView(withId(R.id.pause_and_resume_button))
+        onView(withId(R.id.btn_pause_and_resume))
             .perform(click())
     }
 }

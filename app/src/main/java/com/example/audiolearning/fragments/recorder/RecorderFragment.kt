@@ -39,14 +39,14 @@ class RecorderFragment : Fragment() {
 
         binding.viewModel = recorderViewModel
 
-        /* Hide PauseAndResumeButton since pausing and resuming MediaRecorders
+        /* Hide btnPauseAndResume since pausing and resuming MediaRecorders
         * is only available on API > 24 */
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            binding.pauseAndResumeButton.visibility = View.GONE
+            binding.btnPauseAndResume.visibility = View.GONE
         }
 
+        /* This is only for testing purposes */
         recorderViewModel.recordedFile.observe(this, Observer { newFile ->
-
             if (newFile != null) {
                 MediaPlayer().apply {
                     setAudioAttributes(
@@ -72,25 +72,25 @@ class RecorderFragment : Fragment() {
             when (newState!!) {
                 AudioRecorderState.IDLING -> {
                     binding.apply {
-                        pauseAndResumeButton.isEnabled = false
-                        pauseAndResumeButton.isClickable = false
-                        pauseAndResumeButton.text = getString(R.string.pause_text)
+                        btnPauseAndResume.isEnabled = false
+                        btnPauseAndResume.isClickable = false
+                        btnPauseAndResume.text = getString(R.string.pause_text)
 
-                        recordAndStopButton.text = getString(R.string.record_text)
+                        btnRecordAndStop.text = getString(R.string.record_text)
                     }
                 }
 
                 AudioRecorderState.RECORDING -> {
                     binding.apply {
-                        pauseAndResumeButton.text = getString(R.string.pause_text)
-                        pauseAndResumeButton.isEnabled = true
-                        pauseAndResumeButton.isClickable = true
-                        recordAndStopButton.text = getString(R.string.stop_text)
+                        btnPauseAndResume.text = getString(R.string.pause_text)
+                        btnPauseAndResume.isEnabled = true
+                        btnPauseAndResume.isClickable = true
+                        btnRecordAndStop.text = getString(R.string.stop_text)
                     }
                 }
 
                 AudioRecorderState.PAUSING -> {
-                    binding.pauseAndResumeButton.text = getString(R.string.resume_text)
+                    binding.btnPauseAndResume.text = getString(R.string.resume_text)
                 }
             }
 

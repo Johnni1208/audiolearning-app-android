@@ -8,7 +8,10 @@ import androidx.lifecycle.ViewModel
 import com.example.audiolearning.audio.audio_recorder.AudioRecorder
 import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
 import com.example.audiolearning.audio.audio_recorder.IAudioRecorder
-import kotlinx.coroutines.runBlocking
+import com.example.audiolearning.util.timer.ITimer
+import com.example.audiolearning.util.timer.Timer
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 
 /**
@@ -33,6 +36,11 @@ class RecorderViewModel(private val audioRecorder: IAudioRecorder = AudioRecorde
     val recordedFile: LiveData<File>
         get() = _recordedFile
 
+    private val recordTimer: ITimer =
+        Timer()
+    val recordedTime: LiveData<String>
+        get() = recordTimer.time
+
     fun onRecordOrStop() {
         val isRecording = _audioRecorderState.value == AudioRecorderState.RECORDING
 
@@ -46,12 +54,15 @@ class RecorderViewModel(private val audioRecorder: IAudioRecorder = AudioRecorde
     }
 
     private fun stopRecording() {
-        runBlocking {
-            _recordedFile.value = audioRecorder.stop()
+        recordTimer.stop()
+        GlobalScope.launch {
+            val file = audioRecorder.stop()
+            _recordedFile.postValue(file)
         }
     }
 
     private fun startRecording() {
+        recordTimer.start()
         audioRecorder.record()
     }
 
@@ -69,11 +80,13 @@ class RecorderViewModel(private val audioRecorder: IAudioRecorder = AudioRecorde
 
     @TargetApi(Build.VERSION_CODES.N)
     private fun pauseRecording() {
+        recordTimer.pause()
         audioRecorder.pause()
     }
 
     @TargetApi(Build.VERSION_CODES.N)
     private fun resumeRecording() {
+        recordTimer.resume()
         audioRecorder.resume()
     }
 

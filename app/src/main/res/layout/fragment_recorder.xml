@@ -4,7 +4,6 @@
     android:id="@+id/fragment_recorder">
 
     <data>
-
         <variable
             name="viewModel"
             type="com.example.audiolearning.fragments.recorder.RecorderViewModel" />
@@ -14,25 +13,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/record_and_stop_button"
+        <TextView
+            android:id="@+id/tv_record_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{ () -> viewModel.onRecordOrStop() }"
+            android:text="@{ viewModel.recordedTime }"
+            android:textSize="50sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/pause_and_resume_button"
+            android:id="@+id/btn_record_and_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{ () -> viewModel.onRecordOrStop() }"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.80" />
+
+        <Button
+            android:id="@+id/btn_pause_and_resume"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="@{ () -> viewModel.onPauseOrResume() }"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/record_and_stop_button"
+            app:layout_constraintTop_toBottomOf="@+id/btn_record_and_stop"
             app:layout_constraintVertical_bias="0.126" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

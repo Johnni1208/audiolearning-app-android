@@ -3,7 +3,6 @@ package com.example.audiolearning.audio.audio_recorder
 import android.annotation.TargetApi
 import android.media.MediaRecorder
 import android.os.Build
-import android.os.Environment
 import kotlinx.coroutines.delay
 import java.io.File
 
@@ -19,15 +18,7 @@ class AudioRecorder(private var recorder: MediaRecorder? = null) : IAudioRecorde
 
     override var isActive: Boolean = false
 
-    private val tempDir: File =
-        File(Environment.getExternalStorageDirectory(), "/AudioLearning/temp")
-    private val tempAudioFile: File
-
-    init {
-        if (!tempDir.exists()) tempDir.mkdirs()
-
-        tempAudioFile = File.createTempFile("tempAudioFile", ".m4a", tempDir)
-    }
+    private val tempAudioFile: File = File.createTempFile("tempAudioFile", ".m4a")
 
     override fun record() {
         if (recorder == null) recorder =
@@ -50,6 +41,10 @@ class AudioRecorder(private var recorder: MediaRecorder? = null) : IAudioRecorde
         recorder!!.resume()
     }
 
+    /*
+     * The stop() function needs 500 milliseconds delay,
+     * since the MPEG_4 audio format cuts audio to early.
+     */
     override suspend fun stop(): File {
         delay(500)
         recorder!!.apply {
