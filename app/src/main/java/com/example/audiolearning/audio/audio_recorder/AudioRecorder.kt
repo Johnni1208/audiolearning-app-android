@@ -7,14 +7,21 @@ import android.os.Environment
 import kotlinx.coroutines.delay
 import java.io.File
 
-class AudioRecorder : IAudioRecorder {
+/**
+ * AudioRecorder for recording audio.
+ * Use this for recording audio in this project.
+ *
+ * @param recorder Inject a custom instance of [MediaRecorder],
+ * else it creates an instance in the [record] method.
+ * Used for testing purposes.
+ */
+class AudioRecorder(private var recorder: MediaRecorder? = null) : IAudioRecorder {
 
     override var isActive: Boolean = false
 
     private val tempDir: File =
         File(Environment.getExternalStorageDirectory(), "/AudioLearning/temp")
     private val tempAudioFile: File
-    private lateinit var recorder: MediaRecorder
 
     init {
         if (!tempDir.exists()) tempDir.mkdirs()
@@ -23,9 +30,10 @@ class AudioRecorder : IAudioRecorder {
     }
 
     override fun record() {
-        recorder = getNewAudioRecorder(tempAudioFile)
+        if (recorder == null) recorder =
+            CustomMediaRecorderProvider.getNewAudioRecorder(tempAudioFile)
 
-        recorder.apply {
+        recorder!!.apply {
             prepare()
             start()
         }
@@ -34,40 +42,33 @@ class AudioRecorder : IAudioRecorder {
 
     @TargetApi(Build.VERSION_CODES.N)
     override fun pause() {
-        recorder.pause()
+        recorder!!.pause()
     }
 
     @TargetApi(Build.VERSION_CODES.N)
     override fun resume() {
-        recorder.resume()
+        recorder!!.resume()
     }
 
     override suspend fun stop(): File {
         delay(500)
-        recorder.apply {
+        recorder!!.apply {
             stop()
             release()
         }
+
+        recorder = null
         isActive = false
         return tempAudioFile
     }
 
     override fun onDestroy() {
-        recorder.apply {
+        recorder!!.apply {
             stop()
             release()
         }
-        isActive = false
-    }
 
-    private fun getNewAudioRecorder(file: File): MediaRecorder {
-        return MediaRecorder().apply {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            setAudioEncodingBitRate(64000)
-            setAudioSamplingRate(16000)
-            setOutputFile(file.absolutePath)
-        }
+        recorder = null
+        isActive = false
     }
 }

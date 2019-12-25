@@ -1,5 +1,8 @@
 package com.example.audiolearning.audio.audio_recorder
 
+import android.media.MediaRecorder
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -10,10 +13,12 @@ import java.io.File
 class AudioRecorderTest {
 
     private lateinit var recorder: AudioRecorder
+    private lateinit var mockMediaRecorder: MediaRecorder
 
     @Before
     fun setupAudioRecorder() {
-        recorder = AudioRecorder()
+        mockMediaRecorder = mock()
+        recorder = AudioRecorder(mockMediaRecorder)
     }
 
     @Test
@@ -24,9 +29,15 @@ class AudioRecorderTest {
     }
 
     @Test
-    fun stop_ShouldSetIsActiveToFalse() {
+    fun record_ShouldPrepareAndStartTheMediaRecorder() {
         recorder.record()
 
+        verify(mockMediaRecorder).prepare()
+        verify(mockMediaRecorder).start()
+    }
+
+    @Test
+    fun stop_ShouldSetIsActiveToFalse() {
         runBlocking {
             recorder.stop()
         }
@@ -35,9 +46,18 @@ class AudioRecorderTest {
     }
 
     @Test
+    fun stop_ShouldStopAndReleaseTheMediaRecorder() {
+        runBlocking {
+            recorder.stop()
+        }
+
+        verify(mockMediaRecorder).stop()
+        verify(mockMediaRecorder).release()
+    }
+
+    @Test
     fun stop_ShouldNeed500msTime() {
         val startTime: Long = System.currentTimeMillis()
-        recorder.record()
 
         runBlocking {
             recorder.stop()
@@ -52,7 +72,6 @@ class AudioRecorderTest {
     @Test
     fun stop_ShouldReturnRecordedFile() {
         var recordedFile: File? = null
-        recorder.record()
 
         runBlocking {
             recordedFile = recorder.stop()
@@ -63,10 +82,31 @@ class AudioRecorderTest {
     }
 
     @Test
+    fun pause_ShouldPauseTheMediaRecorder() {
+        recorder.pause()
+
+        verify(mockMediaRecorder).pause()
+    }
+
+    @Test
+    fun resume_ShouldResumeTheMediaRecorder() {
+        recorder.resume()
+
+        verify(mockMediaRecorder).resume()
+    }
+
+    @Test
     fun onDestroy_ShouldSetIsActiveToFalse() {
-        recorder.record()
         recorder.onDestroy()
 
         assertEquals(false, recorder.isActive)
+    }
+
+    @Test
+    fun onDestroy_ShouldStopAndReleaseTheMediaRecorder() {
+        recorder.onDestroy()
+
+        verify(mockMediaRecorder).stop()
+        verify(mockMediaRecorder).release()
     }
 }
