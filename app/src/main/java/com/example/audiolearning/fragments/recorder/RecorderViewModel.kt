@@ -75,4 +75,8 @@ class RecorderViewModel : ViewModel() {
     private fun resumeRecording() {
         audioRecorder.resume()
     }
+
+    fun onDestroy() {
+        if (audioRecorder.isActive) audioRecorder.onDestroy()
+    }
 }

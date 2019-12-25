@@ -5,10 +5,12 @@ import android.media.MediaRecorder
 import android.os.Build
 import android.os.Environment
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import java.io.File
 
 class AudioRecorder : IAudioRecorder {
+
+    override var isActive: Boolean = false
+
     private val tempDir: File =
         File(Environment.getExternalStorageDirectory(), "/AudioLearning/temp")
     private val tempAudioFile: File
@@ -27,6 +29,7 @@ class AudioRecorder : IAudioRecorder {
             prepare()
             start()
         }
+        isActive = true
     }
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -45,7 +48,16 @@ class AudioRecorder : IAudioRecorder {
             stop()
             release()
         }
+        isActive = false
         return tempAudioFile
+    }
+
+    override fun onDestroy() {
+        recorder.apply {
+            stop()
+            release()
+        }
+        isActive = false
     }
 
     private fun getNewAudioRecorder(file: File): MediaRecorder {

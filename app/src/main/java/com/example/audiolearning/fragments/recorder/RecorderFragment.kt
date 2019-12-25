@@ -48,7 +48,7 @@ class RecorderFragment : Fragment() {
         recorderViewModel.recordedFile.observe(this, Observer { newFile ->
 
             if (newFile != null) {
-                var mediaPlayer = MediaPlayer().apply {
+                MediaPlayer().apply {
                     setAudioAttributes(
                         AudioAttributes
                             .Builder()
@@ -73,6 +73,7 @@ class RecorderFragment : Fragment() {
                 AudioRecorderState.IDLING -> {
                     binding.apply {
                         pauseAndResumeButton.isEnabled = false
+                        pauseAndResumeButton.isClickable = false
                         pauseAndResumeButton.text = getString(R.string.pause_text)
 
                         recordAndStopButton.text = getString(R.string.record_text)
@@ -82,6 +83,7 @@ class RecorderFragment : Fragment() {
                 AudioRecorderState.RECORDING -> {
                     binding.apply {
                         pauseAndResumeButton.isEnabled = true
+                        pauseAndResumeButton.isClickable = true
                         recordAndStopButton.text = getString(R.string.stop_text)
                     }
                 }
@@ -96,5 +98,10 @@ class RecorderFragment : Fragment() {
             }
 
         })
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        recorderViewModel.onDestroy()
     }
 }
