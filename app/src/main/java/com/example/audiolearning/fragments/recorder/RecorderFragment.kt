@@ -82,6 +82,7 @@ class RecorderFragment : Fragment() {
 
                 AudioRecorderState.RECORDING -> {
                     binding.apply {
+                        pauseAndResumeButton.text = getString(R.string.pause_text)
                         pauseAndResumeButton.isEnabled = true
                         pauseAndResumeButton.isClickable = true
                         recordAndStopButton.text = getString(R.string.stop_text)
@@ -90,10 +91,6 @@ class RecorderFragment : Fragment() {
 
                 AudioRecorderState.PAUSING -> {
                     binding.pauseAndResumeButton.text = getString(R.string.resume_text)
-                }
-
-                AudioRecorderState.RESUMING -> {
-                    binding.pauseAndResumeButton.text = getString(R.string.pause_text)
                 }
             }
 

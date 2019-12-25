@@ -56,7 +56,7 @@ class RecorderViewModel : ViewModel() {
 
     fun onPauseOrResume() {
         if (isPausing) {
-            _audioRecorderState.value = AudioRecorderState.RESUMING
+            _audioRecorderState.value = AudioRecorderState.RECORDING
             resumeRecording()
         } else {
             _audioRecorderState.value = AudioRecorderState.PAUSING

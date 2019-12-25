@@ -4,5 +4,4 @@ enum class AudioRecorderState{
     IDLING,
     RECORDING,
     PAUSING,
-    RESUMING
 }
