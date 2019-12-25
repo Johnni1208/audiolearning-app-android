@@ -11,7 +11,13 @@ import com.example.audiolearning.audio.audio_recorder.IAudioRecorder
 import kotlinx.coroutines.runBlocking
 import java.io.File
 
-class RecorderViewModel : ViewModel() {
+/**
+ * ViewModel for the RecorderFragment.
+ *
+ * @param audioRecorder Inject a custom instance of [IAudioRecorder],
+ * else it uses a normal [AudioRecorder].
+ */
+class RecorderViewModel(private val audioRecorder: IAudioRecorder = AudioRecorder()) : ViewModel() {
 
     private val _audioRecorderState = MutableLiveData<AudioRecorderState>().apply {
         value = AudioRecorderState.IDLING
@@ -28,7 +34,6 @@ class RecorderViewModel : ViewModel() {
 
     private var isRecording = false
     private var isPausing = false
-    private val audioRecorder: IAudioRecorder = AudioRecorder()
 
     fun onRecordOrStop() {
         if (isRecording) {
