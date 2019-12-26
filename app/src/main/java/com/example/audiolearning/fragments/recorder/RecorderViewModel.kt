@@ -20,7 +20,10 @@ import java.io.File
  * @param audioRecorder Inject a custom instance of [IAudioRecorder],
  * else it uses a normal [AudioRecorder].
  */
-class RecorderViewModel(private val audioRecorder: IAudioRecorder = AudioRecorder()) : ViewModel() {
+class RecorderViewModel(
+    private val audioRecorder: IAudioRecorder = AudioRecorder(),
+    timer: ITimer = Timer()
+) : ViewModel() {
 
     /* AudioRecorder State */
     private val _audioRecorderState = MutableLiveData<AudioRecorderState>().apply {
@@ -37,20 +40,24 @@ class RecorderViewModel(private val audioRecorder: IAudioRecorder = AudioRecorde
         get() = _recordedFile
 
     private val recordTimer: ITimer =
-        Timer()
+        timer
     val recordedTime: LiveData<String>
         get() = recordTimer.time
 
-    fun onRecordOrStop() {
-        val isRecording = _audioRecorderState.value == AudioRecorderState.RECORDING
+    private val isRecording: Boolean
+        get() = _audioRecorderState.value == AudioRecorderState.RECORDING
+    private val isPausing: Boolean
+        get() = _audioRecorderState.value == AudioRecorderState.PAUSING
 
-        if (isRecording) {
-            _audioRecorderState.value = AudioRecorderState.IDLING
-            stopRecording()
-        } else {
-            _audioRecorderState.value = AudioRecorderState.RECORDING
+    fun onRecordOrStop() {
+        if (!isRecording && !isPausing) {
             startRecording()
+            _audioRecorderState.value = AudioRecorderState.RECORDING
+            return
         }
+
+        stopRecording()
+        _audioRecorderState.value = AudioRecorderState.IDLING
     }
 
     private fun stopRecording() {
@@ -67,15 +74,14 @@ class RecorderViewModel(private val audioRecorder: IAudioRecorder = AudioRecorde
     }
 
     fun onPauseOrResume() {
-        val isPausing = _audioRecorderState.value == AudioRecorderState.PAUSING
-
         if (isPausing) {
-            _audioRecorderState.value = AudioRecorderState.RECORDING
             resumeRecording()
-        } else {
-            _audioRecorderState.value = AudioRecorderState.PAUSING
-            pauseRecording()
+            _audioRecorderState.value = AudioRecorderState.RECORDING
+            return
         }
+
+        pauseRecording()
+        _audioRecorderState.value = AudioRecorderState.PAUSING
     }
 
     @TargetApi(Build.VERSION_CODES.N)

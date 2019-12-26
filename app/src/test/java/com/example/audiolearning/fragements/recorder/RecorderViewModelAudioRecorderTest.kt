@@ -3,10 +3,12 @@ package com.example.audiolearning.fragements.recorder
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.audiolearning.audio.audio_recorder.IAudioRecorder
 import com.example.audiolearning.fragments.recorder.RecorderViewModel
+import com.example.audiolearning.util.timer.ITimer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -20,11 +22,13 @@ class RecorderViewModelAudioRecorderTest {
 
     private lateinit var viewModel: RecorderViewModel
     private lateinit var mockAudioRecorder: IAudioRecorder
+    private lateinit var mockTimer: ITimer
 
     @Before
     fun setUp() {
         mockAudioRecorder = mock()
-        viewModel = RecorderViewModel(mockAudioRecorder)
+        mockTimer = mock()
+        viewModel = RecorderViewModel(mockAudioRecorder, mockTimer)
     }
 
     @Test
@@ -40,6 +44,7 @@ class RecorderViewModelAudioRecorderTest {
 
             viewModel.onRecordOrStop()
             viewModel.onRecordOrStop()
+            delay(100)
 
             verify(mockAudioRecorder).stop()
         }
@@ -52,6 +57,7 @@ class RecorderViewModelAudioRecorderTest {
 
             viewModel.onRecordOrStop()
             viewModel.onRecordOrStop()
+            delay(100)
 
             assertTrue(viewModel.recordedFile.value != null)
         }
@@ -68,6 +74,17 @@ class RecorderViewModelAudioRecorderTest {
         viewModel.onPauseOrResume()
         viewModel.onPauseOrResume()
         verify(mockAudioRecorder).resume()
+    }
+
+    @Test
+    fun whenFirstOnPauseOrResume_thenOnRecordOrStop_ShouldStopTheRecorder() {
+        runBlocking {
+            viewModel.onPauseOrResume()
+            viewModel.onRecordOrStop()
+            delay(100)
+
+            verify(mockAudioRecorder).stop()
+        }
     }
 
     @Test
