@@ -1,13 +1,13 @@
-package com.example.audiolearning.audio.audio_recorder
+package com.example.audiolearning.util
 
 import android.media.MediaRecorder
-import com.example.audiolearning.audio.audio_recorder.CustomMediaRecorderProvider.Companion.getNewAudioRecorder
+import com.example.audiolearning.util.CustomMediaRecorderProvider.Companion.getRecorderForAudio
 import java.io.File
 
 /**
  * Provides a custom MediaRecorder of any kind.
  *
- * Currently only use [getNewAudioRecorder].
+ * Currently only use [getRecorderForAudio].
  */
 class CustomMediaRecorderProvider {
     companion object {
@@ -16,7 +16,7 @@ class CustomMediaRecorderProvider {
          *
          * @param file The file where the output should be written.
          */
-        fun getNewAudioRecorder(file: File): MediaRecorder {
+        fun getRecorderForAudio(file: File): MediaRecorder {
             return MediaRecorder().apply {
                 setAudioSource(MediaRecorder.AudioSource.MIC)
                 setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)

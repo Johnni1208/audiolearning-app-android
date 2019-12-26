@@ -21,7 +21,7 @@ class RecorderViewModelAudioRecorderStateTest {
     private lateinit var mockTimer: ITimer
 
     @Before
-    fun setUp() {
+    fun setUpViewModel() {
         mockAudioRecorder = mock()
         mockTimer = mock()
 

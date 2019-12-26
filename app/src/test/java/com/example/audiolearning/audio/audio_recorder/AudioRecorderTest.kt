@@ -21,6 +21,7 @@ class AudioRecorderTest {
         recorder = AudioRecorder(mockMediaRecorder)
     }
 
+    /* record() */
     @Test
     fun record_ShouldSetIsActiveToTrue() {
         recorder.record()
@@ -36,6 +37,7 @@ class AudioRecorderTest {
         verify(mockMediaRecorder).start()
     }
 
+    /* stop() */
     @Test
     fun stop_ShouldSetIsActiveToFalse() {
         runBlocking {
@@ -81,6 +83,7 @@ class AudioRecorderTest {
         assertTrue(recordedFile!!.name.contains(".m4a"))
     }
 
+    /* pause() */
     @Test
     fun pause_ShouldPauseTheMediaRecorder() {
         recorder.pause()
@@ -88,6 +91,7 @@ class AudioRecorderTest {
         verify(mockMediaRecorder).pause()
     }
 
+    /* resume() */
     @Test
     fun resume_ShouldResumeTheMediaRecorder() {
         recorder.resume()
@@ -95,6 +99,7 @@ class AudioRecorderTest {
         verify(mockMediaRecorder).resume()
     }
 
+    /* onDestroy() */
     @Test
     fun onDestroy_ShouldSetIsActiveToFalse() {
         recorder.onDestroy()

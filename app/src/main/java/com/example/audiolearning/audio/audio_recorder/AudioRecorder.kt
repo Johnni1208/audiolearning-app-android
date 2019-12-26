@@ -3,6 +3,7 @@ package com.example.audiolearning.audio.audio_recorder
 import android.annotation.TargetApi
 import android.media.MediaRecorder
 import android.os.Build
+import com.example.audiolearning.util.CustomMediaRecorderProvider
 import kotlinx.coroutines.delay
 import java.io.File
 
@@ -16,13 +17,17 @@ import java.io.File
  */
 class AudioRecorder(private var recorder: MediaRecorder? = null) : IAudioRecorder {
 
+    /**
+     * @see [IAudioRecorder.isActive]
+     */
     override var isActive: Boolean = false
 
     private val tempAudioFile: File = File.createTempFile("tempAudioFile", ".m4a")
 
     override fun record() {
-        if (recorder == null) recorder =
-            CustomMediaRecorderProvider.getNewAudioRecorder(tempAudioFile)
+        if (recorder == null) {
+            recorder = CustomMediaRecorderProvider.getRecorderForAudio(tempAudioFile)
+        }
 
         recorder!!.apply {
             prepare()
@@ -41,9 +46,12 @@ class AudioRecorder(private var recorder: MediaRecorder? = null) : IAudioRecorde
         recorder!!.resume()
     }
 
-    /*
-     * The stop() function needs 500 milliseconds delay,
+    /**
+     * Stops the recording and returns the temporary file.
+     *
+     * IMPORTANT: This function needs 500 milliseconds delay,
      * since the MPEG_4 audio format cuts audio to early.
+     *
      */
     override suspend fun stop(): File {
         delay(500)
@@ -57,6 +65,12 @@ class AudioRecorder(private var recorder: MediaRecorder? = null) : IAudioRecorde
         return tempAudioFile
     }
 
+    /**
+     * Use this function when destroying the fragment.
+     * It cancels the recorder without providing the file.
+     *
+     * We cannot use [stop] for this, since it takes 500ms before finally stopping.
+     */
     override fun onDestroy() {
         recorder!!.apply {
             stop()

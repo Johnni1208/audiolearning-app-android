@@ -19,20 +19,21 @@ import java.io.File
  *
  * @param audioRecorder Inject a custom instance of [IAudioRecorder],
  * else it uses a normal [AudioRecorder].
+ *
+ * @param timer Inject a custom instance of [ITimer],
+ * else it uses a normal [Timer]
  */
 class RecorderViewModel(
     private val audioRecorder: IAudioRecorder = AudioRecorder(),
     timer: ITimer = Timer()
 ) : ViewModel() {
 
-    /* AudioRecorder State */
     private val _audioRecorderState = MutableLiveData<AudioRecorderState>().apply {
         value = AudioRecorderState.IDLING
     }
     val audioRecorderState: LiveData<AudioRecorderState>
         get() = _audioRecorderState
 
-    /* Recorded file output */
     private val _recordedFile = MutableLiveData<File>().apply {
         value = null
     }
