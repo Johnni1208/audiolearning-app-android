@@ -1,4 +1,4 @@
-package com.example.audiolearning.mainActivity
+package com.example.audiolearning.mainActivity.navigation
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.swipeLeft

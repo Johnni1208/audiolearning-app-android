@@ -12,18 +12,20 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.audiolearning.R
+import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
 import com.example.audiolearning.databinding.FragmentRecorderBinding
 
 class RecorderFragment : Fragment() {
 
     private lateinit var recorderViewModel: RecorderViewModel
+    private lateinit var binding: FragmentRecorderBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<FragmentRecorderBinding>(
+        binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_recorder,
             container,
@@ -37,7 +39,7 @@ class RecorderFragment : Fragment() {
 
         binding.viewModel = recorderViewModel
 
-        /* Hide PauseAndResumeButton since pausing and resuming MediaRecorders
+        /* Hide btnPauseAndResume since pausing and resuming MediaRecorders
         * is only available on API > 24 */
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             binding.btnPauseAndResume.visibility = View.GONE
@@ -60,6 +62,43 @@ class RecorderFragment : Fragment() {
             }
         })
 
+        switchButtonAppearancesOnAudioRecorderChange()
+
         return binding.root
+    }
+
+    private fun switchButtonAppearancesOnAudioRecorderChange() {
+        recorderViewModel.audioRecorderState.observe(this, Observer { newState ->
+            when (newState!!) {
+                AudioRecorderState.IDLING -> {
+                    binding.apply {
+                        btnPauseAndResume.isEnabled = false
+                        btnPauseAndResume.isClickable = false
+                        btnPauseAndResume.text = getString(R.string.pause_text)
+
+                        btnRecordAndStop.text = getString(R.string.record_text)
+                    }
+                }
+
+                AudioRecorderState.RECORDING -> {
+                    binding.apply {
+                        btnPauseAndResume.text = getString(R.string.pause_text)
+                        btnPauseAndResume.isEnabled = true
+                        btnPauseAndResume.isClickable = true
+                        btnRecordAndStop.text = getString(R.string.stop_text)
+                    }
+                }
+
+                AudioRecorderState.PAUSING -> {
+                    binding.btnPauseAndResume.text = getString(R.string.resume_text)
+                }
+            }
+
+        })
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        recorderViewModel.onDestroy()
     }
 }

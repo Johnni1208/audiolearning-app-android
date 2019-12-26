@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.audiolearning.audio.audio_recorder.AudioRecorder
+import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
 import com.example.audiolearning.audio.audio_recorder.IAudioRecorder
 import com.example.audiolearning.util.timer.ITimer
 import com.example.audiolearning.util.timer.Timer
@@ -13,19 +14,25 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
 
-class RecorderViewModel : ViewModel() {
+/**
+ * ViewModel for the RecorderFragment.
+ *
+ * @param audioRecorder Inject a custom instance of [IAudioRecorder],
+ * else it uses a normal [AudioRecorder].
+ *
+ * @param timer Inject a custom instance of [ITimer],
+ * else it uses a normal [Timer]
+ */
+class RecorderViewModel(
+    private val audioRecorder: IAudioRecorder = AudioRecorder(),
+    timer: ITimer = Timer()
+) : ViewModel() {
 
-    private val _recordAndStopButtonText = MutableLiveData<String>().apply {
-        value = "Record"
+    private val _audioRecorderState = MutableLiveData<AudioRecorderState>().apply {
+        value = AudioRecorderState.IDLING
     }
-    val recordAndStopButtonText: LiveData<String>
-        get() = _recordAndStopButtonText
-
-    private val _pauseAndResumeButtonText = MutableLiveData<String>().apply {
-        value = "Pause"
-    }
-    val pauseAndResumeButtonText: LiveData<String>
-        get() = _pauseAndResumeButtonText
+    val audioRecorderState: LiveData<AudioRecorderState>
+        get() = _audioRecorderState
 
     private val _recordedFile = MutableLiveData<File>().apply {
         value = null
@@ -34,24 +41,28 @@ class RecorderViewModel : ViewModel() {
         get() = _recordedFile
 
     private val recordTimer: ITimer =
-        Timer()
+        timer
     val recordedTime: LiveData<String>
         get() = recordTimer.time
 
-    private var isRecording = false
-    private var isPausing = false
-    private val audioRecorder: IAudioRecorder = AudioRecorder()
-
+    private val isRecording: Boolean
+        get() = _audioRecorderState.value == AudioRecorderState.RECORDING
+    private val isPausing: Boolean
+        get() = _audioRecorderState.value == AudioRecorderState.PAUSING
 
     fun onRecordOrStop() {
-        if (isRecording) stopRecording() else startRecording()
+        if (!isRecording && !isPausing) {
+            startRecording()
+            _audioRecorderState.value = AudioRecorderState.RECORDING
+            return
+        }
 
-        isRecording = !isRecording
+        stopRecording()
+        _audioRecorderState.value = AudioRecorderState.IDLING
     }
 
     private fun stopRecording() {
         recordTimer.stop()
-        _recordAndStopButtonText.value = "Record"
         GlobalScope.launch {
             val file = audioRecorder.stop()
             _recordedFile.postValue(file)
@@ -61,26 +72,35 @@ class RecorderViewModel : ViewModel() {
     private fun startRecording() {
         recordTimer.start()
         audioRecorder.record()
-        _recordAndStopButtonText.value = "Stop"
     }
 
     fun onPauseOrResume() {
-        if (isPausing) resumeRecording() else pauseRecording()
+        if (isPausing) {
+            resumeRecording()
+            _audioRecorderState.value = AudioRecorderState.RECORDING
+            return
+        }
 
-        isPausing = !isPausing
+        pauseRecording()
+        _audioRecorderState.value = AudioRecorderState.PAUSING
     }
 
     @TargetApi(Build.VERSION_CODES.N)
     private fun pauseRecording() {
         recordTimer.pause()
         audioRecorder.pause()
-        _pauseAndResumeButtonText.value = "Resume"
     }
 
     @TargetApi(Build.VERSION_CODES.N)
     private fun resumeRecording() {
         recordTimer.resume()
         audioRecorder.resume()
-        _pauseAndResumeButtonText.value = "Pause"
+    }
+
+    fun onDestroy() {
+        if (audioRecorder.isActive) {
+            audioRecorder.onDestroy()
+            _audioRecorderState.value = AudioRecorderState.IDLING
+        }
     }
 }
