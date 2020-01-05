@@ -3,7 +3,8 @@ package com.example.audiolearning.fragements.recorder
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
 import com.example.audiolearning.audio.audio_recorder.IAudioRecorder
-import com.example.audiolearning.fragments.recorder.RecorderViewModel
+import com.example.audiolearning.audio.audio_store.IAudioStore
+import com.example.audiolearning.components.fragments.recorder.RecorderViewModel
 import com.example.audiolearning.util.timer.ITimer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
@@ -19,13 +20,22 @@ class RecorderViewModelAudioRecorderStateTest {
     private lateinit var viewModel: RecorderViewModel
     private lateinit var mockAudioRecorder: IAudioRecorder
     private lateinit var mockTimer: ITimer
+    private lateinit var mockAudioStore: IAudioStore
+
 
     @Before
     fun setUpViewModel() {
         mockAudioRecorder = mock()
         mockTimer = mock()
+        mockAudioStore = mock()
 
-        viewModel = RecorderViewModel(mockAudioRecorder, mockTimer)
+
+        viewModel =
+            RecorderViewModel(
+                mockAudioRecorder,
+                mockTimer,
+                mockAudioStore
+            )
     }
 
     @Test

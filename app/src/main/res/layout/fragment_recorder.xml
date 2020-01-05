@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.audiolearning.fragments.recorder.RecorderViewModel" />
+            type="com.example.audiolearning.components.fragments.recorder.RecorderViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

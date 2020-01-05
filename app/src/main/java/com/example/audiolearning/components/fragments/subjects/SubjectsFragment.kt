@@ -1,4 +1,4 @@
-package com.example.audiolearning.fragments.about_us
+package com.example.audiolearning.components.fragments.subjects
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.audiolearning.R
 
-class AboutUsFragment : Fragment() {
+class SubjectsFragment : Fragment() {
 
-    private lateinit var aboutUsViewModel: AboutUsViewModel
+    private lateinit var subjectsViewModel: SubjectsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        aboutUsViewModel =
-            ViewModelProviders.of(this).get(AboutUsViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_about_us, container, false)
-        val textView: TextView = root.findViewById(R.id.text_dashboard)
-        aboutUsViewModel.text.observe(this, Observer {
+        subjectsViewModel =
+            ViewModelProviders.of(this).get(SubjectsViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_subjects, container, false)
+        val textView: TextView = root.findViewById(R.id.text_notifications)
+        subjectsViewModel.text.observe(this, Observer {
             textView.text = it
         })
         return root

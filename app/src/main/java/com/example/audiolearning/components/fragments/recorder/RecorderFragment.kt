@@ -1,7 +1,5 @@
-package com.example.audiolearning.fragments.recorder
+package com.example.audiolearning.components.fragments.recorder
 
-import android.media.AudioAttributes
-import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +11,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.audiolearning.R
 import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
+import com.example.audiolearning.audio.audio_store.AudioStore
+import com.example.audiolearning.components.dialogs.new_recording.NewRecordingDialog
+import com.example.audiolearning.components.dialogs.new_recording.NewRecordingDialogButtonsListener
 import com.example.audiolearning.databinding.FragmentRecorderBinding
+import com.example.audiolearning.models.Subject
 
 class RecorderFragment : Fragment() {
 
@@ -34,8 +36,9 @@ class RecorderFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
-        recorderViewModel =
-            ViewModelProviders.of(this).get(RecorderViewModel::class.java)
+        val viewModelFactory = RecorderViewModelFactory(audioStore = AudioStore(requireContext()))
+        recorderViewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(RecorderViewModel::class.java)
 
         binding.viewModel = recorderViewModel
 
@@ -45,26 +48,23 @@ class RecorderFragment : Fragment() {
             binding.btnPauseAndResume.visibility = View.GONE
         }
 
-        /* This is only for testing purposes */
-        recorderViewModel.recordedFile.observe(this, Observer { newFile ->
-            if (newFile != null) {
-                MediaPlayer().apply {
-                    setAudioAttributes(
-                        AudioAttributes
-                            .Builder()
-                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                            .build()
-                    )
-                    setDataSource(newFile.absolutePath)
-                    prepare()
-                    start()
-                }
-            }
-        })
-
+        observeIfNewAudioRecording()
         switchButtonAppearancesOnAudioRecorderChange()
 
         return binding.root
+    }
+
+    private fun observeIfNewAudioRecording() {
+        recorderViewModel.recordedFile.observe(this, Observer { newFile ->
+            if (newFile != null) {
+                NewRecordingDialog(
+                    object : NewRecordingDialogButtonsListener {
+                        override fun onAddButtonClicked(name: String, subject: Subject) {
+                            recorderViewModel.onSaveAudio(newFile, name, subject)
+                        }
+                    }).show(requireFragmentManager(), tag)
+            }
+        })
     }
 
     private fun switchButtonAppearancesOnAudioRecorderChange() {

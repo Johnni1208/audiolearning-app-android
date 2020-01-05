@@ -1,13 +1,13 @@
-package com.example.audiolearning.fragments.about_us
+package com.example.audiolearning.components.fragments.subjects
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class AboutUsViewModel : ViewModel() {
+class SubjectsViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is About Us"
+        value = "This is Subjects Fragment"
     }
     val text: LiveData<String> = _text
 }

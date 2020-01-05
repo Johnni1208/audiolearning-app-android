@@ -1,4 +1,4 @@
-package com.example.audiolearning.fragments.recorder
+package com.example.audiolearning.components.fragments.recorder
 
 import android.annotation.TargetApi
 import android.os.Build
@@ -8,6 +8,9 @@ import androidx.lifecycle.ViewModel
 import com.example.audiolearning.audio.audio_recorder.AudioRecorder
 import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
 import com.example.audiolearning.audio.audio_recorder.IAudioRecorder
+import com.example.audiolearning.audio.audio_store.IAudioStore
+import com.example.audiolearning.models.Audio
+import com.example.audiolearning.models.Subject
 import com.example.audiolearning.util.timer.ITimer
 import com.example.audiolearning.util.timer.Timer
 import kotlinx.coroutines.GlobalScope
@@ -24,8 +27,9 @@ import java.io.File
  * else it uses a normal [Timer]
  */
 class RecorderViewModel(
-    private val audioRecorder: IAudioRecorder = AudioRecorder(),
-    timer: ITimer = Timer()
+    private val audioRecorder: IAudioRecorder,
+    timer: ITimer,
+    private val audioStore: IAudioStore
 ) : ViewModel() {
 
     private val _audioRecorderState = MutableLiveData<AudioRecorderState>().apply {
@@ -95,6 +99,11 @@ class RecorderViewModel(
     private fun resumeRecording() {
         recordTimer.resume()
         audioRecorder.resume()
+    }
+
+    fun onSaveAudio(file: File, name: String, subject: Subject) {
+        val audio = Audio(file, name, subject)
+        audioStore.save(audio)
     }
 
     fun onDestroy() {
