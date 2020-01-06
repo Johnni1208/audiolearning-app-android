@@ -1,4 +1,4 @@
-package com.example.audiolearning.components.dialogs.new_recording
+package com.example.audiolearning.ui.dialogs.new_recording
 
 import com.example.audiolearning.models.Subject
 

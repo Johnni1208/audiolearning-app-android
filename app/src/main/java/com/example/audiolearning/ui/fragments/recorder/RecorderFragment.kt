@@ -1,4 +1,4 @@
-package com.example.audiolearning.components.fragments.recorder
+package com.example.audiolearning.ui.fragments.recorder
 
 import android.os.Build
 import android.os.Bundle
@@ -12,10 +12,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.audiolearning.R
 import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
 import com.example.audiolearning.audio.audio_store.AudioStore
-import com.example.audiolearning.components.dialogs.new_recording.NewRecordingDialog
-import com.example.audiolearning.components.dialogs.new_recording.NewRecordingDialogButtonsListener
 import com.example.audiolearning.databinding.FragmentRecorderBinding
-import com.example.audiolearning.models.Subject
+import com.example.audiolearning.ui.dialogs.new_recording.NewRecordingDialog
 
 class RecorderFragment : Fragment() {
 
@@ -57,12 +55,7 @@ class RecorderFragment : Fragment() {
     private fun observeIfNewAudioRecording() {
         recorderViewModel.recordedFile.observe(this, Observer { newFile ->
             if (newFile != null) {
-                NewRecordingDialog(
-                    object : NewRecordingDialogButtonsListener {
-                        override fun onAddButtonClicked(name: String, subject: Subject) {
-                            recorderViewModel.onSaveAudio(newFile, name, subject)
-                        }
-                    }).show(requireFragmentManager(), tag)
+                NewRecordingDialog.display(requireFragmentManager())
             }
         })
     }

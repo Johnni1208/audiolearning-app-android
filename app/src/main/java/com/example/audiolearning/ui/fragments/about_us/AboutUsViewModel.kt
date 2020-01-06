@@ -1,4 +1,4 @@
-package com.example.audiolearning.components.fragments.about_us
+package com.example.audiolearning.ui.fragments.about_us
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

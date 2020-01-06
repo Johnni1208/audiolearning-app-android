@@ -8,7 +8,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.example.audiolearning.R
-import com.example.audiolearning.components.fragments.recorder.RecorderFragment
+import com.example.audiolearning.ui.fragments.recorder.RecorderFragment
 import org.hamcrest.Matchers.not
 import org.junit.Before
 import org.junit.Test

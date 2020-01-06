@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
 import com.example.audiolearning.audio.audio_recorder.IAudioRecorder
 import com.example.audiolearning.audio.audio_store.IAudioStore
-import com.example.audiolearning.components.fragments.recorder.RecorderViewModel
+import com.example.audiolearning.ui.fragments.recorder.RecorderViewModel
 import com.example.audiolearning.util.timer.ITimer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever

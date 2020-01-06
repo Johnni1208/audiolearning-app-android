@@ -1,4 +1,4 @@
-package com.example.audiolearning.components.fragments.recorder
+package com.example.audiolearning.ui.fragments.recorder
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
