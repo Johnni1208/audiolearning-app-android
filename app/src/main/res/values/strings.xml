@@ -14,5 +14,6 @@
     <string name="nrDialog_title">Save new recording?</string>
     <string name="nrDialog_audio_name_hint">Name of your recording</string>
     <string name="nrDialog_positive_button_text">Save</string>
-    <string name="nrDialog_negative_button_text">Cancel</string>
+    <string name="nrDialog_negative_button_text">Discard</string>
+    <string name="nrDialog_error_message_missing_info">Cannot be left blank</string>
 </resources>

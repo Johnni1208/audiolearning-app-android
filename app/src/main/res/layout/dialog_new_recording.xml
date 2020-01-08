@@ -13,10 +13,11 @@
 
         <Toolbar
             android:id="@+id/nr_toolbar"
-            android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:navigationIcon="@drawable/ic_cross" />
+            android:navigationIcon="@drawable/ic_cross"
+            android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+            android:title="@string/nrDialog_title" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -45,16 +46,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_audio_name" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_save_recording"
-            android:layout_margin="16dp"
-            app:backgroundTint="@color/colorAccent"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/nrDialog_positive_button_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_discard_recording"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/nrDialog_negative_button_text"
+                android:layout_marginEnd="16dp"
+                android:textColor="@color/colorAccent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_save_recording"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/nrDialog_positive_button_text"
+                app:backgroundTint="@color/colorAccent" />
+
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

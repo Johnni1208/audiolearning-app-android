@@ -4,18 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.example.audiolearning.R
+import com.example.audiolearning.models.Subject
 import kotlinx.android.synthetic.main.dialog_new_recording.*
 
 class NewRecordingDialog(
-//    var newRecordingDialogButtonsListener: NewRecordingDialogButtonsListener
+    private var newRecordingDialogButtonsListener: NewRecordingDialogButtonsListener
 ) : DialogFragment() {
 
     companion object {
-        fun display(fragmentManager: FragmentManager) =
-            NewRecordingDialog().show(fragmentManager, "newrecordingdialog")
+        fun display(
+            newRecordingDialogButtonsListener: NewRecordingDialogButtonsListener,
+            fragmentManager: FragmentManager
+        ) = NewRecordingDialog(newRecordingDialogButtonsListener).show(
+            fragmentManager,
+            "newrecordingdialog"
+        )
     }
 
     override fun onStart() {
@@ -44,10 +51,36 @@ class NewRecordingDialog(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupOnClickListeners()
+    }
 
-        nr_toolbar.let {
-            it.setTitle(R.string.nrDialog_title)
-            it.setNavigationOnClickListener { dismiss() }
+    private fun setupOnClickListeners() {
+        nr_toolbar.setNavigationOnClickListener {
+            newRecordingDialogButtonsListener.onDiscardButtonClicked()
+            dismiss()
+        }
+
+        btn_discard_recording.setOnClickListener {
+            newRecordingDialogButtonsListener.onDiscardButtonClicked()
+            dismiss()
+        }
+
+        btn_save_recording.setOnClickListener {
+            val name = et_audio_name.text.toString()
+            val subject = sp_audio_subject.selectedItem as Subject
+
+            if (name.isEmpty()) {
+                et_audio_name.error = getString(R.string.nrDialog_error_message_missing_info)
+                return@setOnClickListener
+            }
+
+            if (subject.name.isEmpty()) {
+                (sp_audio_subject.selectedView as TextView).error =
+                    getString(R.string.nrDialog_error_message_missing_info)
+                return@setOnClickListener
+            }
+
+            newRecordingDialogButtonsListener.onSaveButtonClicked(name, subject)
         }
     }
 }
