@@ -2,14 +2,15 @@ package com.example.audiolearning.audio.audio_store
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import com.example.audiolearning.models.Audio
 import com.example.audiolearning.models.Subject
+import com.example.audiolearning.util.AudioFileUtils
 
-class AudioStore(context: Context): IAudioStore{
-    private val resolver = context.contentResolver
-
+class AudioStore(var context: Context) : IAudioStore {
     override fun save(audio: Audio) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        AudioFileUtils.moveFile(audio.file, audio.subject.directory.absolutePath, audio.name)
+        Log.i("AudioStore", audio.file.absolutePath)
     }
 
     override fun update(audioUri: Uri) {

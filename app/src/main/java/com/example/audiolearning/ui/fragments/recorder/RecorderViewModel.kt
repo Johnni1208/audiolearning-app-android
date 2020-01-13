@@ -10,7 +10,6 @@ import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
 import com.example.audiolearning.audio.audio_recorder.IAudioRecorder
 import com.example.audiolearning.audio.audio_store.IAudioStore
 import com.example.audiolearning.models.Audio
-import com.example.audiolearning.models.Subject
 import com.example.audiolearning.util.timer.ITimer
 import com.example.audiolearning.util.timer.Timer
 import kotlinx.coroutines.GlobalScope
@@ -101,8 +100,7 @@ class RecorderViewModel(
         audioRecorder.resume()
     }
 
-    fun onSaveAudio(file: File, name: String, subject: Subject) {
-        val audio = Audio(file, name, subject)
+    fun onSaveAudio(audio: Audio) {
         audioStore.save(audio)
     }
 

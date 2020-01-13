@@ -13,6 +13,7 @@ import com.example.audiolearning.R
 import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
 import com.example.audiolearning.audio.audio_store.AudioStore
 import com.example.audiolearning.databinding.FragmentRecorderBinding
+import com.example.audiolearning.models.Audio
 import com.example.audiolearning.models.Subject
 import com.example.audiolearning.ui.dialogs.new_recording.NewRecordingDialog
 import com.example.audiolearning.ui.dialogs.new_recording.NewRecordingDialogButtonsListener
@@ -69,7 +70,7 @@ class RecorderFragment : Fragment() {
     private fun getNewRecordingDialogButtonsListener(newFile: File) =
         object : NewRecordingDialogButtonsListener {
             override fun onSaveButtonClicked(name: String, subject: Subject) {
-                recorderViewModel.onSaveAudio(newFile, name, subject)
+                recorderViewModel.onSaveAudio(Audio(newFile, name, subject))
             }
 
             override fun onDiscardButtonClicked() {
