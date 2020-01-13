@@ -1,10 +1,8 @@
-package com.example.audiolearning.fragements.recorder
+package com.example.audiolearning.handler
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
 import com.example.audiolearning.audio.audio_recorder.IAudioRecorder
-import com.example.audiolearning.data.repositories.AudioRepository
-import com.example.audiolearning.ui.fragments.recorder.RecorderViewModel
 import com.example.audiolearning.util.timer.ITimer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
@@ -13,71 +11,67 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class RecorderViewModelAudioRecorderStateTest {
+class RecordingAndTimerHandlerAudioRecorderStateTest {
     @get:Rule
     val instantExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var viewModel: RecorderViewModel
+    private lateinit var handler: RecordingAndTimerHandler
     private lateinit var mockAudioRecorder: IAudioRecorder
     private lateinit var mockTimer: ITimer
-    private lateinit var mockAudioRepository: AudioRepository
 
 
     @Before
     fun setUpViewModel() {
         mockAudioRecorder = mock()
         mockTimer = mock()
-        mockAudioRepository = mock()
 
-
-        viewModel =
-            RecorderViewModel(
+        handler =
+            RecordingAndTimerHandler(
                 mockAudioRecorder,
-                mockTimer,
-                mockAudioRepository
+                mockTimer
             )
     }
 
     @Test
     fun atBeginning_StateShouldBeIDLING() {
-        assertEquals(viewModel.audioRecorderState.value, AudioRecorderState.IDLING)
+        assertEquals(handler.audioRecorderState.value, AudioRecorderState.IDLING)
     }
 
     @Test
     fun whenOddTimesCalled_onRecordOrStop_StateShouldBeRECORDING() {
-        viewModel.onRecordOrStop()
+        handler.onRecordOrStop()
 
-        assertEquals(viewModel.audioRecorderState.value, AudioRecorderState.RECORDING)
+        assertEquals(handler.audioRecorderState.value, AudioRecorderState.RECORDING)
     }
 
     @Test
     fun whenEvenTimesCalled_onRecordOrStop_StateShouldBeIDLING() {
-        viewModel.onRecordOrStop()
-        viewModel.onRecordOrStop()
+        handler.onRecordOrStop()
+        handler.onRecordOrStop()
 
-        assertEquals(viewModel.audioRecorderState.value, AudioRecorderState.IDLING)
+        assertEquals(handler.audioRecorderState.value, AudioRecorderState.IDLING)
     }
 
     @Test
     fun whenOddTimesCalled_onPauseOrResume_StateShouldBePAUSING() {
-        viewModel.onPauseOrResume()
+        handler.onPauseOrResume()
 
-        assertEquals(viewModel.audioRecorderState.value, AudioRecorderState.PAUSING)
+        assertEquals(handler.audioRecorderState.value, AudioRecorderState.PAUSING)
     }
 
     @Test
     fun whenEvenTimesCalled_onPauseOrResume_StateShouldBeRECORDING() {
-        viewModel.onPauseOrResume()
-        viewModel.onPauseOrResume()
+        handler.onPauseOrResume()
+        handler.onPauseOrResume()
 
-        assertEquals(viewModel.audioRecorderState.value, AudioRecorderState.RECORDING)
+        assertEquals(handler.audioRecorderState.value, AudioRecorderState.RECORDING)
     }
 
     @Test
     fun onDestroy_StateShouldBeIDLING() {
         whenever(mockAudioRecorder.isActive).thenReturn(true)
-        viewModel.onDestroy()
+        handler.onDestroy()
 
-        assertEquals(viewModel.audioRecorderState.value, AudioRecorderState.IDLING)
+        assertEquals(handler.audioRecorderState.value, AudioRecorderState.IDLING)
     }
 }

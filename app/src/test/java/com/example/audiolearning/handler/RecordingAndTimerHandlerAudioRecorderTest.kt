@@ -1,9 +1,7 @@
-package com.example.audiolearning.fragements.recorder
+package com.example.audiolearning.handler
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.audiolearning.audio.audio_recorder.IAudioRecorder
-import com.example.audiolearning.data.repositories.AudioRepository
-import com.example.audiolearning.ui.fragments.recorder.RecorderViewModel
 import com.example.audiolearning.util.timer.ITimer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -17,32 +15,29 @@ import org.junit.Rule
 import org.junit.Test
 import java.io.File
 
-class RecorderViewModelAudioRecorderTest {
+class RecordingAndTimerHandlerAudioRecorderTest {
     @get:Rule
     val instantExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var viewModel: RecorderViewModel
+    private lateinit var handler: RecordingAndTimerHandler
     private lateinit var mockAudioRecorder: IAudioRecorder
     private lateinit var mockTimer: ITimer
-    private lateinit var mockAudioRepository: AudioRepository
 
     @Before
     fun setUpViewModel() {
         mockAudioRecorder = mock()
         mockTimer = mock()
-        mockAudioRepository = mock()
 
-        viewModel =
-            RecorderViewModel(
+        handler =
+            RecordingAndTimerHandler(
                 mockAudioRecorder,
-                mockTimer,
-                mockAudioRepository
+                mockTimer
             )
     }
 
     @Test
     fun whenFirstTimeCalled_onRecordOrStop_ShouldStartTheRecorder() {
-        viewModel.onRecordOrStop()
+        handler.onRecordOrStop()
         verify(mockAudioRecorder).record()
     }
 
@@ -51,8 +46,8 @@ class RecorderViewModelAudioRecorderTest {
         runBlocking {
             whenever(mockAudioRecorder.stop()).thenReturn(File(String()))
 
-            viewModel.onRecordOrStop()
-            viewModel.onRecordOrStop()
+            handler.onRecordOrStop()
+            handler.onRecordOrStop()
             delay(100)
 
             verify(mockAudioRecorder).stop()
@@ -64,32 +59,32 @@ class RecorderViewModelAudioRecorderTest {
         runBlocking {
             whenever(mockAudioRecorder.stop()).thenReturn(File(String()))
 
-            viewModel.onRecordOrStop()
-            viewModel.onRecordOrStop()
+            handler.onRecordOrStop()
+            handler.onRecordOrStop()
             delay(100)
 
-            assertTrue(viewModel.recordedFile.value != null)
+            assertTrue(handler.recordedFile.value != null)
         }
     }
 
     @Test
     fun whenFirstTimeCalled_onPauseOrResume_ShouldPauseTheRecorder() {
-        viewModel.onPauseOrResume()
+        handler.onPauseOrResume()
         verify(mockAudioRecorder).pause()
     }
 
     @Test
     fun whenSecondTimeCalled_onPauseOrResume_ShouldResumeTheRecorder() {
-        viewModel.onPauseOrResume()
-        viewModel.onPauseOrResume()
+        handler.onPauseOrResume()
+        handler.onPauseOrResume()
         verify(mockAudioRecorder).resume()
     }
 
     @Test
     fun whenFirstOnPauseOrResume_thenOnRecordOrStop_ShouldStopTheRecorder() {
         runBlocking {
-            viewModel.onPauseOrResume()
-            viewModel.onRecordOrStop()
+            handler.onPauseOrResume()
+            handler.onRecordOrStop()
             delay(100)
 
             verify(mockAudioRecorder).stop()
@@ -99,7 +94,7 @@ class RecorderViewModelAudioRecorderTest {
     @Test
     fun whenRecorderIsActive_onDestroy_ShouldCallOnDestroyOfRecorder() {
         whenever(mockAudioRecorder.isActive).thenReturn(true)
-        viewModel.onDestroy()
+        handler.onDestroy()
 
         verify(mockAudioRecorder).onDestroy()
     }
@@ -107,7 +102,7 @@ class RecorderViewModelAudioRecorderTest {
     @Test
     fun whenRecorderIsNotActive_onDestroy_ShouldCallNothing() {
         whenever(mockAudioRecorder.isActive).thenReturn(false)
-        viewModel.onDestroy()
+        handler.onDestroy()
 
         verify(mockAudioRecorder, never()).onDestroy()
     }

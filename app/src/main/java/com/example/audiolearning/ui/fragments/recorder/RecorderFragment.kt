@@ -58,7 +58,7 @@ class RecorderFragment : Fragment() {
     }
 
     private fun observeIfNewAudioRecording() {
-        recorderViewModel.recordedFile.observe(this, Observer { newFile ->
+        recorderViewModel.recordingAndTimerHandler.recordedFile.observe(this, Observer { newFile ->
             if (newFile != null) {
                 NewRecordingDialog.display(
                     recorderViewModel.getNewRecordingDialogButtonsListener(newFile),
@@ -69,7 +69,9 @@ class RecorderFragment : Fragment() {
     }
 
     private fun switchButtonAppearancesOnAudioRecorderChange() {
-        recorderViewModel.audioRecorderState.observe(this, Observer { newState ->
+        recorderViewModel.recordingAndTimerHandler.audioRecorderState.observe(
+            this,
+            Observer { newState ->
             when (newState!!) {
                 AudioRecorderState.IDLING -> {
                     binding.apply {
