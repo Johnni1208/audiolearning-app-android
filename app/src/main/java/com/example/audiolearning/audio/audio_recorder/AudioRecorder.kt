@@ -3,6 +3,7 @@ package com.example.audiolearning.audio.audio_recorder
 import android.annotation.TargetApi
 import android.media.MediaRecorder
 import android.os.Build
+import com.example.audiolearning.util.AudioFileUtils
 import com.example.audiolearning.util.CustomMediaRecorderProvider
 import kotlinx.coroutines.delay
 import java.io.File
@@ -22,7 +23,8 @@ class AudioRecorder(private var recorder: MediaRecorder? = null) : IAudioRecorde
      */
     override var isActive: Boolean = false
 
-    private val tempAudioFile: File = File.createTempFile("tempAudioFile", ".m4a")
+    private val tempAudioFile: File =
+        File.createTempFile("tempAudioFile", AudioFileUtils.fileExtension)
 
     override fun record() {
         if (recorder == null) {

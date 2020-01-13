@@ -11,13 +11,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.audiolearning.R
 import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
-import com.example.audiolearning.audio.audio_store.AudioStore
+import com.example.audiolearning.data.db.AudioLearningDatabase
+import com.example.audiolearning.data.repositories.AudioRepository
 import com.example.audiolearning.databinding.FragmentRecorderBinding
-import com.example.audiolearning.models.Audio
-import com.example.audiolearning.models.Subject
 import com.example.audiolearning.ui.dialogs.new_recording.NewRecordingDialog
-import com.example.audiolearning.ui.dialogs.new_recording.NewRecordingDialogButtonsListener
-import java.io.File
 
 class RecorderFragment : Fragment() {
 
@@ -38,7 +35,11 @@ class RecorderFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
-        val viewModelFactory = RecorderViewModelFactory(audioStore = AudioStore(requireContext()))
+        val viewModelFactory = RecorderViewModelFactory(
+            audioRepository = AudioRepository(
+                AudioLearningDatabase.invoke(requireContext())
+            )
+        )
         recorderViewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(RecorderViewModel::class.java)
 
@@ -60,23 +61,12 @@ class RecorderFragment : Fragment() {
         recorderViewModel.recordedFile.observe(this, Observer { newFile ->
             if (newFile != null) {
                 NewRecordingDialog.display(
-                    getNewRecordingDialogButtonsListener(newFile),
+                    recorderViewModel.getNewRecordingDialogButtonsListener(newFile),
                     requireFragmentManager()
                 )
             }
         })
     }
-
-    private fun getNewRecordingDialogButtonsListener(newFile: File) =
-        object : NewRecordingDialogButtonsListener {
-            override fun onSaveButtonClicked(name: String, subject: Subject) {
-                recorderViewModel.onSaveAudio(Audio(newFile, name, subject))
-            }
-
-            override fun onDiscardButtonClicked() {
-                newFile.delete()
-            }
-        }
 
     private fun switchButtonAppearancesOnAudioRecorderChange() {
         recorderViewModel.audioRecorderState.observe(this, Observer { newState ->

@@ -1,6 +1,7 @@
 package com.example.audiolearning.ui.dialogs.new_recording
 
 import android.os.Bundle
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.example.audiolearning.R
-import com.example.audiolearning.models.Subject
+import com.example.audiolearning.data.db.entities.Subject
 import kotlinx.android.synthetic.main.dialog_new_recording.*
 
 class NewRecordingDialog(
@@ -67,7 +68,13 @@ class NewRecordingDialog(
 
         btn_save_recording.setOnClickListener {
             val name = et_audio_name.text.toString()
-            val subject = sp_audio_subject.selectedItem as Subject
+//            val subject = sp_audio_subject.selectedItem as Subject
+            val subject = Subject(
+                "test",
+                Environment.getExternalStorageDirectory()
+            ).apply {
+                id = 1
+            }
 
             if (name.isEmpty()) {
                 et_audio_name.error = getString(R.string.nrDialog_error_message_missing_info)

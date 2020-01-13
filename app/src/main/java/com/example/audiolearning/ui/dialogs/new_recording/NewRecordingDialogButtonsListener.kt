@@ -1,6 +1,6 @@
 package com.example.audiolearning.ui.dialogs.new_recording
 
-import com.example.audiolearning.models.Subject
+import com.example.audiolearning.data.db.entities.Subject
 
 interface NewRecordingDialogButtonsListener {
     fun onSaveButtonClicked(name: String, subject: Subject)

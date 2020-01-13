@@ -8,15 +8,17 @@ import java.io.*
  */
 class AudioFileUtils {
     companion object {
+        const val fileExtension = ".m4a"
+
         /**
-         * Copies the file to destinationDirectory and
+         * Moves the source file to destinationDirectory and deletes the old source file.
          *
          * @param sourceFile The file to be moved.
          * @param destinationDirectory The directory to be moved to.
          * @param destinationName The new name of the file. Can be left blank if name of the
          * sourceFile should be taken.
          */
-        fun moveFile(
+        fun moveFileToDirectory(
             sourceFile: File,
             destinationDirectory: String,
             destinationName: String? = null
@@ -30,7 +32,7 @@ class AudioFileUtils {
 
                 val inputStream = FileInputStream(sourceFile)
 
-                val fileName = (destinationName ?: sourceFile.name) + ".m4a"
+                val fileName = (destinationName ?: sourceFile.name) + fileExtension
                 val outputStream = FileOutputStream("$destinationDirectory/$fileName")
 
                 val buffer = ByteArray(1024)
