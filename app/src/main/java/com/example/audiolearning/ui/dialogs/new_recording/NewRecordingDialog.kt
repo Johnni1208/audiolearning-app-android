@@ -10,6 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.example.audiolearning.R
 import com.example.audiolearning.data.db.entities.Subject
+import com.example.audiolearning.util.AudioFileUtils
 import kotlinx.android.synthetic.main.dialog_new_recording.*
 
 class NewRecordingDialog(
@@ -76,10 +77,7 @@ class NewRecordingDialog(
                 id = 1
             }
 
-            if (name.isEmpty()) {
-                et_audio_name.error = getString(R.string.nrDialog_error_message_missing_info)
-                return@setOnClickListener
-            }
+            if (!isNameValid(name)) return@setOnClickListener
 
             if (subject.name.isEmpty()) {
                 (sp_audio_subject.selectedView as TextView).error =
@@ -88,6 +86,22 @@ class NewRecordingDialog(
             }
 
             newRecordingDialogButtonsListener.onSaveButtonClicked(name, subject)
+            dismiss()
         }
+    }
+
+    private fun isNameValid(name: String): Boolean {
+        if (name.isEmpty()) {
+            et_audio_name.error = getString(R.string.nrDialog_error_message_missing_info)
+            return false
+        }
+
+        if (!AudioFileUtils.isFileNameAllowed(name)) {
+            et_audio_name.error =
+                getString(R.string.nrDialog_error_message_contains_not_allowed_character)
+            return false
+        }
+
+        return true
     }
 }
