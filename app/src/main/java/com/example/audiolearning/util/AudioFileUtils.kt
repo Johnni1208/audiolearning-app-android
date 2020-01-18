@@ -19,7 +19,7 @@ class AudioFileUtils {
          * @param destinationName The new name of the file. Can be left blank if name of the
          * sourceFile should be taken.
          */
-        fun moveFileToDirectory(
+        fun cutFileAndPasteToDirectory(
             sourceFile: File,
             destinationDirectory: String,
             destinationName: String? = null
