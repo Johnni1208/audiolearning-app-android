@@ -1,21 +1,27 @@
 package com.example.audiolearning.ui.dialogs.new_recording
 
+import android.content.Context
 import android.os.Bundle
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.example.audiolearning.R
+import com.example.audiolearning.adapters.SubjectArrayAdapterFactory
 import com.example.audiolearning.data.db.entities.Subject
 import com.example.audiolearning.util.AudioFileUtils
 import kotlinx.android.synthetic.main.dialog_new_recording.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class NewRecordingDialog(
     private var newRecordingDialogButtonsListener: NewRecordingDialogButtonsListener
 ) : DialogFragment() {
+    private lateinit var dialogContext: Context
 
     companion object {
         fun display(
@@ -38,6 +44,11 @@ class NewRecordingDialog(
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        dialogContext = context
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.AppTheme_FullScreenDialog)
@@ -53,7 +64,48 @@ class NewRecordingDialog(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        GlobalScope.launch {
+            setupSpinner()
+        }
         setupOnClickListeners()
+    }
+
+    private suspend fun setupSpinner() {
+//        val subjects = SubjectRepository(AudioLearningDatabase.invoke(dialogContext)).getAllSubjects()
+
+        val subjects = listOf(
+            Subject("test1", "abc"),
+            Subject("testkehebjhkbjhkjhkjhgjhkgjhgjhkgjhkgjhkgjhkgjhk2", "abc")
+        )
+        val spinnerAdapter = SubjectArrayAdapterFactory.createWithAddHint(
+            dialogContext,
+            R.layout.subject_spinner_item,
+            subjects
+        )
+
+        spinnerAdapter.setDropDownViewResource(
+            android.R.layout.simple_spinner_dropdown_item
+        )
+        sp_audio_subject.adapter = spinnerAdapter
+        sp_audio_subject.setSelection(spinnerAdapter.count)
+
+        val onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (position == 0) {
+                    Toast.makeText(dialogContext, "Add subject...", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
+
+        sp_audio_subject.onItemSelectedListener = onItemSelectedListener
     }
 
     private fun setupOnClickListeners() {
@@ -69,13 +121,7 @@ class NewRecordingDialog(
 
         btn_save_recording.setOnClickListener {
             val name = et_audio_name.text.toString()
-//            val subject = sp_audio_subject.selectedItem as Subject
-            val subject = Subject(
-                "test",
-                Environment.getExternalStorageDirectory()
-            ).apply {
-                id = 1
-            }
+            val subject = sp_audio_subject.selectedItem as Subject
 
             if (!isNameValid(name)) return@setOnClickListener
 
