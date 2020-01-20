@@ -61,7 +61,7 @@ class RecorderFragment : Fragment() {
         recorderViewModel.recordingAndTimerHandler.recordedFile.observe(this, Observer { newFile ->
             if (newFile != null) {
                 NewRecordingDialog.display(
-                    recorderViewModel.getNewRecordingDialogButtonsListener(newFile),
+                    newFile,
                     requireFragmentManager()
                 )
             }

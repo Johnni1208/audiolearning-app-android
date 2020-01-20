@@ -5,29 +5,34 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModelProviders
 import com.example.audiolearning.R
 import com.example.audiolearning.adapters.SubjectArrayAdapterFactory
+import com.example.audiolearning.data.db.AudioLearningDatabase
 import com.example.audiolearning.data.db.entities.Subject
+import com.example.audiolearning.data.repositories.AudioRepository
+import com.example.audiolearning.data.repositories.SubjectRepository
 import com.example.audiolearning.extensions.isAllowedFileName
-import com.example.audiolearning.ui.dialogs.create_new_subject.CreateNewSubjectDialog
 import kotlinx.android.synthetic.main.dialog_new_recording.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.File
 
 class NewRecordingDialog(
-    private var newRecordingDialogButtonsListener: NewRecordingDialogButtonsListener
+    private var newRecording: File
 ) : DialogFragment() {
+
     private lateinit var dialogContext: Context
+    private lateinit var viewModel: NewRecordingDialogViewModel
 
     companion object {
         fun display(
-            newRecordingDialogButtonsListener: NewRecordingDialogButtonsListener,
+            newFile: File,
             fragmentManager: FragmentManager
-        ) = NewRecordingDialog(newRecordingDialogButtonsListener).show(
+        ) = NewRecordingDialog(newFile).show(
             fragmentManager,
             "NewRecordingDialog"
         )
@@ -59,6 +64,15 @@ class NewRecordingDialog(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val audioLearningDatabase = AudioLearningDatabase.invoke(dialogContext)
+
+        val viewModelFactory = NewRecordingDialogViewModelFactory(
+            SubjectRepository(audioLearningDatabase), AudioRepository(audioLearningDatabase)
+        )
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(NewRecordingDialogViewModel::class.java)
+
         return inflater.inflate(R.layout.dialog_new_recording, container, false)
     }
 
@@ -71,7 +85,7 @@ class NewRecordingDialog(
     }
 
     private suspend fun setupSpinner() {
-//        val subjects = SubjectRepository(AudioLearningDatabase.invoke(dialogContext)).getAllSubjects()
+//        val subjects = viewModel.getSubjects()
 
         // Testing purposes
         val subjects = listOf(
@@ -90,37 +104,19 @@ class NewRecordingDialog(
         sp_audio_subject.adapter = spinnerAdapter
         sp_audio_subject.setSelection(spinnerAdapter.count)
 
-        val onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                if (position == 0) {
-                    CreateNewSubjectDialog().show(
-                        requireFragmentManager(),
-                        "NewRecordingDialog"
-                    )
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-        }
-
-        sp_audio_subject.onItemSelectedListener = onItemSelectedListener
+        sp_audio_subject.onItemSelectedListener =
+            viewModel.getSubjectSpinnerOnItemSelectedListener(requireFragmentManager())
     }
 
     private fun setupOnClickListeners() {
         // Discard recording
         nr_toolbar.setNavigationOnClickListener {
-            newRecordingDialogButtonsListener.onDiscardButtonClicked()
+            newRecording.delete()
             dismiss()
         }
 
         btn_discard_recording.setOnClickListener {
-            newRecordingDialogButtonsListener.onDiscardButtonClicked()
+            newRecording.delete()
             dismiss()
         }
 
@@ -131,7 +127,7 @@ class NewRecordingDialog(
 
             if (!isInputValid(name, subject)) return@setOnClickListener
 
-            newRecordingDialogButtonsListener.onSaveButtonClicked(name, subject)
+            viewModel.saveAudio(newRecording, name, subject)
             dismiss()
         }
     }
