@@ -2,7 +2,6 @@ package com.example.audiolearning.util
 
 import android.util.Log
 import java.io.*
-import java.util.regex.Pattern
 
 /**
  * Utilities class for AudioFiles in this project.
@@ -57,21 +56,6 @@ class AudioFileUtils {
             } catch (e: Exception) {
                 Log.e("tag", e.message!!)
             }
-        }
-
-        /**
-         * Checks whether the given file name has characters which are not allowed.
-         *
-         * Reserved charaters: \|?*<":>/'
-         *
-         * @param name The file name to be checked
-         *
-         * @return True - If name does not contain any reserved characters
-         * False - If name does return any reserved characters
-         */
-        fun isFileNameAllowed(name: String): Boolean {
-            val reservedCharacters = Pattern.compile("[\\\\|?*<\":>/']")
-            return !reservedCharacters.matcher(name).find()
         }
     }
 }
