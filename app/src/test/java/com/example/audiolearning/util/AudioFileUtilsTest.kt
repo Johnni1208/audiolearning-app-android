@@ -7,21 +7,7 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import java.io.File
 
-class AudioFileUtilsUnitTest {
-
-    @Test
-    fun isFileNameAllowed_ShouldReturnTrue_ifNameIsAllowed() {
-        val allowedName = "test"
-
-        assertTrue(AudioFileUtils.isFileNameAllowed(allowedName))
-    }
-
-    @Test
-    fun isFileNameAllowed_ShouldReturnFalse_ifNameIsNotAllowed() {
-        val notAllowedName = "/../Test.mp3"
-
-        assertFalse(AudioFileUtils.isFileNameAllowed(notAllowedName))
-    }
+class AudioFileUtilsTest {
 
     @Test
     fun cutFileAndPasteToDirectory_ShouldDeleteOldFile() {
