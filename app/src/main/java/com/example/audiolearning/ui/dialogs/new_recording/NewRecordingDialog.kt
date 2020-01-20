@@ -7,13 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.example.audiolearning.R
 import com.example.audiolearning.adapters.SubjectArrayAdapterFactory
 import com.example.audiolearning.data.db.entities.Subject
-import com.example.audiolearning.util.AudioFileUtils
+import com.example.audiolearning.extensions.isAllowedFileName
+import com.example.audiolearning.ui.dialogs.create_new_subject.CreateNewSubjectDialog
 import kotlinx.android.synthetic.main.dialog_new_recording.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -29,7 +29,7 @@ class NewRecordingDialog(
             fragmentManager: FragmentManager
         ) = NewRecordingDialog(newRecordingDialogButtonsListener).show(
             fragmentManager,
-            "newrecordingdialog"
+            "NewRecordingDialog"
         )
     }
 
@@ -40,7 +40,7 @@ class NewRecordingDialog(
 
         dialog!!.window!!.let {
             it.setLayout(width, height)
-            it.setWindowAnimations(R.style.AppTheme_Slide)
+            it.setWindowAnimations(R.style.AppTheme_SlideAnimation)
         }
     }
 
@@ -73,6 +73,7 @@ class NewRecordingDialog(
     private suspend fun setupSpinner() {
 //        val subjects = SubjectRepository(AudioLearningDatabase.invoke(dialogContext)).getAllSubjects()
 
+        // Testing purposes
         val subjects = listOf(
             Subject("test1", "abc"),
             Subject("testkehebjhkbjhkjhkjhgjhkgjhgjhkgjhkgjhkgjhkgjhk2", "abc")
@@ -97,7 +98,10 @@ class NewRecordingDialog(
                 id: Long
             ) {
                 if (position == 0) {
-                    Toast.makeText(dialogContext, "Add subject...", Toast.LENGTH_SHORT).show()
+                    CreateNewSubjectDialog().show(
+                        requireFragmentManager(),
+                        "NewRecordingDialog"
+                    )
                 }
             }
 
@@ -109,6 +113,7 @@ class NewRecordingDialog(
     }
 
     private fun setupOnClickListeners() {
+        // Discard recording
         nr_toolbar.setNavigationOnClickListener {
             newRecordingDialogButtonsListener.onDiscardButtonClicked()
             dismiss()
@@ -119,32 +124,39 @@ class NewRecordingDialog(
             dismiss()
         }
 
+        // Save recording
         btn_save_recording.setOnClickListener {
             val name = et_audio_name.text.toString()
             val subject = sp_audio_subject.selectedItem as Subject
 
-            if (!isNameValid(name)) return@setOnClickListener
-
-            if (subject.name.isEmpty()) {
-                (sp_audio_subject.selectedView as TextView).error =
-                    getString(R.string.nrDialog_error_message_missing_info)
-                return@setOnClickListener
-            }
+            if (!isInputValid(name, subject)) return@setOnClickListener
 
             newRecordingDialogButtonsListener.onSaveButtonClicked(name, subject)
             dismiss()
         }
     }
 
-    private fun isNameValid(name: String): Boolean {
-        if (name.isEmpty()) {
-            et_audio_name.error = getString(R.string.nrDialog_error_message_missing_info)
+    private fun isInputValid(name: String, subject: Subject): Boolean {
+        if (!isNameValid(name)) return false
+
+        if (!subject.isRealSubject) {
+            (sp_audio_subject.selectedView as TextView).error =
+                getString(R.string.dialog_error_message_missing_info)
             return false
         }
 
-        if (!AudioFileUtils.isFileNameAllowed(name)) {
+        return true
+    }
+
+    private fun isNameValid(name: String): Boolean {
+        if (name.isEmpty()) {
+            et_audio_name.error = getString(R.string.dialog_error_message_missing_info)
+            return false
+        }
+
+        if (!name.isAllowedFileName()) {
             et_audio_name.error =
-                getString(R.string.nrDialog_error_message_contains_not_allowed_character)
+                getString(R.string.dialog_error_message_contains_not_allowed_character)
             return false
         }
 
