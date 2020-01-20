@@ -5,13 +5,15 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.audiolearning.data.db.entities.Audio
+import com.example.audiolearning.data.db.entities.Subject
 
 @Database(
-    entities = [Audio::class],
+    entities = [Audio::class, Subject::class],
     version = 1
 )
 abstract class AudioLearningDatabase : RoomDatabase() {
     abstract fun getAudioDao(): AudioDao
+    abstract fun getSubjectDao(): SubjectDao
 
     companion object {
         @Volatile

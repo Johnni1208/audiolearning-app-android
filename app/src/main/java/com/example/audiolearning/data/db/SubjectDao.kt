@@ -1,0 +1,16 @@
+package com.example.audiolearning.data.db
+
+import androidx.room.*
+import com.example.audiolearning.data.db.entities.Subject
+
+@Dao
+interface SubjectDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(subject: Subject)
+
+    @Query("SELECT * FROM subjects")
+    suspend fun getAllSubjects(): List<Subject>
+
+    @Delete
+    suspend fun delete(subject: Subject)
+}

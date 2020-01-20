@@ -16,5 +16,6 @@ data class Audio(
     val fileUriString: String
 ) {
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "audio_id")
     var id: Long? = null
 }
