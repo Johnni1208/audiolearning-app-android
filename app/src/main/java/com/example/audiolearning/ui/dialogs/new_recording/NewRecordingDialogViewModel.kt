@@ -52,7 +52,7 @@ class NewRecordingDialogViewModel(
         )
 
         val audioFile =
-            File(subjectDirectory + "/" + name + AudioFileUtils.fileExtension)
+            File(subjectDirectory + "/" + name + Audio.fileExtension)
         val audioFileUri = Uri.fromFile(audioFile)
 
         GlobalScope.launch {

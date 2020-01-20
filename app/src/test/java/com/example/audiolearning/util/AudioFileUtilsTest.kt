@@ -1,5 +1,6 @@
 package com.example.audiolearning.util
 
+import com.example.audiolearning.data.db.entities.Audio
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -31,7 +32,7 @@ class AudioFileUtilsTest {
         AudioFileUtils.cutFileAndPasteToDirectory(fileToBeDeleted, tempDestinationFolder.path)
 
         val expectedFile =
-            File(tempDestinationFolder.path + "/testFile" + AudioFileUtils.fileExtension)
+            File(tempDestinationFolder.path + "/testFile" + Audio.fileExtension)
 
         assertTrue(expectedFile.exists())
     }

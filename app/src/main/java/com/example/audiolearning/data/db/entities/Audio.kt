@@ -2,6 +2,7 @@ package com.example.audiolearning.data.db.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "audios")
@@ -18,4 +19,9 @@ data class Audio(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "audio_id")
     var id: Long? = null
+
+    companion object {
+        @Ignore
+        val fileExtension = ".m4a"
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.audiolearning.util
 
 import android.util.Log
+import com.example.audiolearning.data.db.entities.Audio
 import java.io.*
 
 /**
@@ -8,8 +9,6 @@ import java.io.*
  */
 class AudioFileUtils {
     companion object {
-        const val fileExtension = ".m4a"
-
         /**
          * Moves the source file to destinationDirectory and deletes the old source file.
          *
@@ -32,7 +31,7 @@ class AudioFileUtils {
 
                 val inputStream = FileInputStream(sourceFile)
 
-                val fileName = (destinationName ?: sourceFile.name) + fileExtension
+                val fileName = (destinationName ?: sourceFile.name) + Audio.fileExtension
                 val outputStream = FileOutputStream("$destinationDirectory/$fileName")
 
                 val buffer = ByteArray(1024)
