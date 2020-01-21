@@ -13,4 +13,7 @@ interface SubjectDao {
 
     @Delete
     suspend fun delete(subject: Subject)
+
+    @Query("SELECT * FROM subjects where subject_name = :name")
+    suspend fun getSubjectByName(name: String): Subject?
 }

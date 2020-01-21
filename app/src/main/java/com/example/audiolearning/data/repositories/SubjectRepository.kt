@@ -9,4 +9,6 @@ class SubjectRepository(private val db: AudioLearningDatabase) {
     suspend fun delete(subject: Subject) = db.getSubjectDao().delete(subject)
 
     suspend fun getAllSubjects() = db.getSubjectDao().getAllSubjects()
+
+    suspend fun getSubjectByName(name: String) = db.getSubjectDao().getSubjectByName(name)
 }

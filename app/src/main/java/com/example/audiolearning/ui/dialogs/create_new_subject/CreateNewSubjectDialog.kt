@@ -5,11 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.audiolearning.R
-import com.example.audiolearning.extensions.isAllowedFileName
+import com.example.audiolearning.data.db.AudioLearningDatabase
+import com.example.audiolearning.data.repositories.SubjectRepository
 import kotlinx.android.synthetic.main.dialog_create_new_subject.*
 
 class CreateNewSubjectDialog : DialogFragment() {
+    private lateinit var viewModel: CreateNewSubjectDialogViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.AppTheme_DialogWithTitle)
@@ -20,6 +25,15 @@ class CreateNewSubjectDialog : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val viewModelFactory = CreateNewSubjectDialogViewModelFactory(
+            SubjectRepository(
+                AudioLearningDatabase.invoke(requireContext())
+            )
+        )
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(CreateNewSubjectDialogViewModel::class.java)
+
         dialog!!.setTitle(R.string.cnsDialog_title)
         return inflater.inflate(R.layout.dialog_create_new_subject, container, false)
     }
@@ -30,23 +44,16 @@ class CreateNewSubjectDialog : DialogFragment() {
         btn_cancel_subject.setOnClickListener { dismiss() }
 
         btn_save_subject.setOnClickListener {
-            if (createNewSubject()) dismiss()
+            val subjectName = et_subject_name.text.toString()
+            if (viewModel.createNewSubject(requireContext().filesDir, subjectName)) dismiss()
         }
+
+        observeError()
     }
 
-    private fun createNewSubject(): Boolean {
-        val subjectName = et_subject_name.text.toString()
-        if (subjectName.isEmpty()) {
-            et_subject_name.error = getString(R.string.dialog_error_message_missing_info)
-            return false
+    private fun observeError() = viewModel.error.observe(this, Observer {
+        if (it != null) {
+            et_subject_name.error = getString(it)
         }
-
-        if (!subjectName.isAllowedFileName()) {
-            et_subject_name.error =
-                getString(R.string.dialog_error_message_contains_not_allowed_character)
-            return false
-        }
-
-        return true
-    }
+    })
 }

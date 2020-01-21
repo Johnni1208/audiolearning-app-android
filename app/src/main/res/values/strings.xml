@@ -28,4 +28,5 @@
     <string name="cnsDialog_subject_name_hint">Name of new subject</string>
     <string name="cnsDialog_save_button_text">Save</string>
     <string name="cnsDialog_cancel_button_text">Cancel</string>
+    <string name="cnsDialog_error_subject_already_exists">Subject already exists</string>
 </resources>
