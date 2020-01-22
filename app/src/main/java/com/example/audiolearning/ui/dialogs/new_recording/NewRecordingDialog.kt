@@ -8,17 +8,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.audiolearning.R
-import com.example.audiolearning.adapters.SubjectArrayAdapterFactory
+import com.example.audiolearning.adapters.SubjectArrayAdapter
 import com.example.audiolearning.data.db.AudioLearningDatabase
 import com.example.audiolearning.data.db.entities.Subject
 import com.example.audiolearning.data.repositories.AudioRepository
 import com.example.audiolearning.data.repositories.SubjectRepository
 import com.example.audiolearning.extensions.isAllowedFileName
 import kotlinx.android.synthetic.main.dialog_new_recording.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.io.File
 
 class NewRecordingDialog(
@@ -78,34 +77,35 @@ class NewRecordingDialog(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        GlobalScope.launch {
-            setupSpinner()
-        }
+        setupSpinner()
         setupOnClickListeners()
     }
 
-    private suspend fun setupSpinner() {
-//        val subjects = viewModel.getSubjects()
-
-        // Testing purposes
-        val subjects = listOf(
-            Subject("test1", "abc"),
-            Subject("testkehebjhkbjhkjhkjhgjhkgjhgjhkgjhkgjhkgjhkgjhk2", "abc")
-        )
-        val spinnerAdapter = SubjectArrayAdapterFactory.createWithAddHint(
-            dialogContext,
-            R.layout.subject_spinner_item,
-            subjects
-        )
-
-        spinnerAdapter.setDropDownViewResource(
-            android.R.layout.simple_spinner_dropdown_item
-        )
-        sp_audio_subject.adapter = spinnerAdapter
-        sp_audio_subject.setSelection(spinnerAdapter.count)
+    private fun setupSpinner() {
 
         sp_audio_subject.onItemSelectedListener =
-            viewModel.getSubjectSpinnerOnItemSelectedListener(requireFragmentManager())
+            viewModel.getAddHintItemSelectedListener(requireFragmentManager())
+
+        var timesLoadedNewSubjects = 0
+
+        viewModel.getSubjects().observe(this, Observer { subjects ->
+            val spinnerAdapter = SubjectArrayAdapter.createWithAddHint(
+                dialogContext,
+                R.layout.subject_spinner_item,
+                subjects,
+                true
+            )
+
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            sp_audio_subject.adapter = spinnerAdapter
+
+            if (timesLoadedNewSubjects == 0) {
+                sp_audio_subject.setSelection(spinnerAdapter.count)
+            } else sp_audio_subject.setSelection(spinnerAdapter.count - 1)
+
+            timesLoadedNewSubjects++
+        })
+
     }
 
     private fun setupOnClickListeners() {

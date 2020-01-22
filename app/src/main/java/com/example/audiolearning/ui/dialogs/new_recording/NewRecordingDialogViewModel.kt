@@ -20,9 +20,9 @@ class NewRecordingDialogViewModel(
     private val audioRepository: AudioRepository
 ) : ViewModel() {
 
-    suspend fun getSubjects() = subjectRepository.getAllSubjects()
+    fun getSubjects() = subjectRepository.getAllSubjects()
 
-    fun getSubjectSpinnerOnItemSelectedListener(fragmentManager: FragmentManager) =
+    fun getAddHintItemSelectedListener(fragmentManager: FragmentManager) =
         object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,

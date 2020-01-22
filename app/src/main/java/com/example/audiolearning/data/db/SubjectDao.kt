@@ -1,5 +1,6 @@
 package com.example.audiolearning.data.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.audiolearning.data.db.entities.Subject
 
@@ -9,7 +10,7 @@ interface SubjectDao {
     suspend fun upsert(subject: Subject)
 
     @Query("SELECT * FROM subjects")
-    suspend fun getAllSubjects(): List<Subject>
+    fun getAllSubjects(): LiveData<List<Subject>>
 
     @Delete
     suspend fun delete(subject: Subject)
