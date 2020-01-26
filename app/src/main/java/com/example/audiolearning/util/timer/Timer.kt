@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData
 import kotlinx.coroutines.*
 
 /**
- * @see ITimer
+ * This class provides a Timer which counts up.
+ * Only usable with Android LiveData.
  */
 class Timer : ITimer {
 

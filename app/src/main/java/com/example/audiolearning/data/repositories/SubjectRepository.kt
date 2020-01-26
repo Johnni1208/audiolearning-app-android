@@ -1,10 +1,21 @@
 package com.example.audiolearning.data.repositories
 
+import android.net.Uri
 import com.example.audiolearning.data.db.AudioLearningDatabase
 import com.example.audiolearning.data.db.entities.Subject
+import com.example.audiolearning.util.SubjectFileUtils
+import java.io.File
 
-class SubjectRepository(private val db: AudioLearningDatabase) {
-    suspend fun upsert(subject: Subject) = db.getSubjectDao().upsert(subject)
+class SubjectRepository(
+    private val db: AudioLearningDatabase,
+    private val filesDir: File
+) {
+    suspend fun insert(subjectName: String) {
+        val subjectDir = SubjectFileUtils.createNewSubjectDirectory(filesDir, subjectName)
+        val subject = Subject(subjectName, Uri.fromFile(subjectDir).toString())
+
+        db.getSubjectDao().insert(subject)
+    }
 
     suspend fun delete(subject: Subject) = db.getSubjectDao().delete(subject)
 

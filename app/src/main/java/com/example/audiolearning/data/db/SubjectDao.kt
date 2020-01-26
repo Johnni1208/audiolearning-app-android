@@ -1,13 +1,16 @@
 package com.example.audiolearning.data.db
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
 import com.example.audiolearning.data.db.entities.Subject
 
 @Dao
 interface SubjectDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(subject: Subject)
+    @Insert
+    suspend fun insert(subject: Subject)
 
     @Query("SELECT * FROM subjects")
     fun getAllSubjects(): LiveData<List<Subject>>

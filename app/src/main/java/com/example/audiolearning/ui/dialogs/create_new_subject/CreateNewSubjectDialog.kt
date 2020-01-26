@@ -30,7 +30,8 @@ class CreateNewSubjectDialog : DialogFragment() {
     ): View? {
         val viewModelFactory = CreateNewSubjectDialogViewModelFactory(
             SubjectRepository(
-                AudioLearningDatabase.invoke(requireContext())
+                AudioLearningDatabase.invoke(requireContext()),
+                requireContext().filesDir
             )
         )
 
@@ -48,7 +49,7 @@ class CreateNewSubjectDialog : DialogFragment() {
 
         btn_save_subject.setOnClickListener {
             val subjectName = et_subject_name.text.toString()
-            if (viewModel.createNewSubject(requireContext().filesDir, subjectName)) dismiss()
+            if (viewModel.createNewSubject(subjectName)) dismiss()
         }
 
         observeError()

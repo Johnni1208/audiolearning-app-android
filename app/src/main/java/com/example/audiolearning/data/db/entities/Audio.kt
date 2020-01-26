@@ -14,7 +14,7 @@ data class Audio(
     val subjectId: Long,
 
     @ColumnInfo(name = "audio_file_uri")
-    val fileUriString: String
+    val audioFileUriString: String
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "audio_id")

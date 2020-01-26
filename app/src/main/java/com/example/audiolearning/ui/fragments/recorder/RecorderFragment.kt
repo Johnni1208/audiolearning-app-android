@@ -10,11 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.audiolearning.R
+import com.example.audiolearning.audio.audio_recorder.AudioRecorder
 import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
-import com.example.audiolearning.data.db.AudioLearningDatabase
-import com.example.audiolearning.data.repositories.AudioRepository
 import com.example.audiolearning.databinding.FragmentRecorderBinding
 import com.example.audiolearning.ui.dialogs.new_recording.NewRecordingDialog
+import com.example.audiolearning.util.timer.Timer
 
 class RecorderFragment : Fragment() {
 
@@ -36,9 +36,8 @@ class RecorderFragment : Fragment() {
         binding.lifecycleOwner = this
 
         val viewModelFactory = RecorderViewModelFactory(
-            audioRepository = AudioRepository(
-                AudioLearningDatabase.invoke(requireContext())
-            )
+            AudioRecorder(),
+            Timer()
         )
         recorderViewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(RecorderViewModel::class.java)

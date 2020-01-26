@@ -5,7 +5,7 @@ import androidx.annotation.RequiresApi
 import java.io.File
 
 /**
- * This class provides a custom made MediaRecorder, specialised for audio recordings.
+ * This class must provide a custom made MediaRecorder, specialised for audio recordings.
  */
 interface IAudioRecorder {
 

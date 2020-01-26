@@ -19,6 +19,8 @@ import com.example.audiolearning.data.repositories.AudioRepository
 import com.example.audiolearning.data.repositories.SubjectRepository
 import com.example.audiolearning.extensions.isAllowedFileName
 import kotlinx.android.synthetic.main.dialog_new_recording.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 
 class NewRecordingDialog(
@@ -65,9 +67,11 @@ class NewRecordingDialog(
         savedInstanceState: Bundle?
     ): View? {
         val audioLearningDatabase = AudioLearningDatabase.invoke(dialogContext)
+        val filesDir = dialogContext.filesDir
 
         val viewModelFactory = NewRecordingDialogViewModelFactory(
-            SubjectRepository(audioLearningDatabase), AudioRepository(audioLearningDatabase)
+            SubjectRepository(audioLearningDatabase, filesDir),
+            AudioRepository(audioLearningDatabase)
         )
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
@@ -133,8 +137,10 @@ class NewRecordingDialog(
 
             if (!isInputValid(name, subject)) return@setOnClickListener
 
-            viewModel.saveAudio(newRecording, name, subject)
-            dismiss()
+            GlobalScope.launch {
+                viewModel.saveAudio(newRecording, name, subject)
+                dismiss()
+            }
         }
     }
 
