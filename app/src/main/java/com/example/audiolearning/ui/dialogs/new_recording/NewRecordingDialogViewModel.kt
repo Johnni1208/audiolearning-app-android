@@ -22,6 +22,10 @@ class NewRecordingDialogViewModel(
 
     fun getSubjects() = subjectRepository.getAllSubjects()
 
+    /**
+     * This method returns an itemSelectListener, which opens an CreateNewSubjectDialog
+     * when the "Add new subject..." item is selected. (Has to be in first place of the spinner!)
+     */
     fun getAddHintItemSelectedListener(fragmentManager: FragmentManager) =
         object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(

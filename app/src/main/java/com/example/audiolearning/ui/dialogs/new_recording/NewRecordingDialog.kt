@@ -1,6 +1,7 @@
 package com.example.audiolearning.ui.dialogs.new_recording
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -86,8 +87,12 @@ class NewRecordingDialog(
         sp_audio_subject.onItemSelectedListener =
             viewModel.getAddHintItemSelectedListener(requireFragmentManager())
 
-        var timesLoadedNewSubjects = 0
+        var hasNewSubject = false
 
+        /* Observes if there are new subject items.
+         * If so, it creates a new array adapter with the items
+         * and then loads it into the spinner.
+         */
         viewModel.getSubjects().observe(this, Observer { subjects ->
             val spinnerAdapter = SubjectArrayAdapter.createWithAddHint(
                 dialogContext,
@@ -95,15 +100,16 @@ class NewRecordingDialog(
                 subjects,
                 true
             )
-
             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
             sp_audio_subject.adapter = spinnerAdapter
 
-            if (timesLoadedNewSubjects == 0) {
-                sp_audio_subject.setSelection(spinnerAdapter.count)
-            } else sp_audio_subject.setSelection(spinnerAdapter.count - 1)
+            if (!hasNewSubject) {
+                sp_audio_subject.setSelection(spinnerAdapter.count) // "Select subject"
+            } else sp_audio_subject.setSelection(spinnerAdapter.count - 1) // New subject name
 
-            timesLoadedNewSubjects++
+
+            hasNewSubject = true
         })
 
     }
@@ -157,5 +163,15 @@ class NewRecordingDialog(
         }
 
         return true
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        newRecording.delete()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        newRecording.delete()
     }
 }

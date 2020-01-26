@@ -12,6 +12,9 @@ import com.example.audiolearning.data.db.AudioLearningDatabase
 import com.example.audiolearning.data.repositories.SubjectRepository
 import kotlinx.android.synthetic.main.dialog_create_new_subject.*
 
+/**
+ * This shows a dialog, where the user can create a new subject.
+ */
 class CreateNewSubjectDialog : DialogFragment() {
     private lateinit var viewModel: CreateNewSubjectDialogViewModel
 
