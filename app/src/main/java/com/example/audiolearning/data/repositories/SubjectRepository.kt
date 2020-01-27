@@ -12,9 +12,8 @@ class SubjectRepository(
 ) {
     suspend fun insert(subjectName: String) {
         val subjectDir = SubjectFileUtils.createNewSubjectDirectory(filesDir, subjectName)
-        val subject = Subject(subjectName, Uri.fromFile(subjectDir).toString())
 
-        db.getSubjectDao().insert(subject)
+        db.getSubjectDao().insert(Subject(subjectName, Uri.fromFile(subjectDir).toString()))
     }
 
     suspend fun delete(subject: Subject) = db.getSubjectDao().delete(subject)

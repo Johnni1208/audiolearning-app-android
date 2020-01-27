@@ -18,34 +18,35 @@ class CreateNewSubjectDialogViewModel(
     val error: LiveData<Int>
         get() = _error
 
-    fun createNewSubject(subjectName: String): Boolean {
+    suspend fun createNewSubject(subjectName: String): Boolean {
+        if (isSubjectNameValid(subjectName)) {
+            subjectRepository.insert(subjectName)
+            return true
+        }
+        return false
+    }
+
+    private fun isSubjectNameValid(subjectName: String): Boolean {
         if (subjectName.isEmpty()) {
-            _error.value = R.string.dialog_error_message_missing_info
+            _error.postValue(R.string.dialog_error_message_missing_info)
             return false
         }
 
         if (!subjectName.isAllowedFileName()) {
-            _error.value = R.string.dialog_error_message_contains_not_allowed_character
+            _error.postValue(R.string.dialog_error_message_contains_not_allowed_character)
             return false
         }
 
-        var isSubjectSaved = false
+        var subjectAlreadyExists = false
+
         runBlocking {
-            isSubjectSaved = trySavingSubject(subjectName)
+            subjectAlreadyExists = subjectRepository.getSubjectByName(subjectName) != null
         }
-
-        return isSubjectSaved
-    }
-
-    private suspend fun trySavingSubject(subjectName: String): Boolean {
-        val subjectAlreadyExists = subjectRepository.getSubjectByName(subjectName) != null
 
         if (subjectAlreadyExists) {
-            _error.value = R.string.cnsDialog_error_subject_already_exists
+            _error.postValue(R.string.cnsDialog_error_subject_already_exists)
             return false
         }
-
-        subjectRepository.insert(subjectName)
 
         return true
     }

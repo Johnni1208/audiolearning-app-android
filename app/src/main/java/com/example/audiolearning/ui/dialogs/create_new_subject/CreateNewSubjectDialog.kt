@@ -11,6 +11,8 @@ import com.example.audiolearning.R
 import com.example.audiolearning.data.db.AudioLearningDatabase
 import com.example.audiolearning.data.repositories.SubjectRepository
 import kotlinx.android.synthetic.main.dialog_create_new_subject.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * This shows a dialog, where the user can create a new subject.
@@ -49,7 +51,10 @@ class CreateNewSubjectDialog : DialogFragment() {
 
         btn_save_subject.setOnClickListener {
             val subjectName = et_subject_name.text.toString()
-            if (viewModel.createNewSubject(subjectName)) dismiss()
+
+            GlobalScope.launch {
+                if (viewModel.createNewSubject(subjectName)) dismiss()
+            }
         }
 
         observeError()
