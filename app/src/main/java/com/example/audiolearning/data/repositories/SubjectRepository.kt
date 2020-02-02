@@ -3,7 +3,7 @@ package com.example.audiolearning.data.repositories
 import android.net.Uri
 import com.example.audiolearning.data.db.AudioLearningDatabase
 import com.example.audiolearning.data.db.entities.Subject
-import com.example.audiolearning.util.SubjectFileUtils
+import com.example.audiolearning.util.file.SubjectFileUtils
 import java.io.File
 
 class SubjectRepository(
@@ -16,7 +16,10 @@ class SubjectRepository(
         db.getSubjectDao().insert(Subject(subjectName, Uri.fromFile(subjectDir).toString()))
     }
 
-    suspend fun delete(subject: Subject) = db.getSubjectDao().delete(subject)
+    suspend fun delete(subject: Subject) {
+        SubjectFileUtils.deleteSubjectDirectory(subject)
+        db.getSubjectDao().delete(subject)
+    }
 
     fun getAllSubjects() = db.getSubjectDao().getAllSubjects()
 

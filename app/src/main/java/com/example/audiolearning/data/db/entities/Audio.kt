@@ -1,11 +1,16 @@
 package com.example.audiolearning.data.db.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
+import androidx.room.*
 
-@Entity(tableName = "audios")
+@Entity(
+    tableName = "audios",
+    foreignKeys = [ForeignKey(
+        entity = Subject::class,
+        parentColumns = ["subject_id"],
+        childColumns = ["audio_subject_id"],
+        onDelete = ForeignKey.CASCADE
+    )]
+)
 data class Audio(
     @ColumnInfo(name = "audio_name")
     val name: String,
