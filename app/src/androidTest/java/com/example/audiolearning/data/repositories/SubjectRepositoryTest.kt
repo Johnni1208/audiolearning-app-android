@@ -118,4 +118,29 @@ class SubjectRepositoryTest {
 
         assertTrue(audioDao.getAllAudios().isEmpty())
     }
+
+    @Test
+    fun getAllSubjects_ShouldReturnAllSubjects() = runBlocking {
+        val testSubjects = listOf(
+            Subject("Subject 1", ""),
+            Subject("Subject 2", ""),
+            Subject("Subject 3", ""),
+            Subject("Subject 4", "")
+        )
+
+
+        testSubjects.forEach {
+            subjectDao.insert(it)
+        }
+
+        assertEquals(testSubjects, subjectRepository.getAllSubjects().getTestValue())
+    }
+
+    @Test
+    fun getSubjectByName_ShouldReturnSpecifiedSubject() = runBlocking {
+        val testSubject = Subject(testSubjectName, "")
+        subjectDao.insert(testSubject)
+
+        assertEquals(testSubject, subjectRepository.getSubjectByName(testSubjectName))
+    }
 }

@@ -26,8 +26,4 @@ class AudioRepository(
 
         db.getAudioDao().insert(Audio(name, subject.id!!, audioFileUri.toString()))
     }
-
-    suspend fun getAllAudios() = db.getAudioDao().getAllAudios()
-
-    suspend fun delete(audio: Audio) = db.getAudioDao().delete(audio)
 }

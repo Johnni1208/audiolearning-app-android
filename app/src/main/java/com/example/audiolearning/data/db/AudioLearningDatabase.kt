@@ -9,7 +9,7 @@ import com.example.audiolearning.data.db.entities.Subject
 
 @Database(
     entities = [Audio::class, Subject::class],
-    version = 1
+    version = 2
 )
 abstract class AudioLearningDatabase : RoomDatabase() {
     abstract fun getAudioDao(): AudioDao
@@ -32,6 +32,8 @@ abstract class AudioLearningDatabase : RoomDatabase() {
             Room.databaseBuilder(
                 context.applicationContext,
                 AudioLearningDatabase::class.java, "AudioLearningDB.db"
-            ).build()
+            )
+                .fallbackToDestructiveMigration()
+                .build()
     }
 }
