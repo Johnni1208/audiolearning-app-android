@@ -49,6 +49,34 @@ class SubjectArrayAdapter(
                 hasSelectHint
             )
         }
+
+        fun create(
+            context: Context,
+            textViewResourceId: Int,
+            subjects: List<Subject>,
+            hasSelectHint: Boolean
+        ): SubjectArrayAdapter {
+            var mutableSubjectList = subjects
+
+            if (hasSelectHint) {
+                val subjectHintItem =
+                    Subject(
+                        context.getString(R.string.subject_spinner_select_subject),
+                        ""
+                    ).apply {
+                        isRealSubject = false
+                    }
+
+                mutableSubjectList = mutableSubjectList + listOf(subjectHintItem)
+            }
+
+            return SubjectArrayAdapter(
+                context,
+                textViewResourceId,
+                mutableSubjectList,
+                hasSelectHint
+            )
+        }
     }
 
     override fun getCount(): Int {

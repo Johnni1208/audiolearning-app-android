@@ -1,7 +1,8 @@
-package com.example.audiolearning.mainActivity.navigation
+package com.example.audiolearning.ui.mainActivity.navigation
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.swipeLeft
+import androidx.test.espresso.action.ViewActions.swipeRight
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -15,34 +16,22 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
-class NavigationSwipeTest {
+class NavigationBarTouchTest {
     @get:Rule
     var activityRule: ActivityTestRule<MainActivity>
             = ActivityTestRule(MainActivity::class.java)
 
     @Test
-    fun testClickNothing_showsRecorder(){
+    fun testNoSwipe_showsRecorder(){
         onView(withId(R.id.fragment_recorder))
             .check(matches(isDisplayed()))
         onView(withId(R.id.navigation_recorder)).check(matches(isSelected()))
     }
 
     @Test
-    fun testClickRecorderFromAboutUs_showsRecorder(){
-        onView(withId(R.id.navigation_about_us))
-            .perform(click())
-        onView(withId(R.id.navigation_recorder))
-            .perform(click())
-
-        onView(withId(R.id.fragment_recorder))
-            .check(matches(isDisplayed()))
-        onView(withId(R.id.navigation_recorder)).check(matches(isSelected()))
-    }
-
-    @Test
-    fun testClickAboutUs_showsAboutUs(){
-        onView(withId(R.id.navigation_about_us))
-            .perform(click())
+    fun testSwipeRight_showsAboutUs(){
+        onView(withId(R.id.pager))
+            .perform(swipeRight())
 
         onView(withId(R.id.fragment_about_us))
             .check(matches(isDisplayed()))
@@ -50,11 +39,11 @@ class NavigationSwipeTest {
     }
 
     @Test
-    fun testClickSubjects_showsSubjects(){
-        onView(withId(R.id.navigation_subjects))
-            .perform(click())
+    fun testSwipeLeft_showsSubjects(){
+        onView(withId(R.id.pager))
+            .perform(swipeLeft())
 
-        onView(withId(R.id.navigation_subjects))
+        onView(withId(R.id.fragment_subjects))
             .check(matches(isDisplayed()))
         onView(withId(R.id.navigation_subjects)).check(matches(isSelected()))
     }

@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.example.audiolearning.R
 import com.example.audiolearning.adapters.SubjectArrayAdapter
 import com.example.audiolearning.data.db.AudioLearningDatabase
@@ -74,7 +74,7 @@ class NewRecordingDialog(
             AudioRepository(audioLearningDatabase)
         )
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
             .get(NewRecordingDialogViewModel::class.java)
 
         return inflater.inflate(R.layout.dialog_new_recording, container, false)
@@ -88,7 +88,7 @@ class NewRecordingDialog(
 
     private fun setupSpinner() {
 
-        sp_audio_subject.onItemSelectedListener =
+        sp_select_subject.onItemSelectedListener =
             viewModel.getAddHintItemSelectedListener(requireFragmentManager())
 
         var hasNewSubject = false
@@ -97,7 +97,7 @@ class NewRecordingDialog(
          * If so, it creates a new array adapter with the items
          * and then loads it into the spinner.
          */
-        viewModel.getSubjects().observe(this, Observer { subjects ->
+        viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects ->
             val spinnerAdapter = SubjectArrayAdapter.createWithAddHint(
                 dialogContext,
                 R.layout.subject_spinner_item,
@@ -106,11 +106,11 @@ class NewRecordingDialog(
             )
             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-            sp_audio_subject.adapter = spinnerAdapter
+            sp_select_subject.adapter = spinnerAdapter
 
             if (!hasNewSubject) {
-                sp_audio_subject.setSelection(spinnerAdapter.count) // "Select subject"
-            } else sp_audio_subject.setSelection(spinnerAdapter.count - 1) // New subject name
+                sp_select_subject.setSelection(spinnerAdapter.count) // "Select subject"
+            } else sp_select_subject.setSelection(spinnerAdapter.count - 1) // New subject name
 
 
             hasNewSubject = true
@@ -133,7 +133,7 @@ class NewRecordingDialog(
         // Save recording
         btn_save_recording.setOnClickListener {
             val name = et_audio_name.text.toString()
-            val subject = sp_audio_subject.selectedItem as Subject
+            val subject = sp_select_subject.selectedItem as Subject
 
             if (!isInputValid(name, subject)) return@setOnClickListener
 
@@ -148,7 +148,7 @@ class NewRecordingDialog(
         if (!isNameValid(name)) return false
 
         if (!subject.isRealSubject) {
-            (sp_audio_subject.selectedView as TextView).error =
+            (sp_select_subject.selectedView as TextView).error =
                 getString(R.string.dialog_error_message_missing_info)
             return false
         }

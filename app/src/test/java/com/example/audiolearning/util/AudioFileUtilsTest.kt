@@ -10,6 +10,8 @@ import org.junit.rules.TemporaryFolder
 import java.io.File
 
 class AudioFileUtilsTest {
+    @get:Rule
+    val tempFolderFile = TemporaryFolder()
 
     @Test
     fun cutFileAndPasteToDirectory_ShouldDeleteOldFile() {
@@ -18,9 +20,6 @@ class AudioFileUtilsTest {
         AudioFileUtils.cutFileAndPasteToDirectory(fileToBeDeleted, "")
         assertFalse(fileToBeDeleted.exists())
     }
-
-    @get:Rule
-    val tempFolderFile = TemporaryFolder()
 
     @Test
     fun cutFileAndPasteToDirectory_ShouldCreateNewFileAtDestination() {

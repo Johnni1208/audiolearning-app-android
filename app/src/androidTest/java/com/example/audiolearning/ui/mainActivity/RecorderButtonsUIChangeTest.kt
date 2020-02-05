@@ -1,4 +1,4 @@
-package com.example.audiolearning.mainActivity
+package com.example.audiolearning.ui.mainActivity
 
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.test.espresso.Espresso.onView

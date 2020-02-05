@@ -1,6 +1,5 @@
 package com.example.audiolearning.util
 
-import android.os.Build
 import com.example.audiolearning.data.db.entities.Subject
 import com.example.audiolearning.util.file.SubjectFileUtils
 import org.junit.Assert.assertEquals
@@ -11,11 +10,9 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 import java.io.File
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [Build.VERSION_CODES.P])
 class SubjectFileUtilsTest {
     @get:Rule
     val tempFolderFile = TemporaryFolder()
