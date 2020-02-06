@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.example.audiolearning.R
 import com.example.audiolearning.audio.audio_recorder.AudioRecorder
 import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
@@ -39,7 +39,7 @@ class RecorderFragment : Fragment() {
             AudioRecorder(),
             Timer()
         )
-        recorderViewModel = ViewModelProviders.of(this, viewModelFactory)
+        recorderViewModel = ViewModelProvider(this, viewModelFactory)
             .get(RecorderViewModel::class.java)
 
         binding.viewModel = recorderViewModel
@@ -57,10 +57,12 @@ class RecorderFragment : Fragment() {
     }
 
     private fun observeIfNewAudioRecording() {
-        recorderViewModel.recordingAndTimerHandler.recordedFile.observe(this, Observer { newFile ->
+        recorderViewModel.recordingAndTimerHandler.recordedFile.observe(
+            viewLifecycleOwner,
+            Observer { newFile ->
             if (newFile != null) {
                 NewRecordingDialog.display(
-                    newFile,
+                    newFile.path,
                     requireFragmentManager()
                 )
             }
@@ -69,7 +71,7 @@ class RecorderFragment : Fragment() {
 
     private fun switchButtonAppearancesOnAudioRecorderChange() {
         recorderViewModel.recordingAndTimerHandler.audioRecorderState.observe(
-            this,
+            viewLifecycleOwner,
             Observer { newState ->
             when (newState!!) {
                 AudioRecorderState.IDLING -> {

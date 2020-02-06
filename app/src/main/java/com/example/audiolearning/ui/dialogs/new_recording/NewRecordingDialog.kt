@@ -23,31 +23,29 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
 
-class NewRecordingDialog(
-    private var newRecording: File
-) : DialogFragment() {
+class NewRecordingDialog : DialogFragment() {
 
+    private lateinit var newRecording: File
     private lateinit var dialogContext: Context
     private lateinit var viewModel: NewRecordingDialogViewModel
 
     companion object {
+        const val newFilePathArgumentKey = "newFilePath"
+
         fun display(
-            newFile: File,
+            newFilePath: String,
             fragmentManager: FragmentManager
-        ) = NewRecordingDialog(newFile).show(
-            fragmentManager,
-            "NewRecordingDialog"
-        )
-    }
+        ) {
+            val dialog = NewRecordingDialog()
 
-    override fun onStart() {
-        super.onStart()
-        val width: Int = ViewGroup.LayoutParams.MATCH_PARENT
-        val height: Int = ViewGroup.LayoutParams.MATCH_PARENT
+            dialog.arguments = Bundle().apply {
+                putString(newFilePathArgumentKey, newFilePath)
+            }
 
-        dialog!!.window!!.let {
-            it.setLayout(width, height)
-            it.setWindowAnimations(R.style.AppTheme_SlideAnimation)
+            dialog.show(
+                fragmentManager,
+                "NewRecordingDialog"
+            )
         }
     }
 
@@ -59,6 +57,12 @@ class NewRecordingDialog(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.AppTheme_FullScreenDialog)
+
+        val newRecordingFilePath = arguments?.getString(newFilePathArgumentKey)
+            ?: throw IllegalArgumentException("No argument provided for the new recording")
+        if (newRecordingFilePath.isEmpty()) throw IllegalArgumentException("No argument provided for the new recording")
+
+        newRecording = File(newRecordingFilePath)
     }
 
     override fun onCreateView(
@@ -169,6 +173,17 @@ class NewRecordingDialog(
         }
 
         return true
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val width: Int = ViewGroup.LayoutParams.MATCH_PARENT
+        val height: Int = ViewGroup.LayoutParams.MATCH_PARENT
+
+        dialog!!.window!!.let {
+            it.setLayout(width, height)
+            it.setWindowAnimations(R.style.AppTheme_SlideAnimation)
+        }
     }
 
     override fun onCancel(dialog: DialogInterface) {
