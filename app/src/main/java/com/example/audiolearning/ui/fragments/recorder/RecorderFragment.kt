@@ -60,7 +60,7 @@ class RecorderFragment : Fragment() {
         recorderViewModel.recordingAndTimerHandler.recordedFile.observe(
             viewLifecycleOwner,
             Observer { newFile ->
-            if (newFile != null) {
+                newFile?.let {
                 NewRecordingDialog.display(
                     newFile.path,
                     requireFragmentManager()

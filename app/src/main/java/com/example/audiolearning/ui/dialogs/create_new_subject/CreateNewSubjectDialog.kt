@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.example.audiolearning.R
 import com.example.audiolearning.data.db.AudioLearningDatabase
 import com.example.audiolearning.data.repositories.SubjectRepository
@@ -37,7 +37,7 @@ class CreateNewSubjectDialog : DialogFragment() {
             )
         )
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
             .get(CreateNewSubjectDialogViewModel::class.java)
 
         dialog!!.setTitle(R.string.cnsDialog_title)
@@ -60,8 +60,8 @@ class CreateNewSubjectDialog : DialogFragment() {
         observeError()
     }
 
-    private fun observeError() = viewModel.error.observe(this, Observer {
-        if (it != null) {
+    private fun observeError() = viewModel.error.observe(viewLifecycleOwner, Observer {
+        it?.let {
             et_subject_name.error = getString(it)
         }
     })

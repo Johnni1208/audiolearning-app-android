@@ -17,7 +17,6 @@ import com.example.audiolearning.data.db.AudioLearningDatabase
 import com.example.audiolearning.data.db.entities.Subject
 import com.example.audiolearning.data.repositories.AudioRepository
 import com.example.audiolearning.data.repositories.SubjectRepository
-import com.example.audiolearning.extensions.isAllowedFileName
 import kotlinx.android.synthetic.main.dialog_new_recording.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -139,7 +138,11 @@ class NewRecordingDialog : DialogFragment() {
             val name = et_audio_name.text.toString()
             val subject = sp_select_subject.selectedItem as Subject
 
-            if (!isInputValid(name, subject)) return@setOnClickListener
+            val inputValidation = viewModel.validateInput(name, subject)
+            if (inputValidation != NewRecordingInputValidation.CORRECT) {
+                setError(inputValidation)
+                return@setOnClickListener
+            }
 
             GlobalScope.launch {
                 viewModel.saveAudio(newRecording, name, subject)
@@ -148,31 +151,22 @@ class NewRecordingDialog : DialogFragment() {
         }
     }
 
-    private fun isInputValid(name: String, subject: Subject): Boolean {
-        if (!isNameValid(name)) return false
+    private fun setError(validation: NewRecordingInputValidation) {
+        when (validation) {
+            NewRecordingInputValidation.SUBJECT_IS_BLANK -> {
+                (sp_select_subject.selectedView as TextView).error =
+                    getString(R.string.dialog_error_message_missing_info)
+            }
 
-        if (!subject.isRealSubject) {
-            (sp_select_subject.selectedView as TextView).error =
+            NewRecordingInputValidation.NAME_IS_BLANK -> et_audio_name.error =
                 getString(R.string.dialog_error_message_missing_info)
-            return false
-        }
 
-        return true
-    }
-
-    private fun isNameValid(name: String): Boolean {
-        if (name.isEmpty()) {
-            et_audio_name.error = getString(R.string.dialog_error_message_missing_info)
-            return false
-        }
-
-        if (!name.isAllowedFileName()) {
-            et_audio_name.error =
+            NewRecordingInputValidation.NAME_CONTAINS_INVALID_CHARS -> et_audio_name.error =
                 getString(R.string.dialog_error_message_contains_not_allowed_character)
-            return false
-        }
 
-        return true
+            else -> {
+            }
+        }
     }
 
     override fun onStart() {
