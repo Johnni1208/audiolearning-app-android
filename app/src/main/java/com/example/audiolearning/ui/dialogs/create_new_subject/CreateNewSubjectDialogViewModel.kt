@@ -1,9 +1,6 @@
 package com.example.audiolearning.ui.dialogs.create_new_subject
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.audiolearning.R
 import com.example.audiolearning.data.repositories.SubjectRepository
 import com.example.audiolearning.extensions.isAllowedFileName
 import kotlinx.coroutines.runBlocking
@@ -12,42 +9,25 @@ class CreateNewSubjectDialogViewModel(
     private val subjectRepository: SubjectRepository
 ) : ViewModel() {
 
-    private val _error = MutableLiveData<Int>().apply {
-        value = null
-    }
-    val error: LiveData<Int>
-        get() = _error
+    suspend fun createNewSubject(subjectName: String) = subjectRepository.insert(subjectName)
 
-    suspend fun createNewSubject(subjectName: String): Boolean {
-        if (isSubjectNameValid(subjectName)) {
-            subjectRepository.insert(subjectName)
-            return true
-        }
-        return false
-    }
-
-    private fun isSubjectNameValid(subjectName: String): Boolean {
+    fun validateInput(subjectName: String): CreateNewSubjectInputValidation {
         if (subjectName.isEmpty()) {
-            _error.postValue(R.string.dialog_error_message_missing_info)
-            return false
+            return CreateNewSubjectInputValidation.FIELD_IS_BLANK
         }
 
         if (!subjectName.isAllowedFileName()) {
-            _error.postValue(R.string.dialog_error_message_contains_not_allowed_character)
-            return false
+            return CreateNewSubjectInputValidation.FIELD_CONTAINS_INVALID_CHARS
         }
 
         var subjectAlreadyExists = false
-
         runBlocking {
             subjectAlreadyExists = subjectRepository.getSubjectByName(subjectName) != null
         }
-
         if (subjectAlreadyExists) {
-            _error.postValue(R.string.cnsDialog_error_subject_already_exists)
-            return false
+            return CreateNewSubjectInputValidation.SUBJECT_ALREADY_EXISTS
         }
 
-        return true
+        return CreateNewSubjectInputValidation.CORRECT
     }
 }

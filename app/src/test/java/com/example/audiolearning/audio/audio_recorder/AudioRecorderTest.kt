@@ -3,13 +3,15 @@ package com.example.audiolearning.audio.audio_recorder
 import android.media.MediaRecorder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.io.File
 
+@ExperimentalCoroutinesApi
 class AudioRecorderTest {
 
     private lateinit var recorder: AudioRecorder
@@ -39,19 +41,15 @@ class AudioRecorderTest {
 
     /* stop() */
     @Test
-    fun stop_ShouldSetIsActiveToFalse() {
-        runBlocking {
-            recorder.stop()
-        }
+    fun stop_ShouldSetIsActiveToFalse() = runBlockingTest {
+        recorder.stop()
 
         assertEquals(false, recorder.isActive)
     }
 
     @Test
-    fun stop_ShouldStopAndReleaseTheMediaRecorder() {
-        runBlocking {
-            recorder.stop()
-        }
+    fun stop_ShouldStopAndReleaseTheMediaRecorder() = runBlockingTest {
+        recorder.stop()
 
         verify(mockMediaRecorder).stop()
         verify(mockMediaRecorder).release()
@@ -72,15 +70,11 @@ class AudioRecorderTest {
     }
 
     @Test
-    fun stop_ShouldReturnRecordedFile() {
-        var recordedFile: File? = null
+    fun stop_ShouldReturnRecordedFile() = runBlockingTest {
+        val recordedFile = recorder.stop()
 
-        runBlocking {
-            recordedFile = recorder.stop()
-        }
-
-        assertTrue(recordedFile!!.name.contains("tempAudioFile"))
-        assertTrue(recordedFile!!.name.contains(".m4a"))
+        assertTrue(recordedFile.name.contains("tempAudioFile"))
+        assertTrue(recordedFile.name.contains(".m4a"))
     }
 
     /* pause() */
