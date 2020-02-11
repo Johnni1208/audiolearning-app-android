@@ -15,7 +15,9 @@ class AudioFileUtilsTest {
 
     @Test
     fun cutFileAndPasteToDirectory_ShouldDeleteOldFile() {
-        val fileToBeDeleted = File("")
+        val tempSourceFolder = tempFolderFile.newFolder("source")
+        val fileToBeDeleted = File(tempSourceFolder.path + "/testFile")
+        fileToBeDeleted.createNewFile()
 
         AudioFileUtils.cutFileAndPasteToDirectory(fileToBeDeleted, "")
         assertFalse(fileToBeDeleted.exists())
