@@ -15,6 +15,10 @@ import com.example.audiolearning.audio.audio_recorder.AudioRecorderState
 import com.example.audiolearning.databinding.FragmentRecorderBinding
 import com.example.audiolearning.ui.dialogs.new_recording.NewRecordingDialog
 import com.example.audiolearning.util.timer.Timer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class RecorderFragment : Fragment() {
 
@@ -61,44 +65,57 @@ class RecorderFragment : Fragment() {
             viewLifecycleOwner,
             Observer { newFile ->
                 newFile?.let {
-                NewRecordingDialog.display(
-                    newFile.path,
-                    requireFragmentManager()
-                )
-            }
-        })
+                    NewRecordingDialog.display(
+                        newFile.path,
+                        requireFragmentManager()
+                    )
+                }
+            })
     }
 
     private fun switchButtonAppearancesOnAudioRecorderChange() {
+        var stateBefore: AudioRecorderState = AudioRecorderState.IDLING
         recorderViewModel.recordingAndTimerHandler.audioRecorderState.observe(
             viewLifecycleOwner,
             Observer { newState ->
-            when (newState!!) {
-                AudioRecorderState.IDLING -> {
-                    binding.apply {
-                        btnPauseAndResume.isEnabled = false
-                        btnPauseAndResume.isClickable = false
-                        btnPauseAndResume.text = getString(R.string.pause_text)
+                when (newState!!) {
+                    AudioRecorderState.IDLING -> {
+                        binding.apply {
+                            btnPauseAndResume.isEnabled = false
+                            btnPauseAndResume.isClickable = false
+                            btnPauseAndResume.text = getString(R.string.pause_text)
 
-                        btnRecordAndStop.text = getString(R.string.record_text)
+                            btnRecordAndStop.text = getString(R.string.record_text)
+                        }
+                        // Disable button so it is not clickable when the NewRecordingDialog opens
+                        if (stateBefore == AudioRecorderState.RECORDING || stateBefore == AudioRecorderState.PAUSING) {
+                            GlobalScope.launch(Dispatchers.Main) {
+                                binding.apply {
+                                    btnRecordAndStop.isEnabled = false
+                                    btnRecordAndStop.isClickable = false
+                                    delay(1000)
+                                    btnRecordAndStop.isEnabled = true
+                                    btnRecordAndStop.isClickable = true
+                                }
+                            }
+                        }
+                    }
+
+                    AudioRecorderState.RECORDING -> {
+                        binding.apply {
+                            btnPauseAndResume.text = getString(R.string.pause_text)
+                            btnPauseAndResume.isEnabled = true
+                            btnPauseAndResume.isClickable = true
+                            btnRecordAndStop.text = getString(R.string.stop_text)
+                        }
+                    }
+
+                    AudioRecorderState.PAUSING -> {
+                        binding.btnPauseAndResume.text = getString(R.string.resume_text)
                     }
                 }
-
-                AudioRecorderState.RECORDING -> {
-                    binding.apply {
-                        btnPauseAndResume.text = getString(R.string.pause_text)
-                        btnPauseAndResume.isEnabled = true
-                        btnPauseAndResume.isClickable = true
-                        btnRecordAndStop.text = getString(R.string.stop_text)
-                    }
-                }
-
-                AudioRecorderState.PAUSING -> {
-                    binding.btnPauseAndResume.text = getString(R.string.resume_text)
-                }
-            }
-
-        })
+                stateBefore = newState
+            })
     }
 
     override fun onDetach() {

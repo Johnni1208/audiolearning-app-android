@@ -137,6 +137,17 @@ class RecorderButtonsUIChangeTest {
             .check(matches(not(isClickable())))
     }
 
+    @Test
+    fun testAudioRecorderStopping_RecordButtonIsDisabled() {
+        startOrStop()
+        startOrStop()
+
+        onView(withId(R.id.btn_record_and_stop))
+            .check(matches(not(isEnabled())))
+        onView(withId(R.id.btn_record_and_stop))
+            .check(matches(not(isClickable())))
+    }
+
     /* Helper functions */
     private fun startOrStop() {
         onView(withId(R.id.btn_record_and_stop))
