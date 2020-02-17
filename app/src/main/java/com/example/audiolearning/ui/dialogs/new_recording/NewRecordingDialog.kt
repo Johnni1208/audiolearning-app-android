@@ -184,9 +184,4 @@ class NewRecordingDialog : DialogFragment() {
         super.onCancel(dialog)
         newRecording.delete()
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        newRecording.delete()
-    }
 }

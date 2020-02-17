@@ -14,23 +14,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.example.audiolearning.R
 import com.example.audiolearning.ui.fragments.recorder.RecorderFragment
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class NewRecordingDialogTest {
-    @Before
-    fun getScenario() {
-        FragmentScenario.launchInContainer(
-            RecorderFragment::class.java,
-            null,
-            R.style.AppTheme,
-            null
-        )
-    }
-
     @Test
     fun stoppingTheRecording_ShouldOpenDialog() {
         FragmentScenario.launchInContainer(
