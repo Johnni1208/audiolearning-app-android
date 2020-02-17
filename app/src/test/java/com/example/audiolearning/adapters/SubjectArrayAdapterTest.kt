@@ -12,7 +12,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class SubjectArrayAdapterUnitTest {
+class SubjectArrayAdapterTest {
     private val context: Context = ApplicationProvider.getApplicationContext<Context>()
     private var testSubjectList = ArrayList<Subject>()
     private val textViewResourceId = R.layout.subject_spinner_item

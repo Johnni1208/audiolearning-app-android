@@ -1,4 +1,4 @@
-package com.example.audiolearning.ui.mainActivity
+package com.example.audiolearning.ui.fragments.recorder
 
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.test.espresso.Espresso.onView
@@ -8,7 +8,6 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.example.audiolearning.R
-import com.example.audiolearning.ui.fragments.recorder.RecorderFragment
 import org.hamcrest.Matchers.not
 import org.junit.Before
 import org.junit.Test
@@ -20,7 +19,12 @@ class RecorderButtonsUIChangeTest {
 
     @Before
     fun getScenario() {
-        FragmentScenario.launchInContainer(RecorderFragment::class.java)
+        FragmentScenario.launchInContainer(
+            RecorderFragment::class.java,
+            null,
+            R.style.AppTheme,
+            null
+        )
     }
 
     @Test

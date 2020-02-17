@@ -34,17 +34,13 @@ class DoubleSelectSpinnerTest {
     fun onAddHintSelectedASecondTime_ShouldOpenDialogAgain() {
         // Click first time
         onView(withId(R.id.sp_select_subject)).perform(click())
-        onData(anything()).inRoot(isPlatformPopup()).check(
-            matches(withText("Add new subject…"))
-        ).perform(click())
+        onData(anything()).atPosition(0).inRoot(isPlatformPopup()).perform(click())
 
         onView(withId(R.id.btn_cancel_subject)).perform(click())
 
         // Click second time
         onView(withId(R.id.sp_select_subject)).perform(click())
-        onData(anything()).inRoot(isPlatformPopup()).check(
-            matches(withText("Add new subject…"))
-        ).perform(click())
+        onData(anything()).atPosition(0).inRoot(isPlatformPopup()).perform(click())
 
         onView(withText("Create new subject")).check(matches(ViewMatchers.isDisplayed()))
     }
