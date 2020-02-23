@@ -10,11 +10,11 @@ import java.io.File
 class AudioRepository(
     private val db: AudioLearningDatabase
 ) {
-    suspend fun insert(tempFile: File, name: String, subject: Subject) {
+    suspend fun insert(tempAudio: File, name: String, subject: Subject) {
         val subjectDirectory = Uri.parse(subject.directoryUriString).path!!
 
         AudioFileUtils.cutFileAndPasteToDirectory(
-            tempFile,
+            tempAudio,
             subjectDirectory,
             name
         )
@@ -23,7 +23,6 @@ class AudioRepository(
             File(subjectDirectory + File.separatorChar + name + Audio.fileExtension)
         val audioFileUri = Uri.fromFile(audioFile)
 
-
-        db.getAudioDao().insert(Audio(name, subject.id!!, audioFileUri.toString()))
+        db.getAudioDao().insert(Audio(name, audioFileUri.toString(), subject.id!!))
     }
 }

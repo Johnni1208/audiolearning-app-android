@@ -6,8 +6,6 @@ import android.widget.Spinner
 
 /**
  * Custom Spinner, which triggers a second time when an item is selected a second time.
- *
- * Use this in XML.
  */
 class DoubleSelectSpinner(context: Context, attributeSet: AttributeSet) :
     Spinner(context, attributeSet) {

@@ -88,6 +88,7 @@ class RecordingAndTimerHandler(
         if (audioRecorder.isActive) {
             audioRecorder.onDestroy()
             _audioRecorderState.value = AudioRecorderState.IDLING
+            recordTimer.stop()
         }
     }
 }

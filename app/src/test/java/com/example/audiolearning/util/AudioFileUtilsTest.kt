@@ -20,6 +20,7 @@ class AudioFileUtilsTest {
         fileToBeDeleted.createNewFile()
 
         AudioFileUtils.cutFileAndPasteToDirectory(fileToBeDeleted, "")
+
         assertFalse(fileToBeDeleted.exists())
     }
 
@@ -28,14 +29,12 @@ class AudioFileUtilsTest {
         val tempSourceFolder = tempFolderFile.newFolder("source")
         val fileToBeDeleted = File(tempSourceFolder.path + "/testFile")
         fileToBeDeleted.createNewFile()
-
         val tempDestinationFolder = tempFolderFile.newFolder("destination")
 
         AudioFileUtils.cutFileAndPasteToDirectory(fileToBeDeleted, tempDestinationFolder.path)
 
         val expectedFile =
             File(tempDestinationFolder.path + "/testFile" + Audio.fileExtension)
-
         assertTrue(expectedFile.exists())
     }
 }

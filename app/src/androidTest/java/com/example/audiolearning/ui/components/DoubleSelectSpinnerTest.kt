@@ -22,7 +22,6 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class DoubleSelectSpinnerTest {
-
     @Before
     fun setUp() {
         launchFragment<NewRecordingDialog>(Bundle().apply {

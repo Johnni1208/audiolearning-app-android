@@ -15,11 +15,11 @@ data class Audio(
     @ColumnInfo(name = "audio_name")
     val name: String,
 
-    @ColumnInfo(name = "audio_subject_id")
-    val subjectId: Long,
-
     @ColumnInfo(name = "audio_file_uri")
-    val audioFileUriString: String
+    val audioFileUriString: String,
+
+    @ColumnInfo(name = "audio_subject_id")
+    val subjectId: Long
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "audio_id")

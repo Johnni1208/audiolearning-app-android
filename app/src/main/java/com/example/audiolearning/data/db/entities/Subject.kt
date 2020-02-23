@@ -17,6 +17,13 @@ data class Subject(
     @ColumnInfo(name = "subject_id")
     var id: Long? = null
 
+    /**
+     * Used for placeholder items in a subject spinner.
+     *
+     * (Placeholders like: "Select subject..." or "Add subject..."
+     *
+     * If items has to be a placeholder -> [isRealSubject] = false
+     */
     @Ignore
     var isRealSubject: Boolean = true
 }

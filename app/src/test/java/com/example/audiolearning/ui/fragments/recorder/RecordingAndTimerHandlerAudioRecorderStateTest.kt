@@ -19,7 +19,6 @@ class RecordingAndTimerHandlerAudioRecorderStateTest {
     private lateinit var mockAudioRecorder: IAudioRecorder
     private lateinit var mockTimer: ITimer
 
-
     @Before
     fun setUpViewModel() {
         mockAudioRecorder = mock()

@@ -23,7 +23,6 @@ enum class TestTime(val value: Long, val string: String) {
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class RecordTimerTest {
-
     private fun assertTvTimerEqualTo(timeString: TestTime) {
         onView(withId(R.id.tv_record_time))
             .check(matches(withText(timeString.string)))

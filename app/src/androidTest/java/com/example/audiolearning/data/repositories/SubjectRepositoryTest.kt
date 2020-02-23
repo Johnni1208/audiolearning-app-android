@@ -31,30 +31,30 @@ class SubjectRepositoryTest {
     val instantExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
     @get:Rule
-    val tempFolderFile = TemporaryFolder()
+    val tempFolder = TemporaryFolder()
 
     private lateinit var subjectRepository: SubjectRepository
     private lateinit var subjectDao: SubjectDao
     private lateinit var audioDao: AudioDao
     private lateinit var db: AudioLearningDatabase
-    private lateinit var subjectRootFile: File
+    private lateinit var subjectsRootFolder: File
 
-    private val testSubjectName = "test"
+    private val testSubjectName = "testSubject"
     private lateinit var testSubjectFolder: File
 
     @Before
-    fun setUpDatabase() {
+    fun setUpDatabaseAndFolders() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(
             context, AudioLearningDatabase::class.java
         ).allowMainThreadQueries().build()
 
-        subjectRepository = SubjectRepository(db, tempFolderFile.root)
+        subjectRepository = SubjectRepository(db, tempFolder.root)
         subjectDao = db.getSubjectDao()
         audioDao = db.getAudioDao()
-        subjectRootFile = File(tempFolderFile.root.path + File.separatorChar + "subjects")
+        subjectsRootFolder = File(tempFolder.root.path + File.separatorChar + "subjects")
 
-        testSubjectFolder = File(subjectRootFile.path + File.separatorChar + testSubjectName)
+        testSubjectFolder = File(subjectsRootFolder.path + File.separatorChar + testSubjectName)
     }
 
     @After
@@ -68,13 +68,13 @@ class SubjectRepositoryTest {
         subjectRepository.insert(testSubjectName)
 
         assertEquals(
-            subjectRootFile.listFiles()?.find { it.name == testSubjectName },
+            subjectsRootFolder.listFiles()?.find { it.name == testSubjectName },
             testSubjectFolder
         )
     }
 
     @Test
-    fun insert_ShouldInsertANewSubject() = runBlocking {
+    fun insert_ShouldInsertANewSubjectIntoTheDb() = runBlocking {
         val expectedSubject =
             Subject(testSubjectName, Uri.fromFile(testSubjectFolder).toString())
 
@@ -90,7 +90,7 @@ class SubjectRepositoryTest {
 
         subjectRepository.delete(testSubject!!)
 
-        assertTrue(subjectRootFile.listFiles()?.find { it.name == testSubjectName } == null)
+        assertTrue(subjectsRootFolder.listFiles()?.find { it.name == testSubjectName } == null)
     }
 
     @Test
@@ -104,13 +104,13 @@ class SubjectRepositoryTest {
     }
 
     @Test
-    fun delete_ShouldDeleteAllChildsOfSubject() = runBlocking {
+    fun delete_ShouldDeleteAllChildsOfSubjectFromDb() = runBlocking {
         subjectRepository.insert(testSubjectName)
         val testSubject = subjectDao.getSubjectByName(testSubjectName)
         val testAudio = Audio(
             "testAudio",
-            testSubject?.id!!,
-            ""
+            "",
+            testSubject?.id!!
         )
         audioDao.insert(testAudio)
 

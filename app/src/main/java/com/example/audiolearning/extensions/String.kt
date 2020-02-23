@@ -5,7 +5,7 @@ import java.util.regex.Pattern
 /**
  * Checks whether the string has characters which are not allowed for files.
  *
- * Reserved charaters: \|?*<":>/'
+ * Reserved characters: \|?*<":>/'
  *
  * @return True - If name does not contain any reserved characters
  *

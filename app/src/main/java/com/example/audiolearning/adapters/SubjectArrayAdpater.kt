@@ -15,7 +15,6 @@ class SubjectArrayAdapter(
     private var subjects: List<Subject>,
     private var hasSelectHint: Boolean
 ) : ArrayAdapter<Subject>(context, textViewResourceId, subjects) {
-
     companion object {
         fun createWithAddHint(
             context: Context,
@@ -28,7 +27,7 @@ class SubjectArrayAdapter(
                     isRealSubject = false
                 }
 
-            var subjectsWithAdder = listOf(addSubjectItem) + subjects
+            var subjectsWithAddHint = listOf(addSubjectItem) + subjects
 
             if (hasSelectHint) {
                 val subjectHintItem =
@@ -39,13 +38,13 @@ class SubjectArrayAdapter(
                         isRealSubject = false
                     }
 
-                subjectsWithAdder = subjectsWithAdder + listOf(subjectHintItem)
+                subjectsWithAddHint = subjectsWithAddHint + listOf(subjectHintItem)
             }
 
             return SubjectArrayAdapter(
                 context,
                 textViewResourceId,
-                subjectsWithAdder,
+                subjectsWithAddHint,
                 hasSelectHint
             )
         }

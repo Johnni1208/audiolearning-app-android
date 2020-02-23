@@ -9,9 +9,8 @@ import java.io.File
  */
 class SubjectFileUtils {
     companion object {
-
         /**
-         * Creates a new subject directory under "/subjects/directoryName"
+         * Creates a new subject directory under "/subjects/[directoryName]"
          *
          * @param filesDir root directory, use context.filesDir
          * @param directoryName name for the new subject directory
@@ -20,10 +19,7 @@ class SubjectFileUtils {
             val rootDir = filesDir.path + File.separatorChar + "subjects"
 
             val subjectDir = File(rootDir + File.separatorChar + directoryName)
-
-            if (!subjectDir.exists()) {
-                subjectDir.mkdirs()
-            }
+            subjectDir.mkdirs()
 
             return subjectDir
         }

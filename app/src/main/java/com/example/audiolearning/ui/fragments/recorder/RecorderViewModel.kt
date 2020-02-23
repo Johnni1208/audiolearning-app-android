@@ -15,7 +15,6 @@ class RecorderViewModel(
     private val audioRecorder: IAudioRecorder,
     timer: ITimer
 ) : ViewModel() {
-
     val recordingAndTimerHandler =
         RecordingAndTimerHandler(
             audioRecorder,

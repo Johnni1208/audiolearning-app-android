@@ -32,7 +32,8 @@ class AudioFileUtils {
                 val inputStream = FileInputStream(sourceFile)
 
                 val fileName = (destinationName ?: sourceFile.name) + Audio.fileExtension
-                val outputStream = FileOutputStream("$destinationDirectory/$fileName")
+                val outputStream =
+                    FileOutputStream(destinationDirectory + File.separatorChar + fileName)
 
                 val buffer = ByteArray(1024)
                 val bufferedOutputStream = BufferedOutputStream(outputStream, buffer.size)
@@ -40,11 +41,11 @@ class AudioFileUtils {
                 var read = inputStream.read(buffer)
                 while (read != -1) {
                     bufferedOutputStream.write(buffer, 0, read)
-                    read = inputStream.read(buffer) // if read value is -1, it escapes loop.
+                    read = inputStream.read(buffer)
                 }
                 inputStream.close()
 
-                // write the output file (You have now copied the file)
+                // write the output file
                 bufferedOutputStream.flush()
                 bufferedOutputStream.close()
 

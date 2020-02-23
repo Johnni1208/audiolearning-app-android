@@ -8,16 +8,15 @@ import kotlinx.coroutines.runBlocking
 class CreateNewSubjectDialogViewModel(
     private val subjectRepository: SubjectRepository
 ) : ViewModel() {
-
     suspend fun createNewSubject(subjectName: String) = subjectRepository.insert(subjectName)
 
     fun validateInput(subjectName: String): CreateNewSubjectInputValidation {
         if (subjectName.isEmpty()) {
-            return CreateNewSubjectInputValidation.FIELD_IS_BLANK
+            return CreateNewSubjectInputValidation.INPUT_FIELD_IS_BLANK
         }
 
         if (!subjectName.isAllowedFileName()) {
-            return CreateNewSubjectInputValidation.FIELD_CONTAINS_INVALID_CHARS
+            return CreateNewSubjectInputValidation.INPUT_FIELD_CONTAINS_INVALID_CHARS
         }
 
         var subjectAlreadyExists = false

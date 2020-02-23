@@ -8,7 +8,6 @@ import kotlinx.coroutines.*
  * Only usable with Android LiveData.
  */
 class Timer : ITimer {
-
     private val _time =
         TimeMutableLiveData()
     override val time: LiveData<String>

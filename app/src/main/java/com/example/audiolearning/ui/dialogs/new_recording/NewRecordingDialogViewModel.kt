@@ -15,7 +15,6 @@ class NewRecordingDialogViewModel(
     private val subjectRepository: SubjectRepository,
     private val audioRepository: AudioRepository
 ) : ViewModel() {
-
     fun getSubjects() = subjectRepository.getAllSubjects()
 
     suspend fun saveAudio(file: File, name: String, subject: Subject) =
@@ -38,7 +37,7 @@ class NewRecordingDialogViewModel(
     }
 
     /**
-     * This method returns an itemSelectListener, which opens an CreateNewSubjectDialog
+     * This method returns an itemSelectListener, which opens an [CreateNewSubjectDialog]
      * when the "Add new subject..." item is selected. (Has to be in first place of the spinner!)
      */
     fun getAddHintItemSelectedListener(fragmentManager: FragmentManager) =

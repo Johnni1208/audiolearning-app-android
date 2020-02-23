@@ -23,7 +23,6 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class NewRecordingDialog : DialogFragment() {
-
     private lateinit var newRecording: File
     private lateinit var dialogContext: Context
     private lateinit var viewModel: NewRecordingDialogViewModel
@@ -31,6 +30,10 @@ class NewRecordingDialog : DialogFragment() {
     companion object {
         const val newFilePathArgumentKey = "newFilePath"
 
+        /**
+         * Bundles the newFilePath and puts it as the fragments arguments.
+         * It then shows it.
+         */
         fun display(
             newFilePath: String,
             fragmentManager: FragmentManager
@@ -70,10 +73,9 @@ class NewRecordingDialog : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val audioLearningDatabase = AudioLearningDatabase.invoke(dialogContext)
-        val filesDir = dialogContext.filesDir
 
         val viewModelFactory = NewRecordingDialogViewModelFactory(
-            SubjectRepository(audioLearningDatabase, filesDir),
+            SubjectRepository(audioLearningDatabase, dialogContext.filesDir),
             AudioRepository(audioLearningDatabase)
         )
 
@@ -90,7 +92,6 @@ class NewRecordingDialog : DialogFragment() {
     }
 
     private fun setupSpinner() {
-
         sp_select_subject.onItemSelectedListener =
             viewModel.getAddHintItemSelectedListener(requireFragmentManager())
 
@@ -115,10 +116,8 @@ class NewRecordingDialog : DialogFragment() {
                 sp_select_subject.setSelection(spinnerAdapter.count) // "Select subject"
             } else sp_select_subject.setSelection(spinnerAdapter.count - 1) // New subject name
 
-
             hasNewSubject = true
         })
-
     }
 
     private fun setupOnClickListeners() {
@@ -128,6 +127,7 @@ class NewRecordingDialog : DialogFragment() {
             dismiss()
         }
 
+        // Discard recording
         btn_discard_recording.setOnClickListener {
             newRecording.delete()
             dismiss()
@@ -174,14 +174,14 @@ class NewRecordingDialog : DialogFragment() {
         val width: Int = ViewGroup.LayoutParams.MATCH_PARENT
         val height: Int = ViewGroup.LayoutParams.MATCH_PARENT
 
-        dialog!!.window!!.let {
+        dialog?.window?.let {
             it.setLayout(width, height)
             it.setWindowAnimations(R.style.AppTheme_SlideAnimation)
         }
     }
 
     override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
         newRecording.delete()
+        super.onCancel(dialog)
     }
 }

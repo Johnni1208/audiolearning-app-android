@@ -4,7 +4,6 @@ import android.annotation.TargetApi
 import android.media.MediaRecorder
 import android.os.Build
 import com.example.audiolearning.data.db.entities.Audio
-import com.example.audiolearning.util.CustomMediaRecorderProvider
 import kotlinx.coroutines.delay
 import java.io.File
 
@@ -17,10 +16,6 @@ import java.io.File
  * Used for testing purposes.
  */
 class AudioRecorder(private var recorder: MediaRecorder? = null) : IAudioRecorder {
-
-    /**
-     * @see [IAudioRecorder.isActive]
-     */
     override var isActive: Boolean = false
 
     private val tempAudioFile: File =
@@ -28,24 +23,34 @@ class AudioRecorder(private var recorder: MediaRecorder? = null) : IAudioRecorde
 
     override fun record() {
         if (recorder == null) {
-            recorder = CustomMediaRecorderProvider.getRecorderForAudio(tempAudioFile)
+            recorder = getAudioMediaRecorder(tempAudioFile)
         }
 
-        recorder!!.apply {
+        recorder?.apply {
             prepare()
             start()
         }
         isActive = true
     }
 
+    private fun getAudioMediaRecorder(file: File) = MediaRecorder().apply {
+        setAudioSource(MediaRecorder.AudioSource.MIC)
+        setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+        setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+        setAudioEncodingBitRate(64000)
+        setAudioSamplingRate(16000)
+        setOutputFile(file.absolutePath)
+    }
+
+
     @TargetApi(Build.VERSION_CODES.N)
     override fun pause() {
-        recorder!!.pause()
+        recorder?.pause()
     }
 
     @TargetApi(Build.VERSION_CODES.N)
     override fun resume() {
-        recorder!!.resume()
+        recorder?.resume()
     }
 
     /**
@@ -57,7 +62,7 @@ class AudioRecorder(private var recorder: MediaRecorder? = null) : IAudioRecorde
      */
     override suspend fun stop(): File {
         delay(500)
-        recorder!!.apply {
+        recorder?.apply {
             stop()
             release()
         }
@@ -74,7 +79,7 @@ class AudioRecorder(private var recorder: MediaRecorder? = null) : IAudioRecorde
      * We cannot use [stop] for this, since it takes 500ms before finally stopping.
      */
     override fun onDestroy() {
-        recorder!!.apply {
+        recorder?.apply {
             stop()
             release()
         }

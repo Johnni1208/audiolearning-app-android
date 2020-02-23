@@ -3,8 +3,8 @@ package com.example.audiolearning
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 
 class SplashActivity : AppCompatActivity() {
@@ -19,16 +19,11 @@ class SplashActivity : AppCompatActivity() {
     private fun requestNecessaryPermissions() {
         if ((ActivityCompat.checkSelfPermission(
                 this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED)
-            ||
-            (ActivityCompat.checkSelfPermission(
-                this,
                 Manifest.permission.RECORD_AUDIO
             ) != PackageManager.PERMISSION_GRANTED)
         ) {
             ActivityCompat.requestPermissions(
-                this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO),
+                this, arrayOf(Manifest.permission.RECORD_AUDIO),
                 10
             )
 

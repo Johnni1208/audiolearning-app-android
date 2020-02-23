@@ -33,14 +33,14 @@ class CreateNewSubjectDialogViewModelTest {
     @Test
     fun validateInput_ShouldReturnFIELD_IS_BLANK_IfEmptyStringIsPassed() {
         Assert.assertTrue(
-            viewModel.validateInput("") == CreateNewSubjectInputValidation.FIELD_IS_BLANK
+            viewModel.validateInput("") == CreateNewSubjectInputValidation.INPUT_FIELD_IS_BLANK
         )
     }
 
     @Test
     fun validateInput_ShouldReturnFIELD_CONTAINS_INVALID_CHARS_IfSubjectNameContainsInvalidChars() {
         Assert.assertTrue(
-            viewModel.validateInput("/") == CreateNewSubjectInputValidation.FIELD_CONTAINS_INVALID_CHARS
+            viewModel.validateInput("/") == CreateNewSubjectInputValidation.INPUT_FIELD_CONTAINS_INVALID_CHARS
         )
     }
 

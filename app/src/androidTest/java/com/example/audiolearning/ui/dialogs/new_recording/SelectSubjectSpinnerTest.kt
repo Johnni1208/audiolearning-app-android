@@ -51,6 +51,7 @@ class SelectSubjectSpinnerTest {
     fun onAddHintItemClicked_ShouldOpenCreateNewSubjectDialog() {
         onView(withId(R.id.sp_select_subject)).perform(click())
         onData(anything()).atPosition(0).inRoot(isPlatformPopup()).perform(click())
+
         onView(withText("Create new subject")).check(matches(isDisplayed()))
     }
 }

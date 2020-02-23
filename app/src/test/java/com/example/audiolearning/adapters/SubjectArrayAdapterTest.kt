@@ -20,7 +20,7 @@ class SubjectArrayAdapterTest {
     @Before
     fun setUp() {
         for (i in 1..10) {
-            testSubjectList.add(Subject("test$i", "").apply {
+            testSubjectList.add(Subject("testSubject$i", "").apply {
                 id = i.toLong()
             })
         }
@@ -65,6 +65,7 @@ class SubjectArrayAdapterTest {
                 testSubjectList,
                 true
             )
+
         assertTrue(subjectArrayAdapter.count == testSubjectList.size)
     }
 }

@@ -17,9 +17,9 @@
     <!-- Text for NewRecordingDialog -->
     <string name="nrDialog_title">Save new recording?</string>
     <string name="nrDialog_audio_name_hint">Name of your recording</string>
+    <string name="nrDialog_add_subject">Add new subject…</string>
     <string name="nrDialog_positive_button_text">Save</string>
     <string name="nrDialog_negative_button_text">Discard</string>
-    <string name="nrDialog_add_subject">Add new subject…</string>
 
     <string name="subject_spinner_select_subject">Select subject…</string>
 

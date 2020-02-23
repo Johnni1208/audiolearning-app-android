@@ -17,5 +17,4 @@ class RecorderViewModelFactory(
 
         throw IllegalArgumentException("Unknown ViewModel class")
     }
-
 }

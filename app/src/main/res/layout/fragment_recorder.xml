@@ -4,7 +4,6 @@
     android:id="@+id/fragment_recorder">
 
     <data>
-
         <variable
             name="viewModel"
             type="com.example.audiolearning.ui.fragments.recorder.RecorderViewModel" />
