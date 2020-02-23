@@ -9,13 +9,17 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.example.audiolearning.databinding.ActivityMainBinding
-import com.example.audiolearning.fragments.about_us.AboutUsFragment
-import com.example.audiolearning.fragments.recorder.RecorderFragment
-import com.example.audiolearning.fragments.subjects.SubjectsFragment
+import com.example.audiolearning.ui.fragments.about_us.AboutUsFragment
+import com.example.audiolearning.ui.fragments.recorder.RecorderFragment
+import com.example.audiolearning.ui.fragments.subjects.SubjectsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-    private val fragments = arrayOf(AboutUsFragment(), RecorderFragment(), SubjectsFragment())
+    private val fragments = arrayOf(
+        AboutUsFragment(),
+        RecorderFragment(),
+        SubjectsFragment()
+    )
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

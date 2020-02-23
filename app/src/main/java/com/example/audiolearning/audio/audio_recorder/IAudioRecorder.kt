@@ -4,14 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import java.io.File
 
-/**
- * This class provides a custom made MediaRecorder, specialised for audio recordings.
- */
 interface IAudioRecorder {
-
-    /**
-     * Flag for determining if the recorder is currently active.
-     */
     var isActive: Boolean
 
     fun record()
