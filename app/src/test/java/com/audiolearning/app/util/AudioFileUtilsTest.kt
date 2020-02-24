@@ -7,11 +7,8 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 import java.io.File
 
-@RunWith(RobolectricTestRunner::class)
 class AudioFileUtilsTest {
     @get:Rule
     val tempFolderFile = TemporaryFolder()
@@ -19,10 +16,11 @@ class AudioFileUtilsTest {
     @Test
     fun cutFileAndPasteToDirectory_ShouldDeleteOldFile() {
         val tempSourceFolder = tempFolderFile.newFolder("source")
+        val tempDestinationFolder = tempFolderFile.newFolder("destination")
         val fileToBeDeleted = File(tempSourceFolder.path + "/testFile")
         fileToBeDeleted.createNewFile()
 
-        AudioFileUtils.cutFileAndPasteToDirectory(fileToBeDeleted, "")
+        AudioFileUtils.cutFileAndPasteToDirectory(fileToBeDeleted, tempDestinationFolder.path)
 
         assertFalse(fileToBeDeleted.exists())
     }
