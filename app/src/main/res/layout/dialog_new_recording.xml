@@ -36,7 +36,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.example.audiolearning.ui.components.DoubleSelectSpinner
+        <com.audiolearning.app.ui.components.DoubleSelectSpinner
             android:id="@+id/sp_select_subject"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
