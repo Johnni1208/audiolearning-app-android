@@ -5,6 +5,7 @@ orbs:
 
 jobs:
   build:
+    working_directory: ~/audiolearning
     executor: android/android
         
     steps:
