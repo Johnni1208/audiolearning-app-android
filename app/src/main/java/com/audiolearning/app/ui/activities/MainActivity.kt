@@ -1,4 +1,4 @@
-package com.audiolearning.app
+package com.audiolearning.app.ui.activities
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.audiolearning.app.R
 import com.audiolearning.app.databinding.ActivityMainBinding
 import com.audiolearning.app.ui.fragments.about_us.AboutUsFragment
 import com.audiolearning.app.ui.fragments.recorder.RecorderFragment
@@ -24,7 +25,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(
+            this,
+            R.layout.activity_main
+        )
         binding.lifecycleOwner = this
 
         binding.navView.setOnNavigationItemSelectedListener(OnNavigationItemSelectedListener())

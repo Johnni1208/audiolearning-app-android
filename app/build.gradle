@@ -48,6 +48,7 @@ dependencies {
 
     def room_version = "2.2.4"
     def lifecycle_version = "2.2.0"
+    def dagger_version = "2.26"
 
     // Room and Architectural Components
     implementation "androidx.room:room-runtime:$room_version"
@@ -85,4 +86,10 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-android:2.7.22'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
+
+    // Dagger DI
+    implementation "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 }

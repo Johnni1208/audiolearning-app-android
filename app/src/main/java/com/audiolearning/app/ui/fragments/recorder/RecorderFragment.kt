@@ -8,20 +8,19 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.audiolearning.app.R
-import com.audiolearning.app.audio.audio_recorder.AudioRecorder
 import com.audiolearning.app.audio.audio_recorder.AudioRecorderState
 import com.audiolearning.app.databinding.FragmentRecorderBinding
 import com.audiolearning.app.ui.dialogs.new_recording.NewRecordingDialog
-import com.audiolearning.app.util.timer.Timer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class RecorderFragment : Fragment() {
-    private lateinit var viewModel: RecorderViewModel
+    @Inject
+    lateinit var viewModel: RecorderViewModel
     private lateinit var binding: FragmentRecorderBinding
 
     override fun onCreateView(
@@ -37,14 +36,6 @@ class RecorderFragment : Fragment() {
         )
 
         binding.lifecycleOwner = this
-
-        val viewModelFactory = RecorderViewModelFactory(
-            AudioRecorder(),
-            Timer()
-        )
-        viewModel = ViewModelProvider(this, viewModelFactory)
-            .get(RecorderViewModel::class.java)
-
         binding.viewModel = viewModel
 
         /* Hide btnPauseAndResume since pausing and resuming MediaRecorders

@@ -7,18 +7,19 @@
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:name=".AudioLearningApplication"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name="com.audiolearning.app.SplashActivity">
+        <activity android:name="com.audiolearning.app.ui.activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.audiolearning.app.MainActivity"
+            android:name="com.audiolearning.app.ui.activities.MainActivity"
             android:label="@string/app_name">
         </activity>
     </application>
