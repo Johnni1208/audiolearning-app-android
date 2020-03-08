@@ -6,21 +6,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.audiolearning.app.R
 import com.audiolearning.app.audio.audio_recorder.AudioRecorderState
 import com.audiolearning.app.databinding.FragmentRecorderBinding
 import com.audiolearning.app.ui.dialogs.new_recording.NewRecordingDialog
+import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class RecorderFragment : Fragment() {
+class RecorderFragment : DaggerFragment() {
     @Inject
-    lateinit var viewModel: RecorderViewModel
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel by viewModels<RecorderViewModel> { viewModelFactory }
     private lateinit var binding: FragmentRecorderBinding
 
     override fun onCreateView(

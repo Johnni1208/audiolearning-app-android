@@ -1,9 +1,9 @@
 package com.audiolearning.app.ui.fragments.recorder
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.audiolearning.app.audio.audio_recorder.AudioRecorder
 import com.audiolearning.app.audio.audio_recorder.AudioRecorderState
-import com.audiolearning.app.audio.audio_recorder.IAudioRecorder
-import com.audiolearning.app.util.timer.ITimer
+import com.audiolearning.app.util.timer.Timer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert.assertEquals
@@ -16,8 +16,8 @@ class RecordingAndTimerHandlerAudioRecorderStateTest {
     val instantExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var handler: RecordingAndTimerHandler
-    private lateinit var mockAudioRecorder: IAudioRecorder
-    private lateinit var mockTimer: ITimer
+    private lateinit var mockAudioRecorder: AudioRecorder
+    private lateinit var mockTimer: Timer
 
     @Before
     fun setUpViewModel() {

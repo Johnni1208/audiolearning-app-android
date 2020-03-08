@@ -4,14 +4,16 @@ import android.content.Context
 import com.audiolearning.app.AudioLearningApplication
 import dagger.BindsInstance
 import dagger.Component
+import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import javax.inject.Singleton
 
 @Singleton
 @Component(
     modules = [
-        RecorderModule::class,
-        AudioRecorderModule::class
+        AndroidInjectionModule::class,
+        ApplicationModule::class,
+        RecorderModule::class
     ]
 )
 interface ApplicationComponent : AndroidInjector<AudioLearningApplication> {

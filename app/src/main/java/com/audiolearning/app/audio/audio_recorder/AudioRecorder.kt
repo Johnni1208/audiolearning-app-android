@@ -4,6 +4,7 @@ import android.annotation.TargetApi
 import android.media.MediaRecorder
 import android.os.Build
 import com.audiolearning.app.data.db.entities.Audio
+import com.audiolearning.app.util.audio.CustomMediaRecorderProvider
 import kotlinx.coroutines.delay
 import java.io.File
 import javax.inject.Inject
@@ -12,19 +13,23 @@ import javax.inject.Inject
  * AudioRecorder for recording audio.
  * Use this for recording audio in this project.
  *
- * @param recorder Inject a custom instance of [MediaRecorder],
+ * @param recorder **Used for testing purposes only. Use _null_ in production.**
+ *
+ * Inject a custom instance of [MediaRecorder],
  * else it creates an instance in the [record] method.
- * Used for testing purposes.
  */
-class AudioRecorder @Inject constructor(private var recorder: MediaRecorder) : IAudioRecorder {
-    override var isActive: Boolean = false
+class AudioRecorder @Inject constructor(private var recorder: MediaRecorder?) {
+    var isActive: Boolean = false
 
     private val tempAudioFile: File =
         File.createTempFile("tempAudioFile", Audio.fileExtension)
 
-    override fun record() {
-        recorder.setOutputFile(tempAudioFile.absolutePath)
-        recorder.apply {
+    fun record() {
+        if (recorder == null) {
+            recorder = CustomMediaRecorderProvider.getAudioMediaRecorder(tempAudioFile)
+        }
+
+        recorder?.apply {
             prepare()
             start()
         }
@@ -32,13 +37,13 @@ class AudioRecorder @Inject constructor(private var recorder: MediaRecorder) : I
     }
 
     @TargetApi(Build.VERSION_CODES.N)
-    override fun pause() {
-        recorder.pause()
+    fun pause() {
+        recorder?.pause()
     }
 
     @TargetApi(Build.VERSION_CODES.N)
-    override fun resume() {
-        recorder.resume()
+    fun resume() {
+        recorder?.resume()
     }
 
     /**
@@ -48,13 +53,14 @@ class AudioRecorder @Inject constructor(private var recorder: MediaRecorder) : I
      * since the MPEG_4 audio format cuts audio to early.
      *
      */
-    override suspend fun stop(): File {
+    suspend fun stop(): File {
         delay(500)
-        recorder.apply {
+        recorder?.apply {
             stop()
             release()
         }
 
+        recorder = null
         isActive = false
         return tempAudioFile
     }
@@ -65,12 +71,13 @@ class AudioRecorder @Inject constructor(private var recorder: MediaRecorder) : I
      *
      * We cannot use [stop] for this, since it takes 500ms before finally stopping.
      */
-    override fun onDestroy() {
-        recorder.apply {
+    fun onDestroy() {
+        recorder?.apply {
             stop()
             release()
         }
 
+        recorder = null
         isActive = false
     }
 }
