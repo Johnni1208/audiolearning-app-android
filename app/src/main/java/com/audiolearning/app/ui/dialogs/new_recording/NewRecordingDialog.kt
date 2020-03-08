@@ -7,25 +7,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.audiolearning.app.R
 import com.audiolearning.app.adapters.SubjectArrayAdapter
-import com.audiolearning.app.data.db.AudioLearningDatabase
 import com.audiolearning.app.data.db.entities.Subject
-import com.audiolearning.app.data.repositories.AudioRepository
-import com.audiolearning.app.data.repositories.SubjectRepository
+import dagger.android.support.DaggerDialogFragment
 import kotlinx.android.synthetic.main.dialog_new_recording.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
-class NewRecordingDialog : DialogFragment() {
+class NewRecordingDialog : DaggerDialogFragment() {
     private lateinit var newRecording: File
     private lateinit var dialogContext: Context
-    private lateinit var viewModel: NewRecordingDialogViewModel
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel by viewModels<NewRecordingDialogViewModel> { viewModelFactory }
 
     companion object {
         const val newFilePathArgumentKey = "newFilePath"
@@ -72,16 +74,6 @@ class NewRecordingDialog : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val audioLearningDatabase = AudioLearningDatabase.invoke(dialogContext)
-
-        val viewModelFactory = NewRecordingDialogViewModelFactory(
-            SubjectRepository(audioLearningDatabase, dialogContext.filesDir),
-            AudioRepository(audioLearningDatabase)
-        )
-
-        viewModel = ViewModelProvider(this, viewModelFactory)
-            .get(NewRecordingDialogViewModel::class.java)
-
         return inflater.inflate(R.layout.dialog_new_recording, container, false)
     }
 

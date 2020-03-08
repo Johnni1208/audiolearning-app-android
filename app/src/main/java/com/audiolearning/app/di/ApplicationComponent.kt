@@ -13,7 +13,8 @@ import javax.inject.Singleton
     modules = [
         AndroidInjectionModule::class,
         ApplicationModule::class,
-        RecorderModule::class
+        RecorderModule::class,
+        NewRecordingDialogModule::class
     ]
 )
 interface ApplicationComponent : AndroidInjector<AudioLearningApplication> {

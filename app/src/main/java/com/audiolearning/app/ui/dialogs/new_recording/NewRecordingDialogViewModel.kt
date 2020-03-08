@@ -10,8 +10,9 @@ import com.audiolearning.app.data.repositories.SubjectRepository
 import com.audiolearning.app.extensions.isAllowedFileName
 import com.audiolearning.app.ui.dialogs.create_new_subject.CreateNewSubjectDialog
 import java.io.File
+import javax.inject.Inject
 
-class NewRecordingDialogViewModel(
+class NewRecordingDialogViewModel @Inject constructor(
     private val subjectRepository: SubjectRepository,
     private val audioRepository: AudioRepository
 ) : ViewModel() {

@@ -5,8 +5,9 @@ import com.audiolearning.app.data.db.AudioLearningDatabase
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.util.file.SubjectFileUtils
 import java.io.File
+import javax.inject.Inject
 
-class SubjectRepository(
+class SubjectRepository @Inject constructor(
     private val db: AudioLearningDatabase,
     private val filesDir: File
 ) {
