@@ -18,10 +18,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 class RecorderFragment : DaggerFragment() {
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by viewModels<RecorderViewModel> { viewModelFactory }
@@ -57,7 +57,7 @@ class RecorderFragment : DaggerFragment() {
     private fun observeIfNewAudioRecording() {
         viewModel.recordingAndTimerHandler.recordedFile.observe(
             viewLifecycleOwner,
-            Observer { newFile ->
+            Observer { newFile: File? ->
                 newFile?.let {
                     NewRecordingDialog.display(
                         newFile.path,
@@ -71,8 +71,8 @@ class RecorderFragment : DaggerFragment() {
         var stateBefore: AudioRecorderState = AudioRecorderState.IDLING
         viewModel.recordingAndTimerHandler.audioRecorderState.observe(
             viewLifecycleOwner,
-            Observer { newState ->
-                newState?.let {
+            Observer { newState: AudioRecorderState ->
+                newState.let {
                     when (it) {
                         AudioRecorderState.IDLING -> {
                             binding.apply {

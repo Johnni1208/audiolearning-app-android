@@ -93,7 +93,7 @@ class NewRecordingDialog : DaggerDialogFragment() {
          * If so, it creates a new array adapter with the items
          * and then loads it into the spinner.
          */
-        viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects ->
+        viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
             val spinnerAdapter = SubjectArrayAdapter.createWithAddHint(
                 dialogContext,
                 R.layout.subject_spinner_item,

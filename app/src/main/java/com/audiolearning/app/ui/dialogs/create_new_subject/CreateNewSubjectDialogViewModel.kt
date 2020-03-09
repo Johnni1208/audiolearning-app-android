@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import com.audiolearning.app.data.repositories.SubjectRepository
 import com.audiolearning.app.extensions.isAllowedFileName
 import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
-class CreateNewSubjectDialogViewModel(
+class CreateNewSubjectDialogViewModel @Inject constructor(
     private val subjectRepository: SubjectRepository
 ) : ViewModel() {
     suspend fun createNewSubject(subjectName: String) = subjectRepository.insert(subjectName)
