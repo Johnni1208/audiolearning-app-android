@@ -14,6 +14,7 @@ class AudioLearningViewModelFactory @Inject constructor(
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         var creator: Provider<out ViewModel>? = creators[modelClass]
+
         if (creator != null) {
             for ((key, value) in creators) {
                 if (modelClass.isAssignableFrom(key)) {
@@ -22,6 +23,7 @@ class AudioLearningViewModelFactory @Inject constructor(
                 }
             }
         }
+
         if (creator == null) {
             throw IllegalArgumentException("Unknown model class: $modelClass")
         }

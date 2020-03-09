@@ -72,47 +72,46 @@ class RecorderFragment : DaggerFragment() {
         viewModel.recordingAndTimerHandler.audioRecorderState.observe(
             viewLifecycleOwner,
             Observer { newState: AudioRecorderState ->
-                newState.let {
-                    when (it) {
-                        AudioRecorderState.IDLING -> {
-                            binding.apply {
-                                btnPauseAndResume.isEnabled = false
-                                btnPauseAndResume.isClickable = false
-                                btnPauseAndResume.text = getString(R.string.pause_text)
+                when (newState) {
+                    AudioRecorderState.IDLING -> {
+                        binding.apply {
+                            btnPauseAndResume.isEnabled = false
+                            btnPauseAndResume.isClickable = false
+                            btnPauseAndResume.text = getString(R.string.pause_text)
 
-                                btnRecordAndStop.text = getString(R.string.record_text)
-                            }
+                            btnRecordAndStop.text = getString(R.string.record_text)
+                        }
 
-                            // Disable recording button so it is not clickable when the NewRecordingDialog opens
-                            if (stateBefore == AudioRecorderState.RECORDING || stateBefore == AudioRecorderState.PAUSING) {
-                                GlobalScope.launch(Dispatchers.Main) {
-                                    binding.apply {
-                                        btnRecordAndStop.isEnabled = false
-                                        btnRecordAndStop.isClickable = false
-                                        delay(1000)
-                                        btnRecordAndStop.isEnabled = true
-                                        btnRecordAndStop.isClickable = true
-                                    }
+                        // Disable recording button so it is not clickable when the NewRecordingDialog opens
+                        if (stateBefore == AudioRecorderState.RECORDING || stateBefore == AudioRecorderState.PAUSING) {
+                            GlobalScope.launch(Dispatchers.Main) {
+                                binding.apply {
+                                    btnRecordAndStop.isEnabled = false
+                                    btnRecordAndStop.isClickable = false
+                                    delay(1000)
+                                    btnRecordAndStop.isEnabled = true
+                                    btnRecordAndStop.isClickable = true
                                 }
                             }
                         }
+                    }
 
-                        AudioRecorderState.RECORDING -> {
-                            binding.apply {
-                                btnPauseAndResume.text = getString(R.string.pause_text)
-                                btnPauseAndResume.isEnabled = true
-                                btnPauseAndResume.isClickable = true
-                                btnRecordAndStop.text = getString(R.string.stop_text)
-                            }
-                        }
-
-                        AudioRecorderState.PAUSING -> {
-                            binding.btnPauseAndResume.text = getString(R.string.resume_text)
+                    AudioRecorderState.RECORDING -> {
+                        binding.apply {
+                            btnPauseAndResume.text = getString(R.string.pause_text)
+                            btnPauseAndResume.isEnabled = true
+                            btnPauseAndResume.isClickable = true
+                            btnRecordAndStop.text = getString(R.string.stop_text)
                         }
                     }
-                    stateBefore = newState
+
+                    AudioRecorderState.PAUSING -> {
+                        binding.btnPauseAndResume.text = getString(R.string.resume_text)
+                    }
                 }
-            })
+                stateBefore = newState
+            }
+        )
     }
 
     override fun onDetach() {

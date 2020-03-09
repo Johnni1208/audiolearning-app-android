@@ -4,7 +4,6 @@ import android.annotation.TargetApi
 import android.media.MediaRecorder
 import android.os.Build
 import com.audiolearning.app.data.db.entities.Audio
-import com.audiolearning.app.util.audio.CustomMediaRecorderProvider
 import kotlinx.coroutines.delay
 import java.io.File
 import javax.inject.Inject
@@ -26,7 +25,7 @@ class AudioRecorder @Inject constructor(private var recorder: MediaRecorder?) {
 
     fun record() {
         if (recorder == null) {
-            recorder = CustomMediaRecorderProvider.getAudioMediaRecorder(tempAudioFile)
+            recorder = getAudioMediaRecorder(tempAudioFile)
         }
 
         recorder?.apply {
@@ -79,5 +78,14 @@ class AudioRecorder @Inject constructor(private var recorder: MediaRecorder?) {
 
         recorder = null
         isActive = false
+    }
+
+    private fun getAudioMediaRecorder(file: File) = MediaRecorder().apply {
+        setAudioSource(MediaRecorder.AudioSource.MIC)
+        setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+        setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+        setAudioEncodingBitRate(64000)
+        setAudioSamplingRate(16000)
+        setOutputFile(file.absolutePath)
     }
 }
