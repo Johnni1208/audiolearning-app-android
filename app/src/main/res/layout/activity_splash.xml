@@ -3,6 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SplashActivity">
+    tools:context=".ui.activities.SplashActivity">
     <!-- TODO: ADD App Icon -->
 </androidx.constraintlayout.widget.ConstraintLayout>

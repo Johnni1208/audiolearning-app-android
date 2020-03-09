@@ -5,20 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.audiolearning.app.R
-import com.audiolearning.app.data.db.AudioLearningDatabase
-import com.audiolearning.app.data.repositories.SubjectRepository
+import dagger.android.support.DaggerDialogFragment
 import kotlinx.android.synthetic.main.dialog_create_new_subject.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * This shows a dialog, where the user can create a new subject.
  */
-class CreateNewSubjectDialog : DialogFragment() {
-    private lateinit var viewModel: CreateNewSubjectDialogViewModel
+class CreateNewSubjectDialog : DaggerDialogFragment() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel by viewModels<CreateNewSubjectDialogViewModel> { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,16 +32,6 @@ class CreateNewSubjectDialog : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val viewModelFactory = CreateNewSubjectDialogViewModelFactory(
-            SubjectRepository(
-                AudioLearningDatabase.invoke(requireContext()),
-                requireContext().filesDir
-            )
-        )
-
-        viewModel = ViewModelProvider(this, viewModelFactory)
-            .get(CreateNewSubjectDialogViewModel::class.java)
-
         dialog?.setTitle(R.string.cnsDialog_title)
         return inflater.inflate(R.layout.dialog_create_new_subject, container, false)
     }

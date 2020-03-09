@@ -4,16 +4,16 @@ import android.annotation.TargetApi
 import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.audiolearning.app.audio.audio_recorder.AudioRecorder
 import com.audiolearning.app.audio.audio_recorder.AudioRecorderState
-import com.audiolearning.app.audio.audio_recorder.IAudioRecorder
-import com.audiolearning.app.util.timer.ITimer
+import com.audiolearning.app.util.timer.Timer
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
 
 class RecordingAndTimerHandler(
-    private val audioRecorder: IAudioRecorder,
-    timer: ITimer
+    private val audioRecorder: AudioRecorder,
+    timer: Timer
 ) {
     private val _audioRecorderState = MutableLiveData<AudioRecorderState>().apply {
         value = AudioRecorderState.IDLING
@@ -27,7 +27,7 @@ class RecordingAndTimerHandler(
     val recordedFile: LiveData<File>
         get() = _recordedFile
 
-    private val recordTimer: ITimer =
+    private val recordTimer: Timer =
         timer
     val recordedTime: LiveData<String>
         get() = recordTimer.time

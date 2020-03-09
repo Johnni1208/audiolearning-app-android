@@ -6,22 +6,24 @@ import android.os.Build
 import com.audiolearning.app.data.db.entities.Audio
 import kotlinx.coroutines.delay
 import java.io.File
+import javax.inject.Inject
 
 /**
  * AudioRecorder for recording audio.
  * Use this for recording audio in this project.
  *
- * @param recorder Inject a custom instance of [MediaRecorder],
+ * @param recorder **Used for testing purposes only. Use _null_ in production.**
+ *
+ * Inject a custom instance of [MediaRecorder],
  * else it creates an instance in the [record] method.
- * Used for testing purposes.
  */
-class AudioRecorder(private var recorder: MediaRecorder? = null) : IAudioRecorder {
-    override var isActive: Boolean = false
+class AudioRecorder @Inject constructor(private var recorder: MediaRecorder?) {
+    var isActive: Boolean = false
 
     private val tempAudioFile: File =
         File.createTempFile("tempAudioFile", Audio.fileExtension)
 
-    override fun record() {
+    fun record() {
         if (recorder == null) {
             recorder = getAudioMediaRecorder(tempAudioFile)
         }
@@ -33,23 +35,13 @@ class AudioRecorder(private var recorder: MediaRecorder? = null) : IAudioRecorde
         isActive = true
     }
 
-    private fun getAudioMediaRecorder(file: File) = MediaRecorder().apply {
-        setAudioSource(MediaRecorder.AudioSource.MIC)
-        setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-        setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-        setAudioEncodingBitRate(64000)
-        setAudioSamplingRate(16000)
-        setOutputFile(file.absolutePath)
-    }
-
-
     @TargetApi(Build.VERSION_CODES.N)
-    override fun pause() {
+    fun pause() {
         recorder?.pause()
     }
 
     @TargetApi(Build.VERSION_CODES.N)
-    override fun resume() {
+    fun resume() {
         recorder?.resume()
     }
 
@@ -60,7 +52,7 @@ class AudioRecorder(private var recorder: MediaRecorder? = null) : IAudioRecorde
      * since the MPEG_4 audio format cuts audio to early.
      *
      */
-    override suspend fun stop(): File {
+    suspend fun stop(): File {
         delay(500)
         recorder?.apply {
             stop()
@@ -78,7 +70,7 @@ class AudioRecorder(private var recorder: MediaRecorder? = null) : IAudioRecorde
      *
      * We cannot use [stop] for this, since it takes 500ms before finally stopping.
      */
-    override fun onDestroy() {
+    fun onDestroy() {
         recorder?.apply {
             stop()
             release()
@@ -86,5 +78,14 @@ class AudioRecorder(private var recorder: MediaRecorder? = null) : IAudioRecorde
 
         recorder = null
         isActive = false
+    }
+
+    private fun getAudioMediaRecorder(file: File) = MediaRecorder().apply {
+        setAudioSource(MediaRecorder.AudioSource.MIC)
+        setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+        setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+        setAudioEncodingBitRate(64000)
+        setAudioSamplingRate(16000)
+        setOutputFile(file.absolutePath)
     }
 }
