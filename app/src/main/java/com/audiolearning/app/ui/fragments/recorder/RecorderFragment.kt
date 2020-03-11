@@ -61,7 +61,7 @@ class RecorderFragment : DaggerFragment() {
                 newFile?.let {
                     NewRecordingDialog.display(
                         newFile.path,
-                        requireFragmentManager()
+                        parentFragmentManager
                     )
                 }
             })

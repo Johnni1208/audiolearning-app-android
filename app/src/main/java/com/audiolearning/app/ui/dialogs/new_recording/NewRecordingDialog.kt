@@ -85,7 +85,7 @@ class NewRecordingDialog : DaggerDialogFragment() {
 
     private fun setupSpinner() {
         sp_select_subject.onItemSelectedListener =
-            viewModel.getAddHintItemSelectedListener(requireFragmentManager())
+            viewModel.getAddHintItemSelectedListener(parentFragmentManager)
 
         var hasNewSubject = false
 
