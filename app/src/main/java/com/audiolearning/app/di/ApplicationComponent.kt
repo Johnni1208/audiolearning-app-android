@@ -14,6 +14,7 @@ import javax.inject.Singleton
         AndroidInjectionModule::class,
         ApplicationModule::class,
         RecorderModule::class,
+        SubjectsModule::class,
         NewRecordingDialogModule::class,
         CreateNewSubjectDialogModule::class
     ]
