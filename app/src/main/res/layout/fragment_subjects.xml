@@ -11,6 +11,7 @@
             android:id="@+id/rv_subjects"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/bottomNavigationBar_height"
             android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -19,10 +20,10 @@
 
         <TextView
             android:id="@+id/tv_no_subjects"
+            style="@style/SubjectFragment.EmptyText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/subjectFragment_empty_text"
             android:gravity="center"
-            android:textSize="18sp" />
+            android:text="@string/subjectFragment_empty_text" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
