@@ -6,8 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.audiolearning.app.R
 import com.audiolearning.app.databinding.ActivityMainBinding
 import com.audiolearning.app.ui.fragments.about_us.AboutUsFragment
@@ -16,6 +16,7 @@ import com.audiolearning.app.ui.fragments.subjects.SubjectsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
+    private val recorderFragmentPosition = 1
     private val fragments = arrayOf(
         AboutUsFragment(),
         RecorderFragment(),
@@ -35,8 +36,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.pager.apply {
             adapter = ScreenSlidePagerAdapter(supportFragmentManager)
-            addOnPageChangeListener(OnPageChangeListener())
-            currentItem = 1
+            registerOnPageChangeCallback(OnPageChangeCallback())
+            setCurrentItem(recorderFragmentPosition, false)
         }
     }
 
@@ -46,9 +47,9 @@ class MainActivity : AppCompatActivity() {
             val pager = binding.pager
 
             val menuItemToPagerItemMap = mapOf(
-                R.id.navigation_about_us to fun(){ pager.currentItem = 0 },
-                R.id.navigation_recorder to fun(){ pager.currentItem = 1 },
-                R.id.navigation_subjects to fun(){ pager.currentItem = 2 }
+                R.id.navigation_about_us to fun() { pager.currentItem = 0 },
+                R.id.navigation_recorder to fun() { pager.currentItem = 1 },
+                R.id.navigation_subjects to fun() { pager.currentItem = 2 }
             )
 
             menuItemToPagerItemMap[selectedItem.itemId]?.invoke()
@@ -57,16 +58,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private inner class ScreenSlidePagerAdapter(fm: FragmentManager) :
-        FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        override fun getCount(): Int = fragments.size
+        FragmentStateAdapter(fm, lifecycle) {
+        override fun getItemCount(): Int = fragments.size
 
-        override fun getItem(position: Int): Fragment {
+        override fun createFragment(position: Int): Fragment {
             return fragments[position]
         }
     }
 
-    private inner class OnPageChangeListener :
-        ViewPager.OnPageChangeListener {
+    private inner class OnPageChangeCallback :
+        ViewPager2.OnPageChangeCallback() {
         private lateinit var previousMenuItem: MenuItem
 
         override fun onPageSelected(position: Int) {
@@ -79,15 +80,5 @@ class MainActivity : AppCompatActivity() {
             binding.navView.menu.getItem(position).isChecked = true
             previousMenuItem = binding.navView.menu.getItem(position)
         }
-
-        override fun onPageScrollStateChanged(state: Int) {}
-
-        override fun onPageScrolled(
-            position: Int,
-            positionOffset: Float,
-            positionOffsetPixels: Int
-        ) {
-        }
     }
-
 }

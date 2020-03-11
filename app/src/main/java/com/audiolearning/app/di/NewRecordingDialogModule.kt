@@ -15,7 +15,7 @@ abstract class NewRecordingDialogModule {
             ViewModelBuilder::class
         ]
     )
-    internal abstract fun newRecoridngDialog(): NewRecordingDialog
+    internal abstract fun newRecordingDialog(): NewRecordingDialog
 
     @Binds
     @IntoMap
