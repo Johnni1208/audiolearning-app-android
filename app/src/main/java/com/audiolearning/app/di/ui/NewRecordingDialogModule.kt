@@ -1,6 +1,8 @@
-package com.audiolearning.app.di
+package com.audiolearning.app.di.ui
 
 import androidx.lifecycle.ViewModel
+import com.audiolearning.app.di.ViewModelBuilder
+import com.audiolearning.app.di.ViewModelKey
 import com.audiolearning.app.ui.dialogs.new_recording.NewRecordingDialog
 import com.audiolearning.app.ui.dialogs.new_recording.NewRecordingDialogViewModel
 import dagger.Binds
