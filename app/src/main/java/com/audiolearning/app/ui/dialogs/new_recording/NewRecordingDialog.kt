@@ -14,6 +14,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.audiolearning.app.R
 import com.audiolearning.app.adapters.SubjectArrayAdapter
 import com.audiolearning.app.data.db.entities.Subject
+import com.audiolearning.app.extensions.hideKeyboard
+import com.audiolearning.app.extensions.showKeyboard
 import dagger.android.support.DaggerDialogFragment
 import kotlinx.android.synthetic.main.dialog_new_recording.*
 import kotlinx.coroutines.GlobalScope
@@ -79,6 +81,7 @@ class NewRecordingDialog : DaggerDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        et_audio_name.showKeyboard()
         setupSpinner()
         setupOnClickListeners()
     }
@@ -173,7 +176,14 @@ class NewRecordingDialog : DaggerDialogFragment() {
     }
 
     override fun onCancel(dialog: DialogInterface) {
+        et_audio_name.hideKeyboard()
         newRecording.delete()
         super.onCancel(dialog)
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        et_audio_name.hideKeyboard()
+        newRecording.delete()
+        super.onDismiss(dialog)
     }
 }

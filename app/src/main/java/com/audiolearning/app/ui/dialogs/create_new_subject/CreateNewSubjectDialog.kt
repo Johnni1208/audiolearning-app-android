@@ -1,13 +1,17 @@
 package com.audiolearning.app.ui.dialogs.create_new_subject
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.audiolearning.app.R
+import com.audiolearning.app.extensions.hideKeyboard
+import com.audiolearning.app.extensions.showKeyboard
 import dagger.android.support.DaggerDialogFragment
 import kotlinx.android.synthetic.main.dialog_create_new_subject.*
 import kotlinx.coroutines.GlobalScope
@@ -21,6 +25,7 @@ class CreateNewSubjectDialog : DaggerDialogFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by viewModels<CreateNewSubjectDialogViewModel> { viewModelFactory }
+    private lateinit var imm: InputMethodManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +43,8 @@ class CreateNewSubjectDialog : DaggerDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        dialog?.window?.showKeyboard(et_subject_name)
 
         et_subject_name.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
@@ -81,5 +88,15 @@ class CreateNewSubjectDialog : DaggerDialogFragment() {
             else -> {
             }
         }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        this.dialog?.window?.hideKeyboard()
+        super.onDismiss(dialog)
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        this.dialog?.window?.hideKeyboard()
+        super.onCancel(dialog)
     }
 }
