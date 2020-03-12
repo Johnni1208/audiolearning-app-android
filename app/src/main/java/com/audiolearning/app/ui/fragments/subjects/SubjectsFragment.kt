@@ -4,28 +4,58 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import com.audiolearning.app.R
+import com.audiolearning.app.adapters.SubjectsRecyclerViewAdapter
+import com.audiolearning.app.data.db.entities.Subject
+import com.audiolearning.app.databinding.FragmentSubjectsBinding
+import com.audiolearning.app.extensions.hide
+import com.audiolearning.app.extensions.show
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
-class SubjectsFragment : Fragment() {
-
-    private lateinit var subjectsViewModel: SubjectsViewModel
+class SubjectsFragment : DaggerFragment() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel by viewModels<SubjectsViewModel> { viewModelFactory }
+    private lateinit var binding: FragmentSubjectsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        subjectsViewModel =
-            ViewModelProvider(this).get(SubjectsViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_subjects, container, false)
-        val textView: TextView = root.findViewById(R.id.text_notifications)
-        subjectsViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_subjects,
+            container,
+            false
+        )
+
+        binding.lifecycleOwner = this
+
+        val subjectsAdapter =
+            SubjectsRecyclerViewAdapter(viewModel.getSubjects().value ?: emptyList())
+
+        viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
+            // Updates the adapter with new data
+            subjectsAdapter.setData(subjects)
+
+            // Updates the empty state message
+            if (subjects.isEmpty()) binding.tvNoSubjects.show()
+            else binding.tvNoSubjects.hide()
         })
-        return root
+
+        binding.rvSubjects.apply {
+            setHasFixedSize(true)
+            layoutManager = GridLayoutManager(context, 2)
+            adapter = subjectsAdapter
+        }
+
+        return binding.root
     }
 }

@@ -1,13 +1,10 @@
 package com.audiolearning.app.ui.fragments.subjects
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.audiolearning.app.data.repositories.SubjectRepository
+import javax.inject.Inject
 
-class SubjectsViewModel : ViewModel() {
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is Subjects Fragment"
-    }
-    val text: LiveData<String> = _text
+class SubjectsViewModel @Inject constructor(private val subjectRepository: SubjectRepository) :
+    ViewModel() {
+    fun getSubjects() = subjectRepository.getAllSubjects()
 }

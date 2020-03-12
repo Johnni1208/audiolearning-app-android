@@ -29,4 +29,7 @@
     <string name="cnsDialog_save_button_text">Save</string>
     <string name="cnsDialog_cancel_button_text">Cancel</string>
     <string name="cnsDialog_error_subject_already_exists">Subject already exists</string>
+
+    <!-- Text for subject list -->
+    <string name="subjectFragment_empty_text">No subjects yet, try adding one…</string>
 </resources>
