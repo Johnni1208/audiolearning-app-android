@@ -13,6 +13,8 @@ import com.audiolearning.app.R
 import com.audiolearning.app.adapters.SubjectsRecyclerViewAdapter
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.databinding.FragmentSubjectsBinding
+import com.audiolearning.app.extensions.hide
+import com.audiolearning.app.extensions.show
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 

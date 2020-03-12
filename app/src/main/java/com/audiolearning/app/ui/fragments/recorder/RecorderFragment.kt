@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.audiolearning.app.R
 import com.audiolearning.app.audio.audio_recorder.AudioRecorderState
 import com.audiolearning.app.databinding.FragmentRecorderBinding
+import com.audiolearning.app.extensions.hide
 import com.audiolearning.app.ui.dialogs.new_recording.NewRecordingDialog
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +46,7 @@ class RecorderFragment : DaggerFragment() {
         /* Hide btnPauseAndResume since pausing and resuming MediaRecorders
         * is only available on API > 24 */
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            binding.btnPauseAndResume.visibility = View.GONE
+            binding.btnPauseAndResume.hide()
         }
 
         observeIfNewAudioRecording()
