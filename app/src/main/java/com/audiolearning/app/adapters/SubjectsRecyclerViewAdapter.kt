@@ -24,6 +24,11 @@ class SubjectsRecyclerViewAdapter(private var data: List<Subject>) :
 
     override fun getItemCount() = data.size
 
+    /**
+     * Use this function to apply new data for the adapter.
+     *
+     * @param newData List of new Subjects
+     */
     fun setData(newData: List<Subject>) {
         data = newData
         notifyDataSetChanged()

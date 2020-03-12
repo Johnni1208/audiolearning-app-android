@@ -38,26 +38,24 @@ class SubjectsFragment : DaggerFragment() {
 
         binding.lifecycleOwner = this
 
-        binding.rvSubjects.apply {
-            setHasFixedSize(true)
-            layoutManager = GridLayoutManager(context, 2)
-            adapter = getSubjectAdapter()
-        }
-
-        return binding.root
-    }
-
-    private fun getSubjectAdapter(): SubjectsRecyclerViewAdapter {
         val subjectsAdapter =
             SubjectsRecyclerViewAdapter(viewModel.getSubjects().value ?: emptyList())
 
         viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
+            // Updates the adapter with new data
             subjectsAdapter.setData(subjects)
 
+            // Updates the empty state message
             if (subjects.isEmpty()) binding.tvNoSubjects.show()
             else binding.tvNoSubjects.hide()
         })
 
-        return subjectsAdapter
+        binding.rvSubjects.apply {
+            setHasFixedSize(true)
+            layoutManager = GridLayoutManager(context, 2)
+            adapter = subjectsAdapter
+        }
+
+        return binding.root
     }
 }
