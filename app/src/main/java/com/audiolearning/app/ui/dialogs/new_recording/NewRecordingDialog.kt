@@ -1,8 +1,11 @@
 package com.audiolearning.app.ui.dialogs.new_recording
 
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +19,9 @@ import com.audiolearning.app.adapters.SubjectArrayAdapter
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.extensions.hideKeyboard
 import com.audiolearning.app.extensions.showKeyboard
+import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog
+import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialogTexts
+import com.audiolearning.app.util.ArgumentMissingException
 import dagger.android.support.DaggerDialogFragment
 import kotlinx.android.synthetic.main.dialog_new_recording.*
 import kotlinx.coroutines.GlobalScope
@@ -26,13 +32,15 @@ import javax.inject.Inject
 class NewRecordingDialog : DaggerDialogFragment() {
     private lateinit var newRecording: File
     private lateinit var dialogContext: Context
+    private lateinit var discardRecordingDialogTexts: DefaultYesNoDialogTexts
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     private val viewModel by viewModels<NewRecordingDialogViewModel> { viewModelFactory }
 
     companion object {
-        const val newFilePathArgumentKey = "newFilePath"
+        const val ARG_NEW_FILE_PATH = "NewRecordingDialog.newFilePath"
 
         /**
          * Bundles the newFilePath and puts it as the fragments arguments.
@@ -45,7 +53,7 @@ class NewRecordingDialog : DaggerDialogFragment() {
             val dialog = NewRecordingDialog()
 
             dialog.arguments = Bundle().apply {
-                putString(newFilePathArgumentKey, newFilePath)
+                putString(ARG_NEW_FILE_PATH, newFilePath)
             }
 
             dialog.show(
@@ -64,11 +72,18 @@ class NewRecordingDialog : DaggerDialogFragment() {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.AppTheme_FullScreenDialog)
 
-        val newRecordingFilePath = arguments?.getString(newFilePathArgumentKey)
-            ?: throw IllegalArgumentException("No argument provided for the new recording")
-        if (newRecordingFilePath.isEmpty()) throw IllegalArgumentException("No argument provided for the new recording")
+        val newRecordingFilePath = arguments?.getString(ARG_NEW_FILE_PATH)
+            ?: throw ArgumentMissingException(ARG_NEW_FILE_PATH)
+        if (newRecordingFilePath.isEmpty()) throw ArgumentMissingException(ARG_NEW_FILE_PATH)
 
         newRecording = File(newRecordingFilePath)
+
+        discardRecordingDialogTexts = DefaultYesNoDialogTexts(
+            getString(R.string.drDialog_title),
+            getString(R.string.drDialog_message),
+            getString(R.string.drDialog_positive_button_text),
+            getString(R.string.cancel)
+        )
     }
 
     override fun onCreateView(
@@ -116,16 +131,19 @@ class NewRecordingDialog : DaggerDialogFragment() {
     }
 
     private fun setupOnClickListeners() {
-        // Discard recording
+        dialog?.setOnKeyListener(DialogInterface.OnKeyListener { _, keyCode, event ->
+            if (event.action != KeyEvent.ACTION_DOWN) return@OnKeyListener true
+
+            if (keyCode == KeyEvent.KEYCODE_BACK) showDiscardRecordingDialog()
+            return@OnKeyListener true
+        })
+
         nr_toolbar.setNavigationOnClickListener {
-            newRecording.delete()
-            dismiss()
+            showDiscardRecordingDialog()
         }
 
-        // Discard recording
         btn_discard_recording.setOnClickListener {
-            newRecording.delete()
-            dismiss()
+            showDiscardRecordingDialog()
         }
 
         // Save recording
@@ -144,6 +162,14 @@ class NewRecordingDialog : DaggerDialogFragment() {
                 dismiss()
             }
         }
+    }
+
+    private fun showDiscardRecordingDialog() {
+        DefaultYesNoDialog.display(
+            parentFragmentManager,
+            discardRecordingDialogTexts,
+            this
+        )
     }
 
     private fun setError(validation: NewRecordingInputValidation) {
@@ -175,15 +201,19 @@ class NewRecordingDialog : DaggerDialogFragment() {
         }
     }
 
-    override fun onCancel(dialog: DialogInterface) {
-        et_audio_name.hideKeyboard()
-        newRecording.delete()
-        super.onCancel(dialog)
-    }
-
     override fun onDismiss(dialog: DialogInterface) {
         et_audio_name.hideKeyboard()
         newRecording.delete()
         super.onDismiss(dialog)
+    }
+
+    /**
+     * Receives Results from the [DefaultYesNoDialog] started when trying to dismiss the dialog.
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode != DefaultYesNoDialog.YES_NO_CALL) return
+
+        if (resultCode == Activity.RESULT_OK) dismiss()
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }

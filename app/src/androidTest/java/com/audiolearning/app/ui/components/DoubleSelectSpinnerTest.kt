@@ -25,7 +25,7 @@ class DoubleSelectSpinnerTest {
     @Before
     fun setUp() {
         launchFragment<NewRecordingDialog>(Bundle().apply {
-            putString(NewRecordingDialog.newFilePathArgumentKey, "testTempFile")
+            putString(NewRecordingDialog.ARG_NEW_FILE_PATH, "testTempFile")
         })
     }
 

@@ -38,7 +38,7 @@ class NewRecordingDialogTest {
     @Test
     fun clickingDiscard_ShouldCloseTheDialog() {
         launchFragment<NewRecordingDialog>(Bundle().apply {
-            putString(NewRecordingDialog.newFilePathArgumentKey, "testTempFile")
+            putString(NewRecordingDialog.ARG_NEW_FILE_PATH, "testTempFile")
         })
 
         onView(withId(R.id.btn_discard_recording)).perform(click())
