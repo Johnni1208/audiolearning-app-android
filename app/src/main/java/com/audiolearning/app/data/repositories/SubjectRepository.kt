@@ -25,4 +25,6 @@ class SubjectRepository @Inject constructor(
     fun getAllSubjects() = db.getSubjectDao().getAllSubjects()
 
     suspend fun getSubjectByName(name: String) = db.getSubjectDao().getSubjectByName(name)
+
+    suspend fun getSubjectById(id: Int) = db.getSubjectDao().getSubjectById(id)
 }

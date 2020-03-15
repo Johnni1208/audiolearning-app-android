@@ -17,9 +17,10 @@ import com.audiolearning.app.extensions.hide
 import com.audiolearning.app.extensions.show
 import com.audiolearning.app.ui.dialogs.create_new_subject.CreateNewSubjectDialog
 import dagger.android.support.DaggerFragment
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-class SubjectsFragment : DaggerFragment() {
+class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectClickListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by viewModels<SubjectsViewModel> { viewModelFactory }
@@ -56,14 +57,15 @@ class SubjectsFragment : DaggerFragment() {
 
     private fun setupRecyclerView() {
         val subjectsAdapter =
-            SubjectsRecyclerViewAdapter(viewModel.getSubjects().value ?: emptyList())
+            SubjectsRecyclerViewAdapter(viewModel.getSubjects().value ?: emptyList(), this)
 
         // Updates the adapter with new data
-        var hasNewSubjects = false
+        var subjectListCount = 0
         viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
             subjectsAdapter.setData(subjects)
-            if (hasNewSubjects) binding.rvSubjects.smoothScrollToPosition(subjects.size - 1)
-            hasNewSubjects = true
+
+            if (subjects.size > subjectListCount) binding.rvSubjects.smoothScrollToPosition(subjects.size - 1)
+            subjectListCount = subjects.size
         })
 
         binding.rvSubjects.apply {
@@ -80,5 +82,15 @@ class SubjectsFragment : DaggerFragment() {
                 "SubjectsFragment"
             )
         }
+    }
+
+    override fun onSubjectItemClick(position: Int) = runBlocking {
+    }
+
+    override fun onSubjectItemLongClick(position: Int): Boolean = runBlocking {
+        val subject = viewModel.getSubjectById(position)
+            ?: throw IllegalArgumentException("Could not find subject with id $position")
+        viewModel.deleteSubject(subject)
+        return@runBlocking true
     }
 }
