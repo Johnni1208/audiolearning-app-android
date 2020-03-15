@@ -23,6 +23,8 @@ import java.io.File
 import javax.inject.Inject
 
 class RecorderFragment : DaggerFragment() {
+    private val recordButtonUnavailableTime = 2000L
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by viewModels<RecorderViewModel> { viewModelFactory }
@@ -89,7 +91,7 @@ class RecorderFragment : DaggerFragment() {
                                 binding.apply {
                                     btnRecordAndStop.isEnabled = false
                                     btnRecordAndStop.isClickable = false
-                                    delay(1000)
+                                    delay(recordButtonUnavailableTime)
                                     btnRecordAndStop.isEnabled = true
                                     btnRecordAndStop.isClickable = true
                                 }

@@ -12,6 +12,6 @@ import java.util.regex.Pattern
  * False - If name does return any reserved characters
  */
 fun String.isAllowedFileName(): Boolean {
-    val reservedCharacters = Pattern.compile("[\\\\|?*<\":>/']")
+    val reservedCharacters = Pattern.compile("[\\\\|?*<\":>/'.]")
     return !reservedCharacters.matcher(this).find()
 }
