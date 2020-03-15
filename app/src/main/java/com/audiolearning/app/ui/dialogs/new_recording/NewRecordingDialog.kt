@@ -36,7 +36,6 @@ class NewRecordingDialog : DaggerDialogFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
     private val viewModel by viewModels<NewRecordingDialogViewModel> { viewModelFactory }
 
     companion object {

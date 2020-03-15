@@ -7,7 +7,7 @@ import android.view.WindowManager
 /**
  * Shows the SoftKeyboard.
  *
- * @param focusable requestsFocus for the given view
+ * @param focusable [View.requestFocus] for the given view
  */
 fun Window.showKeyboard(focusable: View? = null) {
     focusable?.requestFocus()
