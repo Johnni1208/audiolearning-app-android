@@ -15,6 +15,7 @@ import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.databinding.FragmentSubjectsBinding
 import com.audiolearning.app.extensions.hide
 import com.audiolearning.app.extensions.show
+import com.audiolearning.app.ui.dialogs.create_new_subject.CreateNewSubjectDialog
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -38,16 +39,31 @@ class SubjectsFragment : DaggerFragment() {
 
         binding.lifecycleOwner = this
 
+        setupEmptyStateMessage()
+        setupRecyclerView()
+        setupFab()
+
+        return binding.root
+    }
+
+    private fun setupEmptyStateMessage() {
+        // Updates the empty state message
+        viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
+            if (subjects.isEmpty()) binding.tvNoSubjects.show()
+            else binding.tvNoSubjects.hide()
+        })
+    }
+
+    private fun setupRecyclerView() {
         val subjectsAdapter =
             SubjectsRecyclerViewAdapter(viewModel.getSubjects().value ?: emptyList())
 
+        // Updates the adapter with new data
+        var hasNewSubjects = false
         viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
-            // Updates the adapter with new data
             subjectsAdapter.setData(subjects)
-
-            // Updates the empty state message
-            if (subjects.isEmpty()) binding.tvNoSubjects.show()
-            else binding.tvNoSubjects.hide()
+            if (hasNewSubjects) binding.rvSubjects.smoothScrollToPosition(subjects.size - 1)
+            hasNewSubjects = true
         })
 
         binding.rvSubjects.apply {
@@ -55,7 +71,14 @@ class SubjectsFragment : DaggerFragment() {
             layoutManager = GridLayoutManager(context, 2)
             adapter = subjectsAdapter
         }
+    }
 
-        return binding.root
+    private fun setupFab() {
+        binding.fabAddSubject.setOnClickListener {
+            CreateNewSubjectDialog().show(
+                parentFragmentManager,
+                "SubjectsFragment"
+            )
+        }
     }
 }
