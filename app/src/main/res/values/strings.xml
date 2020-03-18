@@ -36,6 +36,14 @@
     <string name="cnsDialog_save_button_text">Save</string>
     <string name="cnsDialog_error_subject_already_exists">Subject already exists</string>
 
-    <!-- Text for subject list -->
-    <string name="subjectFragment_empty_text">No subjects yet, try adding one…</string>
+    <!-- Text for subjectsFragment -->
+    <string name="subjectsFragment_empty_text">No subjects yet, try adding one…</string>
+
+    <!-- Text for Delete Subjects? Dialog -->
+    <string name="dsDialog_title">Delete subjects?</string>
+    <string name="dsDialog_message">The subject\'s recordings will be lost forever, too.</string>
+    <string name="dsDialog_positive_button_text">Delete</string>
+
+    <!-- Titles for menus -->
+    <string name="menu_delete">Delete</string>
 </resources>

@@ -10,6 +10,7 @@ class SubjectsViewModel @Inject constructor(private val subjectRepository: Subje
     fun getSubjects() = subjectRepository.getAllSubjects()
 
     suspend fun getSubjectById(id: Int) = subjectRepository.getSubjectById(id)
+        ?: throw IllegalArgumentException("Could not find subject with id $id")
 
     suspend fun deleteSubject(subject: Subject) = subjectRepository.delete(subject)
 }

@@ -52,6 +52,7 @@ class SubjectsRecyclerViewAdapter(
 
         override fun onClick(v: View?) {
             data[adapterPosition].id?.let {
+                this.subjectCardView.elevation = 0f
                 listener.onSubjectItemClick(it.toInt())
             }
         }
@@ -59,6 +60,7 @@ class SubjectsRecyclerViewAdapter(
 
         override fun onLongClick(v: View?): Boolean {
             data[adapterPosition].id?.let {
+                this.subjectCardView.elevation = 20f
                 return listener.onSubjectItemLongClick(it.toInt())
             }
 

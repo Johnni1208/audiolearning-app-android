@@ -1,6 +1,7 @@
 package com.audiolearning.app.ui.activities
 
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -16,13 +17,25 @@ import com.audiolearning.app.ui.fragments.subjects.SubjectsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-    private val recorderFragmentPosition = 1
-    private val fragments = arrayOf(
+    private val subjectsFragment = SubjectsFragment()
+    private val fragments: Array<Fragment> = arrayOf(
         AboutUsFragment(),
         RecorderFragment(),
-        SubjectsFragment()
+        subjectsFragment
     )
+    private val recorderFragmentPosition = 1
     private lateinit var binding: ActivityMainBinding
+
+    companion object {
+        private lateinit var menuItemDelete: MenuItem
+        fun showDeleteIcon() {
+            if (!menuItemDelete.isVisible) menuItemDelete.isVisible = true
+        }
+
+        fun hideDeleteIcon() {
+            if (menuItemDelete.isVisible) menuItemDelete.isVisible = false
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,5 +93,22 @@ class MainActivity : AppCompatActivity() {
             binding.navView.menu.getItem(position).isChecked = true
             previousMenuItem = binding.navView.menu.getItem(position)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_main_menu, menu)
+        menu?.let { menuItemDelete = it.findItem(R.id.menu_item_delete) }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_item_delete -> {
+                subjectsFragment.requestDeletionOfSubjects()
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

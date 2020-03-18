@@ -21,7 +21,6 @@ import com.audiolearning.app.extensions.hideKeyboard
 import com.audiolearning.app.extensions.showKeyboard
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialogTexts
-import com.audiolearning.app.util.ArgumentMissingException
 import dagger.android.support.DaggerDialogFragment
 import kotlinx.android.synthetic.main.dialog_new_recording.*
 import kotlinx.coroutines.GlobalScope
@@ -33,6 +32,7 @@ class NewRecordingDialog : DaggerDialogFragment() {
     private lateinit var newRecording: File
     private lateinit var dialogContext: Context
     private lateinit var discardRecordingDialogTexts: DefaultYesNoDialogTexts
+    private var dialogRequestCode: Int = 0 // Initialized later
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -71,11 +71,7 @@ class NewRecordingDialog : DaggerDialogFragment() {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.AppTheme_FullScreenDialog)
 
-        val newRecordingFilePath = arguments?.getString(ARG_NEW_FILE_PATH)
-            ?: throw ArgumentMissingException(ARG_NEW_FILE_PATH)
-        if (newRecordingFilePath.isEmpty()) throw ArgumentMissingException(ARG_NEW_FILE_PATH)
-
-        newRecording = File(newRecordingFilePath)
+        arguments?.let { newRecording = viewModel.receiveNewRecordingFromArguments(it) }
 
         discardRecordingDialogTexts = DefaultYesNoDialogTexts(
             getString(R.string.drDialog_title),
@@ -83,6 +79,9 @@ class NewRecordingDialog : DaggerDialogFragment() {
             getString(R.string.drDialog_positive_button_text),
             getString(R.string.cancel)
         )
+
+        dialogRequestCode =
+            dialogContext.resources.getInteger(R.integer.request_code_nrDialog_discard_recording)
     }
 
     override fun onCreateView(
@@ -137,13 +136,9 @@ class NewRecordingDialog : DaggerDialogFragment() {
             return@OnKeyListener true
         })
 
-        nr_toolbar.setNavigationOnClickListener {
-            showDiscardRecordingDialog()
-        }
+        nr_toolbar.setNavigationOnClickListener { showDiscardRecordingDialog() }
 
-        btn_discard_recording.setOnClickListener {
-            showDiscardRecordingDialog()
-        }
+        btn_discard_recording.setOnClickListener { showDiscardRecordingDialog() }
 
         // Save recording
         btn_save_recording.setOnClickListener {
@@ -167,7 +162,8 @@ class NewRecordingDialog : DaggerDialogFragment() {
         DefaultYesNoDialog.display(
             parentFragmentManager,
             discardRecordingDialogTexts,
-            this
+            this,
+            dialogRequestCode
         )
     }
 
@@ -210,7 +206,7 @@ class NewRecordingDialog : DaggerDialogFragment() {
      * Receives Results from the [DefaultYesNoDialog] started when trying to dismiss the dialog.
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode != DefaultYesNoDialog.YES_NO_CALL) return
+        if (requestCode != this.dialogRequestCode) return
 
         if (resultCode == Activity.RESULT_OK) dismiss()
         super.onActivityResult(requestCode, resultCode, data)
