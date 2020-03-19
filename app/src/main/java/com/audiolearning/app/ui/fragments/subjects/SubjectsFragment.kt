@@ -15,22 +15,20 @@ import com.audiolearning.app.R
 import com.audiolearning.app.adapters.SubjectsRecyclerViewAdapter
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.databinding.FragmentSubjectsBinding
-import com.audiolearning.app.extensions.addIfNotContained
 import com.audiolearning.app.extensions.hide
-import com.audiolearning.app.extensions.removeIfContained
 import com.audiolearning.app.extensions.show
 import com.audiolearning.app.ui.activities.MainActivity
 import com.audiolearning.app.ui.dialogs.create_new_subject.CreateNewSubjectDialog
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialogTexts
 import dagger.android.support.DaggerFragment
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectClickListener {
-    private val subjectsSelectedList: ArrayList<Subject> = arrayListOf()
     private var dialogRequestCode: Int = 0 // Initialized later
     private lateinit var deleteSubjectsDialogTexts: DefaultYesNoDialogTexts
 
@@ -66,6 +64,7 @@ class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectCl
         setupEmptyStateMessage()
         setupRecyclerView()
         setupFab()
+        setupDeleteIcon()
 
         return binding.root
     }
@@ -112,35 +111,25 @@ class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectCl
         }
     }
 
-    override fun onSubjectItemClick(position: Int) = runBlocking {
-        val subject: Subject = viewModel.getSubjectById(position)
-        if (onSubjectItemDeselect(subject)) return@runBlocking
+    private fun setupDeleteIcon() {
+        viewModel.subjectsSelectedList.observe(
+            viewLifecycleOwner,
+            Observer { subjectList: ArrayList<Subject> ->
+                when (subjectList.isEmpty()) {
+                    true -> MainActivity.hideDeleteIcon()
+                    false -> MainActivity.showDeleteIcon()
+                }
+            })
     }
 
-    private fun onSubjectItemDeselect(subject: Subject): Boolean {
-        val isRemoved: Boolean = subjectsSelectedList.removeIfContained(subject)
-        if (subjectsSelectedList.isEmpty()) MainActivity.hideDeleteIcon()
-        return isRemoved
+    override fun onSubjectItemClick(id: Int) = runBlocking(Dispatchers.IO) {
+        val subject: Subject = viewModel.getSubjectById(id)
+        if (viewModel.deselectSubjectItem(subject)) return@runBlocking
     }
 
-    override fun onSubjectItemLongClick(position: Int): Boolean = runBlocking {
-        val subject: Subject = viewModel.getSubjectById(position)
-
-        if (subjectsSelectedList.addIfNotContained(subject)) {
-            MainActivity.showDeleteIcon()
-            return@runBlocking true
-        }
-
-        return@runBlocking false
-    }
-
-    fun requestDeletionOfSubjects() = GlobalScope.launch {
-        DefaultYesNoDialog.display(
-            parentFragmentManager,
-            deleteSubjectsDialogTexts,
-            this@SubjectsFragment,
-            dialogRequestCode
-        )
+    override fun onSubjectItemLongClick(id: Int): Boolean = runBlocking {
+        val subject: Subject = viewModel.getSubjectById(id)
+        return@runBlocking viewModel.selectSubjectItem(subject)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -148,13 +137,19 @@ class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectCl
 
         if (resultCode == Activity.RESULT_OK) {
             GlobalScope.launch {
-                subjectsSelectedList.forEach {
-                    viewModel.deleteSubject(it)
-                }
-                subjectsSelectedList.clear()
+                viewModel.deleteAllSelectedSubjects()
             }
-            MainActivity.hideDeleteIcon()
         }
+
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    fun requestDeletionOfSubjects() {
+        DefaultYesNoDialog.display(
+            parentFragmentManager,
+            deleteSubjectsDialogTexts,
+            this@SubjectsFragment,
+            dialogRequestCode
+        )
     }
 }

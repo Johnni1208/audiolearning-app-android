@@ -69,7 +69,7 @@ class SubjectsRecyclerViewAdapter(
     }
 
     interface SubjectClickListener {
-        fun onSubjectItemClick(position: Int)
-        fun onSubjectItemLongClick(position: Int): Boolean
+        fun onSubjectItemClick(id: Int)
+        fun onSubjectItemLongClick(id: Int): Boolean
     }
 }
