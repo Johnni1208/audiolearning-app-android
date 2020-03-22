@@ -12,7 +12,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.audiolearning.app.R
-import com.audiolearning.app.adapters.SubjectsRecyclerViewAdapter
+import com.audiolearning.app.adapters.subjects_recycler_view.SubjectsRecyclerViewAdapter
+import com.audiolearning.app.adapters.subjects_recycler_view.SubjectsRecyclerViewAdapterEvent
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.databinding.FragmentSubjectsBinding
 import com.audiolearning.app.extensions.hide
@@ -78,21 +79,18 @@ class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectCl
     }
 
     private fun setupRecyclerView() {
-        val subjectsAdapter =
-            SubjectsRecyclerViewAdapter(viewModel.getSubjects().value ?: emptyList(), this)
+        val subjectsAdapter = SubjectsRecyclerViewAdapter(arrayListOf(), this)
 
-        // Updates the adapter with new data
-        var subjectListCount = 0
-        var initialized = false
         viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
-            subjectsAdapter.setData(subjects)
+            if (subjectsAdapter.dataInitialized) {
+                when (subjectsAdapter.updateData(subjects)) {
+                    SubjectsRecyclerViewAdapterEvent.ITEMS_ADDED ->
+                        binding.rvSubjects.smoothScrollToPosition(subjects.size - 1)
 
-            if (initialized && subjects.size > subjectListCount) binding.rvSubjects.smoothScrollToPosition(
-                subjects.size - 1
-            )
-
-            subjectListCount = subjects.size
-            initialized = true
+                    SubjectsRecyclerViewAdapterEvent.ITEMS_DELETED ->
+                        binding.rvSubjects.smoothScrollToPosition(0)
+                }
+            } else subjectsAdapter.setInitialData(subjects)
         })
 
         binding.rvSubjects.apply {
