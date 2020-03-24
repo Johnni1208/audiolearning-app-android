@@ -11,6 +11,8 @@ import com.audiolearning.app.data.repositories.SubjectRepository
 import com.audiolearning.app.extensions.isAllowedFileName
 import com.audiolearning.app.ui.dialogs.create_new_subject.CreateNewSubjectDialog
 import com.audiolearning.app.util.ArgumentMissingException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 
@@ -21,7 +23,9 @@ class NewRecordingDialogViewModel @Inject constructor(
     fun getSubjects() = subjectRepository.getAllSubjects()
 
     suspend fun saveAudio(file: File, name: String, subject: Subject) =
-        audioRepository.insert(file, name, subject)
+        withContext(Dispatchers.IO) {
+            audioRepository.insert(file, name, subject)
+        }
 
     fun validateInput(name: String, subject: Subject): NewRecordingInputValidation {
         if (name.isEmpty()) {

@@ -7,6 +7,8 @@ import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.data.repositories.SubjectRepository
 import com.audiolearning.app.extensions.addIfNotContained
 import com.audiolearning.app.extensions.removeIfContained
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SubjectsViewModel @Inject constructor(private val subjectRepository: SubjectRepository) :
@@ -21,8 +23,10 @@ class SubjectsViewModel @Inject constructor(private val subjectRepository: Subje
 
     fun getSubjects() = subjectRepository.getAllSubjects()
 
-    suspend fun getSubjectById(id: Int) = subjectRepository.getSubjectById(id)
-        ?: throw IllegalArgumentException("Could not find subject with id $id")
+    suspend fun getSubjectById(id: Int) = withContext(Dispatchers.IO) {
+        subjectRepository.getSubjectById(id)
+            ?: throw IllegalArgumentException("Could not find subject with id $id")
+    }
 
     fun selectSubjectItem(subject: Subject): Boolean {
         if (mutableSubjectSelectList.addIfNotContained(subject)) {
@@ -43,13 +47,15 @@ class SubjectsViewModel @Inject constructor(private val subjectRepository: Subje
     }
 
     suspend fun deleteAllSelectedSubjects() {
-        mutableSubjectSelectList.apply {
-            forEach {
-                subjectRepository.delete(it)
-            }
+        deleteSelectedSubjectsFromDb()
 
-            clear()
-            _subjectsSelectedList.postValue(this)
+        mutableSubjectSelectList.clear()
+        _subjectsSelectedList.postValue(mutableSubjectSelectList)
+    }
+
+    private suspend fun deleteSelectedSubjectsFromDb() = withContext(Dispatchers.IO) {
+        mutableSubjectSelectList.forEach { selectedSubject ->
+            subjectRepository.delete(selectedSubject)
         }
     }
 }

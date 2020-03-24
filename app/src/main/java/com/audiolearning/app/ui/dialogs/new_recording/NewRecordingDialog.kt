@@ -23,7 +23,8 @@ import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialogTexts
 import dagger.android.support.DaggerDialogFragment
 import kotlinx.android.synthetic.main.dialog_new_recording.*
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -151,7 +152,7 @@ class NewRecordingDialog : DaggerDialogFragment() {
                 return@setOnClickListener
             }
 
-            GlobalScope.launch {
+            CoroutineScope(Dispatchers.Main).launch {
                 viewModel.saveAudio(newRecording, name, subject)
                 dismiss()
             }

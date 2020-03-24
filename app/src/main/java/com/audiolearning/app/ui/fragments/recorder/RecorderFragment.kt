@@ -15,8 +15,7 @@ import com.audiolearning.app.databinding.FragmentRecorderBinding
 import com.audiolearning.app.extensions.hide
 import com.audiolearning.app.ui.dialogs.new_recording.NewRecordingDialog
 import dagger.android.support.DaggerFragment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
@@ -87,7 +86,7 @@ class RecorderFragment : DaggerFragment() {
 
                         // Disable recording button so it is not clickable when the NewRecordingDialog opens
                         if (stateBefore == AudioRecorderState.RECORDING || stateBefore == AudioRecorderState.PAUSING) {
-                            GlobalScope.launch(Dispatchers.Main) {
+                            MainScope().launch {
                                 binding.apply {
                                     btnRecordAndStop.isEnabled = false
                                     btnRecordAndStop.isClickable = false

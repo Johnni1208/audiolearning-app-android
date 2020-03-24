@@ -23,7 +23,10 @@ import com.audiolearning.app.ui.dialogs.create_new_subject.CreateNewSubjectDialo
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialogTexts
 import dagger.android.support.DaggerFragment
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectEventListener {
@@ -125,14 +128,14 @@ class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectEv
             })
     }
 
-    override fun onSubjectItemDeselect(id: Int) = runBlocking {
-        val subject: Subject = viewModel.getSubjectById(id)
-        if (viewModel.deselectSubjectItem(subject)) return@runBlocking
+    override fun onSubjectItemDeselect(id: Int) {
+        val subject: Subject = runBlocking { viewModel.getSubjectById(id) }
+        if (viewModel.deselectSubjectItem(subject)) return
     }
 
-    override fun onSubjectItemSelect(id: Int): Boolean = runBlocking {
-        val subject: Subject = viewModel.getSubjectById(id)
-        return@runBlocking viewModel.selectSubjectItem(subject)
+    override fun onSubjectItemSelect(id: Int): Boolean {
+        val subject: Subject = runBlocking { viewModel.getSubjectById(id) }
+        return viewModel.selectSubjectItem(subject)
     }
 
     override fun onSubjectItemClick(id: Int) {}
@@ -141,7 +144,7 @@ class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectEv
         if (requestCode != dialogRequestCode) return
 
         if (resultCode == Activity.RESULT_OK) {
-            CoroutineScope(Dispatchers.IO).launch {
+            CoroutineScope(Dispatchers.Main).launch {
                 viewModel.deleteAllSelectedSubjects()
             }
         }

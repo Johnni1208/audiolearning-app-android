@@ -13,8 +13,9 @@ import com.audiolearning.app.extensions.hideKeyboard
 import com.audiolearning.app.extensions.showKeyboard
 import dagger.android.support.DaggerDialogFragment
 import kotlinx.android.synthetic.main.dialog_create_new_subject.*
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 /**
@@ -59,13 +60,13 @@ class CreateNewSubjectDialog : DaggerDialogFragment() {
         btn_save_subject.setOnClickListener {
             val subjectName = et_subject_name.text.toString()
 
-            val inputValidation = viewModel.validateInput(subjectName)
+            val inputValidation = runBlocking { viewModel.validateInput(subjectName) }
             if (inputValidation != CreateNewSubjectInputValidation.CORRECT) {
                 setError(inputValidation)
                 return@setOnClickListener
             }
 
-            GlobalScope.launch {
+            MainScope().launch {
                 viewModel.createNewSubject(subjectName)
                 dismiss()
             }
