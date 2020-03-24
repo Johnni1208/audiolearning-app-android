@@ -13,15 +13,16 @@ import kotlinx.android.synthetic.main.subject_cardview.view.*
 
 class SubjectsRecyclerViewAdapter(
     private var data: ArrayList<Subject>,
-    private var subjectClickListener: SubjectClickListener
+    private var subjectEventListener: SubjectEventListener
 ) : RecyclerView.Adapter<SubjectsRecyclerViewAdapter.SubjectsViewHolder>() {
-    var dataInitialized = false
+    var isDataInitialized = false
+    var isSelecting = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectsViewHolder {
         val subjectCardView = LayoutInflater.from(parent.context)
             .inflate(R.layout.subject_cardview, parent, false) as CardView
 
-        return SubjectsViewHolder(subjectCardView, subjectClickListener)
+        return SubjectsViewHolder(subjectCardView, subjectEventListener)
     }
 
     override fun onBindViewHolder(holder: SubjectsViewHolder, position: Int) {
@@ -42,10 +43,10 @@ class SubjectsRecyclerViewAdapter(
      * @throws IllegalStateException If the adapter's data has already been initialized
      */
     fun setInitialData(data: List<Subject>) {
-        check(!dataInitialized) { "Already initialized. Use updateData()" }
+        check(!isDataInitialized) { "Already initialized. Use updateData()" }
 
         this.data = ArrayList(data)
-        dataInitialized = true
+        isDataInitialized = true
         notifyDataSetChanged()
     }
 
@@ -59,7 +60,7 @@ class SubjectsRecyclerViewAdapter(
      * @throws IllegalStateException If the data has not yet been initialised.
      */
     fun updateData(newData: List<Subject>): SubjectsRecyclerViewAdapterEvent {
-        check(dataInitialized) { "Not yet initialized. Use setInitialData()" }
+        check(isDataInitialized) { "Not yet initialized. Use setInitialData()" }
 
         // Adds items
         if (newData.size > data.size) {
@@ -92,7 +93,7 @@ class SubjectsRecyclerViewAdapter(
 
     inner class SubjectsViewHolder(
         val subjectCardView: CardView,
-        private val listener: SubjectClickListener
+        private val listener: SubjectEventListener
     ) : RecyclerView.ViewHolder(subjectCardView), View.OnClickListener, View.OnLongClickListener {
         init {
             this.subjectCardView.setOnClickListener(this@SubjectsViewHolder)
@@ -101,25 +102,42 @@ class SubjectsRecyclerViewAdapter(
 
         override fun onClick(v: View?) {
             data[adapterPosition].id?.let {
-                this.subjectCardView.alpha = 1f
-                this.subjectCardView.iv_check_circle.hide()
-                listener.onSubjectItemClick(it.toInt())
+                if (isSelecting) onLongClick(v)
+                else listener.onSubjectItemClick(it.toInt())
             }
         }
 
         override fun onLongClick(v: View?): Boolean {
             data[adapterPosition].id?.let {
-                this.subjectCardView.alpha = 0.75f
-                this.subjectCardView.iv_check_circle.show()
-                return listener.onSubjectItemLongClick(it.toInt())
+                if (this.subjectCardView.isSelected) {
+                    setCardViewDeselectState()
+                    listener.onSubjectItemDeselect(it.toInt())
+                } else {
+                    setCardViewSelectedState()
+                    listener.onSubjectItemSelect(it.toInt())
+                }
+                return true
             }
 
-            return true
+            return false
+        }
+
+        private fun setCardViewSelectedState() {
+            this.subjectCardView.isSelected = true
+            this.subjectCardView.alpha = 0.75f
+            this.subjectCardView.iv_check_circle.show()
+        }
+
+        private fun setCardViewDeselectState() {
+            this.subjectCardView.isSelected = false
+            this.subjectCardView.alpha = 1f
+            this.subjectCardView.iv_check_circle.hide()
         }
     }
 
-    interface SubjectClickListener {
+    interface SubjectEventListener {
+        fun onSubjectItemDeselect(id: Int)
+        fun onSubjectItemSelect(id: Int): Boolean
         fun onSubjectItemClick(id: Int)
-        fun onSubjectItemLongClick(id: Int): Boolean
     }
 }

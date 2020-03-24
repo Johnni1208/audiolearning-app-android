@@ -23,13 +23,10 @@ import com.audiolearning.app.ui.dialogs.create_new_subject.CreateNewSubjectDialo
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialogTexts
 import dagger.android.support.DaggerFragment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
-class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectClickListener {
+class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectEventListener {
     private var dialogRequestCode: Int = 0 // Initialized later
     private lateinit var deleteSubjectsDialogTexts: DefaultYesNoDialogTexts
 
@@ -81,8 +78,9 @@ class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectCl
     private fun setupRecyclerView() {
         val subjectsAdapter = SubjectsRecyclerViewAdapter(arrayListOf(), this)
 
+        // Update adapters data
         viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
-            if (subjectsAdapter.dataInitialized) {
+            if (subjectsAdapter.isDataInitialized) {
                 when (subjectsAdapter.updateData(subjects)) {
                     SubjectsRecyclerViewAdapterEvent.ITEMS_ADDED ->
                         binding.rvSubjects.smoothScrollToPosition(subjects.size - 1)
@@ -92,6 +90,13 @@ class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectCl
                 }
             } else subjectsAdapter.setInitialData(subjects)
         })
+
+        // Update selecting state
+        viewModel.subjectsSelectedList.observe(
+            viewLifecycleOwner,
+            Observer { subjectsSelectedList: ArrayList<Subject> ->
+                subjectsAdapter.isSelecting = subjectsSelectedList.isNotEmpty()
+            })
 
         binding.rvSubjects.apply {
             setHasFixedSize(true)
@@ -112,29 +117,31 @@ class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectCl
     private fun setupDeleteIcon() {
         viewModel.subjectsSelectedList.observe(
             viewLifecycleOwner,
-            Observer { subjectList: ArrayList<Subject> ->
-                when (subjectList.isEmpty()) {
+            Observer { subjectsSelectedList: ArrayList<Subject> ->
+                when (subjectsSelectedList.isEmpty()) {
                     true -> MainActivity.hideDeleteIcon()
                     false -> MainActivity.showDeleteIcon()
                 }
             })
     }
 
-    override fun onSubjectItemClick(id: Int) = runBlocking(Dispatchers.IO) {
+    override fun onSubjectItemDeselect(id: Int) = runBlocking {
         val subject: Subject = viewModel.getSubjectById(id)
         if (viewModel.deselectSubjectItem(subject)) return@runBlocking
     }
 
-    override fun onSubjectItemLongClick(id: Int): Boolean = runBlocking {
+    override fun onSubjectItemSelect(id: Int): Boolean = runBlocking {
         val subject: Subject = viewModel.getSubjectById(id)
         return@runBlocking viewModel.selectSubjectItem(subject)
     }
+
+    override fun onSubjectItemClick(id: Int) {}
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode != dialogRequestCode) return
 
         if (resultCode == Activity.RESULT_OK) {
-            GlobalScope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 viewModel.deleteAllSelectedSubjects()
             }
         }
