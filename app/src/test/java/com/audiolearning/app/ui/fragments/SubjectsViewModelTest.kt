@@ -101,4 +101,13 @@ class SubjectsViewModelTest {
 
         assertTrue(viewModel.subjectsSelectedList.value?.isEmpty()!!)
     }
+
+    @Test
+    fun deselectAllSelectSubjects_ShouldEmptySelectedSubjectsList() {
+        viewModel.selectSubjectItem(testSubject)
+
+        viewModel.deselectAllSelectSubjects()
+
+        assertTrue(viewModel.subjectsSelectedList.value?.isEmpty()!!)
+    }
 }

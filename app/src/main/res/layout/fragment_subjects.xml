@@ -11,7 +11,7 @@
             android:id="@+id/rv_subjects"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/bottomNavigationBar_height"
+            android:layout_marginBottom="?attr/actionBarSize"
             android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -65,7 +65,7 @@ class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectEv
         setupEmptyStateMessage()
         setupRecyclerView()
         setupFab()
-        setupDeleteIcon()
+        setupSubjectsSelectedToolbar()
 
         return binding.root
     }
@@ -117,14 +117,11 @@ class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectEv
         }
     }
 
-    private fun setupDeleteIcon() {
+    private fun setupSubjectsSelectedToolbar() {
         viewModel.subjectsSelectedList.observe(
             viewLifecycleOwner,
             Observer { subjectsSelectedList: ArrayList<Subject> ->
-                when (subjectsSelectedList.isEmpty()) {
-                    true -> MainActivity.hideDeleteIcon()
-                    false -> MainActivity.showDeleteIcon()
-                }
+                MainActivity.onSelectedSubjectsChanged(subjectsSelectedList)
             })
     }
 
@@ -159,5 +156,14 @@ class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectEv
             this@SubjectsFragment,
             dialogRequestCode
         )
+    }
+
+    fun deselectAllSubjects() {
+        viewModel.deselectAllSelectSubjects()
+
+        // Update RecyclerView items
+        val subjectsRecyclerViewAdapter: SubjectsRecyclerViewAdapter =
+            binding.rvSubjects.adapter as SubjectsRecyclerViewAdapter
+        subjectsRecyclerViewAdapter.notifyItemRangeChanged(0, subjectsRecyclerViewAdapter.itemCount)
     }
 }

@@ -58,4 +58,9 @@ class SubjectsViewModel @Inject constructor(private val subjectRepository: Subje
             subjectRepository.delete(selectedSubject)
         }
     }
+
+    fun deselectAllSelectSubjects() {
+        mutableSubjectSelectList.clear()
+        _subjectsSelectedList.postValue(mutableSubjectSelectList)
+    }
 }

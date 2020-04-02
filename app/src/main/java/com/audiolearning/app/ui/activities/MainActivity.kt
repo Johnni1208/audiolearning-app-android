@@ -1,20 +1,24 @@
 package com.audiolearning.app.ui.activities
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.audiolearning.app.R
+import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.databinding.ActivityMainBinding
+import com.audiolearning.app.extensions.hide
+import com.audiolearning.app.extensions.show
 import com.audiolearning.app.ui.fragments.about_us.AboutUsFragment
 import com.audiolearning.app.ui.fragments.recorder.RecorderFragment
 import com.audiolearning.app.ui.fragments.subjects.SubjectsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private val subjectsFragment = SubjectsFragment()
@@ -27,13 +31,20 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     companion object {
-        private lateinit var menuItemDelete: MenuItem
-        fun showDeleteIcon() {
-            if (!menuItemDelete.isVisible) menuItemDelete.isVisible = true
-        }
+        lateinit var mainToolbar: Toolbar
+        lateinit var subjectsSelectedToolbar: Toolbar
 
-        fun hideDeleteIcon() {
-            if (menuItemDelete.isVisible) menuItemDelete.isVisible = false
+        fun onSelectedSubjectsChanged(selectedSubjectsList: ArrayList<Subject>) {
+            if (selectedSubjectsList.isEmpty()) {
+                mainToolbar.show()
+                subjectsSelectedToolbar.hide()
+                return
+            }
+
+            mainToolbar.hide()
+            subjectsSelectedToolbar.show()
+
+            subjectsSelectedToolbar.title = selectedSubjectsList.size.toString()
         }
     }
 
@@ -52,6 +63,8 @@ class MainActivity : AppCompatActivity() {
             registerOnPageChangeCallback(OnPageChangeCallback())
             setCurrentItem(recorderFragmentPosition, false)
         }
+
+        setupToolbars()
     }
 
     private inner class OnNavigationItemSelectedListener :
@@ -92,23 +105,42 @@ class MainActivity : AppCompatActivity() {
 
             binding.navView.menu.getItem(position).isChecked = true
             previousMenuItem = binding.navView.menu.getItem(position)
+
+            changeTitleOfToolBar(position)
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.activity_main_menu, menu)
-        menu?.let { menuItemDelete = it.findItem(R.id.menu_item_delete) }
-        return true
+    private fun changeTitleOfToolBar(position: Int) {
+        when (position) {
+            0 -> tb_main.setTitle(R.string.title_about_us)
+            1 -> tb_main.setTitle(R.string.title_recorder)
+            2 -> tb_main.setTitle(R.string.title_subjects)
+            else -> throw IllegalStateException("No title for position: $position")
+        }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_item_delete -> {
-                subjectsFragment.requestDeletionOfSubjects()
-                return true
+    private fun setupToolbars() {
+        mainToolbar = binding.tbMain
+        subjectsSelectedToolbar = binding.tbSubjectsSelected
+
+        setSupportActionBar(binding.tbMain)
+
+        binding.tbSubjectsSelected.setNavigationOnClickListener {
+            subjectsFragment.deselectAllSubjects()
+            binding.tbSubjectsSelected.hide()
+            binding.tbMain.show()
+        }
+
+        binding.tbSubjectsSelected.inflateMenu(R.menu.delete_selected_subjects_menu)
+        binding.tbSubjectsSelected.setOnMenuItemClickListener { item: MenuItem ->
+            when (item.itemId) {
+                R.id.menu_item_delete -> {
+                    subjectsFragment.requestDeletionOfSubjects()
+                    return@setOnMenuItemClickListener true
+                }
             }
-        }
 
-        return super.onOptionsItemSelected(item)
+            return@setOnMenuItemClickListener false
+        }
     }
 }
