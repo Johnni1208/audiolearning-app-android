@@ -15,7 +15,7 @@ class SubjectsViewModel @Inject constructor(private val subjectRepository: Subje
     ViewModel() {
     private var mutableSubjectSelectList: ArrayList<Subject> = arrayListOf()
     private val _subjectsSelectedList = MutableLiveData<ArrayList<Subject>>().apply {
-        value = mutableSubjectSelectList
+        value = arrayListOf()
     }
 
     val subjectsSelectedList: LiveData<ArrayList<Subject>>

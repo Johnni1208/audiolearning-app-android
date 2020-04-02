@@ -1,16 +1,19 @@
 package com.audiolearning.app.ui.dialogs
 
+import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.data.repositories.AudioRepository
 import com.audiolearning.app.data.repositories.SubjectRepository
+import com.audiolearning.app.ui.dialogs.new_recording.NewRecordingDialog
 import com.audiolearning.app.ui.dialogs.new_recording.NewRecordingDialogViewModel
 import com.audiolearning.app.ui.dialogs.new_recording.NewRecordingInputValidation
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -98,5 +101,16 @@ class NewRecordingViewModelTest {
 
         // Showing a dialog internally calls beginTransaction on the fragment manager
         verify(mockFragmentManager).beginTransaction()
+    }
+
+    @Test
+    fun receiveNewRecordingFromArguments_ShouldReturnFileWithPathFromArgument() {
+        val path = "\\testPath"
+        val args: Bundle = mock()
+        whenever(args.getString(NewRecordingDialog.ARG_NEW_FILE_PATH)).thenReturn(path)
+
+        val file = viewModel.receiveNewRecordingFromArguments(args)
+
+        assertEquals(path, file.path)
     }
 }

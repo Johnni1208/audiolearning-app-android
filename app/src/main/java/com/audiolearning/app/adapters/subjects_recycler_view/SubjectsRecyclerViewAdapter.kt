@@ -14,18 +14,18 @@ import kotlinx.android.synthetic.main.subject_cardview.view.*
 class SubjectsRecyclerViewAdapter(
     private var data: ArrayList<Subject>,
     private var subjectEventListener: SubjectEventListener
-) : RecyclerView.Adapter<SubjectsRecyclerViewAdapter.SubjectsViewHolder>() {
+) : RecyclerView.Adapter<SubjectsRecyclerViewAdapter.SubjectViewHolder>() {
     var isDataInitialized = false
     var isSelecting = false
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectViewHolder {
         val subjectCardView = LayoutInflater.from(parent.context)
             .inflate(R.layout.subject_cardview, parent, false) as CardView
 
-        return SubjectsViewHolder(subjectCardView, subjectEventListener)
+        return SubjectViewHolder(subjectCardView, subjectEventListener)
     }
 
-    override fun onBindViewHolder(holder: SubjectsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SubjectViewHolder, position: Int) {
         holder.subjectCardView.tv_subject_name.text = data[position].name
         holder.subjectCardView.alpha = 1f
         holder.subjectCardView.iv_check_circle.hide()
@@ -91,13 +91,13 @@ class SubjectsRecyclerViewAdapter(
         notifyItemRangeRemoved(position, data.size)
     }
 
-    inner class SubjectsViewHolder(
+    inner class SubjectViewHolder(
         val subjectCardView: CardView,
         private val listener: SubjectEventListener
     ) : RecyclerView.ViewHolder(subjectCardView), View.OnClickListener, View.OnLongClickListener {
         init {
-            this.subjectCardView.setOnClickListener(this@SubjectsViewHolder)
-            this.subjectCardView.setOnLongClickListener(this@SubjectsViewHolder)
+            this.subjectCardView.setOnClickListener(this@SubjectViewHolder)
+            this.subjectCardView.setOnLongClickListener(this@SubjectViewHolder)
         }
 
         override fun onClick(v: View?) {

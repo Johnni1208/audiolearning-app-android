@@ -41,6 +41,7 @@ class SubjectRepositoryTest {
 
     private val testSubjectName = "testSubject"
     private lateinit var testSubjectFolder: File
+    private val testSubjectId = 1
 
     @Before
     fun setUpDatabaseAndFolders() {
@@ -142,5 +143,13 @@ class SubjectRepositoryTest {
         subjectDao.insert(testSubject)
 
         assertEquals(testSubject, subjectRepository.getSubjectByName(testSubjectName))
+    }
+
+    @Test
+    fun getSubjectById_ShouldReturnSpecifiedSubject() = runBlocking {
+        val testSubject = Subject(testSubjectName, "").apply { id = testSubjectId.toLong() }
+        subjectDao.insert(testSubject)
+
+        assertEquals(testSubject.id, subjectRepository.getSubjectById(testSubjectId)?.id)
     }
 }
