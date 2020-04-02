@@ -46,10 +46,10 @@ class SubjectsViewModelTest {
         assertTrue(testSubject == returnedSubject)
     }
 
-    @Suppress("MainFunctionReturnUnit")
+    @Suppress("UNUSED_VARIABLE")
     @Test(expected = IllegalArgumentException::class)
     fun getSubjectById_ShouldThrowError_IfSubjectIsNotFound() = runBlocking {
-        viewModel.getSubjectById(1)
+        val returnedSubject = viewModel.getSubjectById(1)
     }
 
     @Test
