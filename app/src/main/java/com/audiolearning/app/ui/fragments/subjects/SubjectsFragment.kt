@@ -18,7 +18,7 @@ import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.databinding.FragmentSubjectsBinding
 import com.audiolearning.app.extensions.hide
 import com.audiolearning.app.extensions.show
-import com.audiolearning.app.ui.activities.MainActivity
+import com.audiolearning.app.ui.activities.MainActivityToolBarChangeListener
 import com.audiolearning.app.ui.dialogs.create_new_subject.CreateNewSubjectDialog
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialogTexts
@@ -29,7 +29,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectEventListener {
+class SubjectsFragment(private val mainActivityToolBarChangeListener: MainActivityToolBarChangeListener) :
+    DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectEventListener {
     private var dialogRequestCode: Int = 0 // Initialized later
     private lateinit var deleteSubjectsDialogTexts: DefaultYesNoDialogTexts
 
@@ -121,7 +122,9 @@ class SubjectsFragment : DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectEv
         viewModel.subjectsSelectedList.observe(
             viewLifecycleOwner,
             Observer { subjectsSelectedList: ArrayList<Subject> ->
-                MainActivity.onSelectedSubjectsChanged(subjectsSelectedList)
+                mainActivityToolBarChangeListener.onSelectedSubjectsToolBarChanged(
+                    subjectsSelectedList
+                )
             })
     }
 

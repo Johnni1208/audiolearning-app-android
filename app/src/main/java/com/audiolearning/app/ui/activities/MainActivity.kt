@@ -3,7 +3,6 @@ package com.audiolearning.app.ui.activities
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -20,33 +19,18 @@ import com.audiolearning.app.ui.fragments.subjects.SubjectsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
-    private val subjectsFragment = SubjectsFragment()
+class MainActivity : AppCompatActivity(), MainActivityToolBarChangeListener {
+    private val subjectsFragment = SubjectsFragment(this)
     private val fragments: Array<Fragment> = arrayOf(
         AboutUsFragment(),
         RecorderFragment(),
         subjectsFragment
     )
-    private val recorderFragmentPosition = 1
+    private val POSITION_ABOUT_US_FRAGMENT = 0
+    private val POSITION_RECORDER_FRAGMENT = 1
+    private val POSITION_SUBJECT_FRAGMENT = 2
+
     private lateinit var binding: ActivityMainBinding
-
-    companion object {
-        lateinit var mainToolbar: Toolbar
-        lateinit var subjectsSelectedToolbar: Toolbar
-
-        fun onSelectedSubjectsChanged(selectedSubjectsList: ArrayList<Subject>) {
-            if (selectedSubjectsList.isEmpty()) {
-                mainToolbar.show()
-                subjectsSelectedToolbar.hide()
-                return
-            }
-
-            mainToolbar.hide()
-            subjectsSelectedToolbar.show()
-
-            subjectsSelectedToolbar.title = selectedSubjectsList.size.toString()
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         binding.pager.apply {
             adapter = ScreenSlidePagerAdapter(supportFragmentManager)
             registerOnPageChangeCallback(OnPageChangeCallback())
-            setCurrentItem(recorderFragmentPosition, false)
+            setCurrentItem(POSITION_RECORDER_FRAGMENT, false)
         }
 
         setupToolbars()
@@ -70,15 +54,13 @@ class MainActivity : AppCompatActivity() {
     private inner class OnNavigationItemSelectedListener :
         BottomNavigationView.OnNavigationItemSelectedListener {
         override fun onNavigationItemSelected(selectedItem: MenuItem): Boolean {
-            val pager = binding.pager
+            when (selectedItem.itemId) {
+                R.id.navigation_about_us -> binding.pager.currentItem = POSITION_ABOUT_US_FRAGMENT
+                R.id.navigation_recorder -> binding.pager.currentItem = POSITION_RECORDER_FRAGMENT
+                R.id.navigation_subjects -> binding.pager.currentItem = POSITION_SUBJECT_FRAGMENT
+                else -> return false
+            }
 
-            val menuItemToPagerItemMap = mapOf(
-                R.id.navigation_about_us to fun() { pager.currentItem = 0 },
-                R.id.navigation_recorder to fun() { pager.currentItem = 1 },
-                R.id.navigation_subjects to fun() { pager.currentItem = 2 }
-            )
-
-            menuItemToPagerItemMap[selectedItem.itemId]?.invoke()
             return true
         }
     }
@@ -95,6 +77,7 @@ class MainActivity : AppCompatActivity() {
     private inner class OnPageChangeCallback :
         ViewPager2.OnPageChangeCallback() {
         private lateinit var previousMenuItem: MenuItem
+        private var previousPosition: Int = -1
 
         override fun onPageSelected(position: Int) {
             if (::previousMenuItem.isInitialized) {
@@ -105,6 +88,9 @@ class MainActivity : AppCompatActivity() {
 
             binding.navView.menu.getItem(position).isChecked = true
             previousMenuItem = binding.navView.menu.getItem(position)
+
+            if (previousPosition == POSITION_SUBJECT_FRAGMENT) subjectsFragment.deselectAllSubjects()
+            previousPosition = position
 
             changeTitleOfToolBar(position)
         }
@@ -120,9 +106,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupToolbars() {
-        mainToolbar = binding.tbMain
-        subjectsSelectedToolbar = binding.tbSubjectsSelected
-
         setSupportActionBar(binding.tbMain)
 
         binding.tbSubjectsSelected.setNavigationOnClickListener {
@@ -143,4 +126,25 @@ class MainActivity : AppCompatActivity() {
             return@setOnMenuItemClickListener false
         }
     }
+
+    override fun onSelectedSubjectsToolBarChanged(selectedSubjectsList: ArrayList<Subject>) {
+        if (selectedSubjectsList.isEmpty()) {
+            binding.tbMain.show()
+            binding.tbSubjectsSelected.hide()
+            return
+        }
+
+        binding.tbMain.hide()
+        binding.tbSubjectsSelected.show()
+
+        binding.tbSubjectsSelected.title = selectedSubjectsList.size.toString()
+    }
+}
+
+/**
+ * Interface for children of Activities to implement. They then can call the listener to change
+ * ToolBar of the parent
+ */
+interface MainActivityToolBarChangeListener {
+    fun onSelectedSubjectsToolBarChanged(selectedSubjectsList: ArrayList<Subject>)
 }
