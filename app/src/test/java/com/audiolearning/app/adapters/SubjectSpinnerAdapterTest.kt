@@ -2,7 +2,6 @@ package com.audiolearning.app.adapters
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.audiolearning.app.R
 import com.audiolearning.app.data.db.entities.Subject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -15,7 +14,6 @@ import org.robolectric.RobolectricTestRunner
 class SubjectSpinnerAdapterTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
     private var testSubjectList = ArrayList<Subject>()
-    private val textViewResourceId = R.layout.subject_spinner_item
 
     @Before
     fun setUp() {
