@@ -23,15 +23,14 @@ import com.audiolearning.app.ui.dialogs.create_new_subject.CreateNewSubjectDialo
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialogTexts
 import dagger.android.support.DaggerFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-class SubjectsFragment(private val mainActivityToolBarChangeListener: MainActivityToolBarChangeListener) :
+class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarChangeListener) :
     DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectEventListener {
-    private var dialogRequestCode: Int = 0 // Initialized later
+    private var dialogRequestCode: Int = 0 // lateinit
     private lateinit var deleteSubjectsDialogTexts: DefaultYesNoDialogTexts
 
     @Inject
@@ -59,14 +58,14 @@ class SubjectsFragment(private val mainActivityToolBarChangeListener: MainActivi
         deleteSubjectsDialogTexts = DefaultYesNoDialogTexts(
             getString(R.string.dsDialog_title),
             getString(R.string.dsDialog_message),
-            getString(R.string.dsDialog_positive_button_text),
+            getString(R.string.delete),
             getString(R.string.cancel)
         )
 
         setupEmptyStateMessage()
         setupRecyclerView()
         setupFab()
-        setupSubjectsSelectedToolbar()
+        setupSelectedSubjectsToolbar()
 
         return binding.root
     }
@@ -92,14 +91,14 @@ class SubjectsFragment(private val mainActivityToolBarChangeListener: MainActivi
                     SubjectsRecyclerViewAdapterEvent.ITEMS_DELETED ->
                         binding.rvSubjects.smoothScrollToPosition(0)
                 }
-            } else subjectsAdapter.setInitialData(subjects)
+            } else subjectsAdapter.initializeData(subjects)
         })
 
         // Update selecting state
-        viewModel.subjectsSelectedList.observe(
+        viewModel.selectedSubjectsList.observe(
             viewLifecycleOwner,
-            Observer { subjectsSelectedList: ArrayList<Subject> ->
-                subjectsAdapter.isSelecting = subjectsSelectedList.isNotEmpty()
+            Observer { selectedSubjectsList: ArrayList<Subject> ->
+                subjectsAdapter.isSelecting = selectedSubjectsList.isNotEmpty()
             })
 
         binding.rvSubjects.apply {
@@ -118,24 +117,24 @@ class SubjectsFragment(private val mainActivityToolBarChangeListener: MainActivi
         }
     }
 
-    private fun setupSubjectsSelectedToolbar() {
-        viewModel.subjectsSelectedList.observe(
+    private fun setupSelectedSubjectsToolbar() {
+        viewModel.selectedSubjectsList.observe(
             viewLifecycleOwner,
-            Observer { subjectsSelectedList: ArrayList<Subject> ->
-                mainActivityToolBarChangeListener.onSelectedSubjectsToolBarChanged(
-                    subjectsSelectedList
+            Observer { selectedSubjectsList: ArrayList<Subject> ->
+                toolBarChangeListener.onSelectedSubjectsChange(
+                    selectedSubjectsList
                 )
             })
     }
 
     override fun onSubjectItemDeselect(id: Int) {
         val subject: Subject = runBlocking { viewModel.getSubjectById(id) }
-        if (viewModel.deselectSubjectItem(subject)) return
+        if (viewModel.deselectSubject(subject)) return
     }
 
     override fun onSubjectItemSelect(id: Int): Boolean {
         val subject: Subject = runBlocking { viewModel.getSubjectById(id) }
-        return viewModel.selectSubjectItem(subject)
+        return viewModel.selectSubject(subject)
     }
 
     override fun onSubjectItemClick(id: Int) {}
@@ -144,7 +143,7 @@ class SubjectsFragment(private val mainActivityToolBarChangeListener: MainActivi
         if (requestCode != dialogRequestCode) return
 
         if (resultCode == Activity.RESULT_OK) {
-            CoroutineScope(Dispatchers.Main).launch {
+            MainScope().launch {
                 viewModel.deleteAllSelectedSubjects()
             }
         }
@@ -152,7 +151,7 @@ class SubjectsFragment(private val mainActivityToolBarChangeListener: MainActivi
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    fun requestDeletionOfSubjects() {
+    fun requestDeletionOfSelectedSubjects() {
         DefaultYesNoDialog.display(
             parentFragmentManager,
             deleteSubjectsDialogTexts,
@@ -162,11 +161,11 @@ class SubjectsFragment(private val mainActivityToolBarChangeListener: MainActivi
     }
 
     fun deselectAllSubjects() {
-        viewModel.deselectAllSelectSubjects()
+        viewModel.deselectAllSubjects()
 
         // Update RecyclerView items
-        val subjectsRecyclerViewAdapter: SubjectsRecyclerViewAdapter =
-            binding.rvSubjects.adapter as SubjectsRecyclerViewAdapter
-        subjectsRecyclerViewAdapter.notifyItemRangeChanged(0, subjectsRecyclerViewAdapter.itemCount)
+        (binding.rvSubjects.adapter as SubjectsRecyclerViewAdapter).apply {
+            notifyItemRangeChanged(0, this.itemCount)
+        }
     }
 }

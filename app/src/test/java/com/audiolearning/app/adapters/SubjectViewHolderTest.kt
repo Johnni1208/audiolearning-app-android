@@ -19,45 +19,40 @@ import org.mockito.Mockito.mock
 
 class SubjectViewHolderTest {
     private val mockSubjectsCardView: CardView = mock()
-    private val listener: SubjectsRecyclerViewAdapter.SubjectEventListener = mock()
+    private val mockListener: SubjectsRecyclerViewAdapter.SubjectEventListener = mock()
     private val mockData: ArrayList<Subject> = mock()
+    private val mockView: View = mock()
     private val testSubject = Subject("test", "").apply { id = 0 }
-    private val subjectsRecyclerViewAdapter = SubjectsRecyclerViewAdapter(mockData, listener)
+    private val subjectsRecyclerViewAdapter = SubjectsRecyclerViewAdapter(mockData, mockListener)
+    private lateinit var subjectsViewHolder: SubjectsRecyclerViewAdapter.SubjectViewHolder
 
     @Before
     fun setup() {
+        subjectsViewHolder =
+            subjectsRecyclerViewAdapter.SubjectViewHolder(mockSubjectsCardView, mockListener)
         whenever(mockSubjectsCardView.iv_check_circle).thenReturn(mock(ImageView::class.java))
+        whenever(mockData[anyInt()]).thenReturn(testSubject)
     }
 
     @Test
     fun init_ShouldSetOnClickAndOnLongClickListener() {
-        val subjectsViewHolder =
-            subjectsRecyclerViewAdapter.SubjectViewHolder(mockSubjectsCardView, listener)
+        val initializedSubjectsViewHolder =
+            subjectsRecyclerViewAdapter.SubjectViewHolder(mockSubjectsCardView, mockListener)
 
-        verify(mockSubjectsCardView, times(1)).setOnClickListener(subjectsViewHolder)
-        verify(mockSubjectsCardView, times(1)).setOnLongClickListener(subjectsViewHolder)
+        verify(mockSubjectsCardView, times(1)).setOnClickListener(initializedSubjectsViewHolder)
+        verify(mockSubjectsCardView, times(1)).setOnLongClickListener(initializedSubjectsViewHolder)
     }
 
     @Test
     fun onClick_ShouldCallListenersSubjectItemClick_WhenIsSelectingIsFalse() {
-        val mockView: View = mock()
-        whenever(mockData[anyInt()]).thenReturn(testSubject)
-        val subjectsViewHolder =
-            subjectsRecyclerViewAdapter.SubjectViewHolder(mockSubjectsCardView, listener)
-
         subjectsRecyclerViewAdapter.isSelecting = false
         subjectsViewHolder.onClick(mockView)
 
-        verify(listener, times(1)).onSubjectItemClick(testSubject.id!!.toInt())
+        verify(mockListener, times(1)).onSubjectItemClick(testSubject.id!!.toInt())
     }
 
     @Test
     fun onClick_ShouldSelectSubjectCardView_WhenIsSelectingIsTrue() {
-        val mockView: View = mock()
-        whenever(mockData[anyInt()]).thenReturn(testSubject)
-        val subjectsViewHolder =
-            subjectsRecyclerViewAdapter.SubjectViewHolder(mockSubjectsCardView, listener)
-
         subjectsRecyclerViewAdapter.isSelecting = true
         subjectsViewHolder.onClick(mockView)
 
@@ -67,16 +62,14 @@ class SubjectViewHolderTest {
         verify(mockSubjectsCardView).alpha = 0.75f
 
         // Listener call
-        verify(listener).onSubjectItemSelect(testSubject.id!!.toInt())
+        verify(mockListener).onSubjectItemSelect(testSubject.id!!.toInt())
     }
 
     @Test
     fun onClick_ShouldDeselectSubjectCardView_WhenCardIsSelected() {
-        val mockView: View = mock()
-        whenever(mockData[anyInt()]).thenReturn(testSubject)
         whenever(mockSubjectsCardView.isSelected).thenReturn(true)
         val subjectsViewHolder =
-            subjectsRecyclerViewAdapter.SubjectViewHolder(mockSubjectsCardView, listener)
+            subjectsRecyclerViewAdapter.SubjectViewHolder(mockSubjectsCardView, mockListener)
 
         subjectsRecyclerViewAdapter.isSelecting = true
         subjectsViewHolder.onClick(mockView)
@@ -87,6 +80,6 @@ class SubjectViewHolderTest {
         verify(mockSubjectsCardView).alpha = 1f
 
         // Listener call
-        verify(listener).onSubjectItemDeselect(testSubject.id!!.toInt())
+        verify(mockListener).onSubjectItemDeselect(testSubject.id!!.toInt())
     }
 }

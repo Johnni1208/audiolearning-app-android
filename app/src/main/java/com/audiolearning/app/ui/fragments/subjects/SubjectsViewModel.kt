@@ -13,13 +13,13 @@ import javax.inject.Inject
 
 class SubjectsViewModel @Inject constructor(private val subjectRepository: SubjectRepository) :
     ViewModel() {
-    private var mutableSubjectSelectList: ArrayList<Subject> = arrayListOf()
-    private val _subjectsSelectedList = MutableLiveData<ArrayList<Subject>>().apply {
+    private var mutableSelectedSubjectsList: ArrayList<Subject> = arrayListOf()
+    private val _selectedSubjectsList = MutableLiveData<ArrayList<Subject>>().apply {
         value = arrayListOf()
     }
 
-    val subjectsSelectedList: LiveData<ArrayList<Subject>>
-        get() = _subjectsSelectedList
+    val selectedSubjectsList: LiveData<ArrayList<Subject>>
+        get() = _selectedSubjectsList
 
     fun getSubjects() = subjectRepository.getAllSubjects()
 
@@ -28,18 +28,18 @@ class SubjectsViewModel @Inject constructor(private val subjectRepository: Subje
             ?: throw IllegalArgumentException("Could not find subject with id $id")
     }
 
-    fun selectSubjectItem(subject: Subject): Boolean {
-        if (mutableSubjectSelectList.addIfNotContained(subject)) {
-            _subjectsSelectedList.postValue(mutableSubjectSelectList)
+    fun selectSubject(subject: Subject): Boolean {
+        if (mutableSelectedSubjectsList.addIfNotContained(subject)) {
+            _selectedSubjectsList.postValue(mutableSelectedSubjectsList)
             return true
         }
 
         return false
     }
 
-    fun deselectSubjectItem(subject: Subject): Boolean {
-        if (mutableSubjectSelectList.removeIfContained(subject)) {
-            _subjectsSelectedList.postValue(mutableSubjectSelectList)
+    fun deselectSubject(subject: Subject): Boolean {
+        if (mutableSelectedSubjectsList.removeIfContained(subject)) {
+            _selectedSubjectsList.postValue(mutableSelectedSubjectsList)
             return true
         }
 
@@ -49,18 +49,18 @@ class SubjectsViewModel @Inject constructor(private val subjectRepository: Subje
     suspend fun deleteAllSelectedSubjects() {
         deleteSelectedSubjectsFromDb()
 
-        mutableSubjectSelectList.clear()
-        _subjectsSelectedList.postValue(mutableSubjectSelectList)
+        mutableSelectedSubjectsList.clear()
+        _selectedSubjectsList.postValue(mutableSelectedSubjectsList)
     }
 
     private suspend fun deleteSelectedSubjectsFromDb() = withContext(Dispatchers.IO) {
-        mutableSubjectSelectList.forEach { selectedSubject ->
+        mutableSelectedSubjectsList.forEach { selectedSubject ->
             subjectRepository.delete(selectedSubject)
         }
     }
 
-    fun deselectAllSelectSubjects() {
-        mutableSubjectSelectList.clear()
-        _subjectsSelectedList.postValue(mutableSubjectSelectList)
+    fun deselectAllSubjects() {
+        mutableSelectedSubjectsList.clear()
+        _selectedSubjectsList.postValue(mutableSelectedSubjectsList)
     }
 }

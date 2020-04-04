@@ -8,6 +8,7 @@ import com.audiolearning.app.adapters.subjects_recycler_view.SubjectsRecyclerVie
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.extensions.hide
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.android.synthetic.main.subject_cardview.view.*
 import org.junit.Assert.assertEquals
@@ -69,15 +70,15 @@ class SubjectsRecyclerViewAdapterTest {
     }
 
     @Test(expected = IllegalStateException::class)
-    fun setInitialData_ShouldThrowError_WhenIsDataInitializedIsTrue() {
+    fun initializeData_ShouldThrowError_WhenIsDataInitializedIsTrue() {
         subjectsRecyclerViewAdapter.isDataInitialized = true
 
-        subjectsRecyclerViewAdapter.setInitialData(mockData)
+        subjectsRecyclerViewAdapter.initializeData(mockData)
     }
 
     @Test
-    fun setInitialData_ShouldSetIsDataInitializedToTrue() {
-        subjectsRecyclerViewAdapter.setInitialData(realData)
+    fun initializeData_ShouldSetIsDataInitializedToTrue() {
+        subjectsRecyclerViewAdapter.initializeData(realData)
 
         assertEquals(true, subjectsRecyclerViewAdapter.isDataInitialized)
     }

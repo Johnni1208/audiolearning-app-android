@@ -12,7 +12,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class SubjectArrayAdapterTest {
+class SubjectSpinnerAdapterTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
     private var testSubjectList = ArrayList<Subject>()
     private val textViewResourceId = R.layout.subject_spinner_item
@@ -31,9 +31,8 @@ class SubjectArrayAdapterTest {
         val expectedAddHintItem = Subject("Add new subject…", "")
 
         val subjectArrayAdapter =
-            SubjectArrayAdapter.createWithAddHint(
+            SubjectSpinnerAdapter.createWithAddHint(
                 context,
-                textViewResourceId,
                 testSubjectList,
                 false
             )
@@ -46,9 +45,8 @@ class SubjectArrayAdapterTest {
         val expectedSelectHint = Subject("Select subject…", "")
 
         val subjectArrayAdapter =
-            SubjectArrayAdapter.createWithAddHint(
+            SubjectSpinnerAdapter.createWithAddHint(
                 context,
-                textViewResourceId,
                 testSubjectList,
                 true
             )
@@ -59,9 +57,8 @@ class SubjectArrayAdapterTest {
     @Test
     fun if_hasSelectHint_getCountShouldReturnSizeOfInsertedSubjects() {
         val subjectArrayAdapter =
-            SubjectArrayAdapter.create(
+            SubjectSpinnerAdapter.create(
                 context,
-                textViewResourceId,
                 testSubjectList,
                 true
             )

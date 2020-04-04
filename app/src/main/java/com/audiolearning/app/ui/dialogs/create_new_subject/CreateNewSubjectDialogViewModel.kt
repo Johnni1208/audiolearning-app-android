@@ -22,8 +22,7 @@ class CreateNewSubjectDialogViewModel @Inject constructor(
             return CreateNewSubjectInputValidation.INPUT_FIELD_CONTAINS_INVALID_CHARS
         }
 
-        val subjectAlreadyExists: Boolean = getSubjectByName(subjectName) != null
-        if (subjectAlreadyExists) {
+        if (getSubjectByName(subjectName) != null) {
             return CreateNewSubjectInputValidation.SUBJECT_ALREADY_EXISTS
         }
 

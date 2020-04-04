@@ -42,7 +42,7 @@ class SubjectsRecyclerViewAdapter(
      *
      * @throws IllegalStateException If the adapter's data has already been initialized
      */
-    fun setInitialData(data: List<Subject>) {
+    fun initializeData(data: List<Subject>) {
         check(!isDataInitialized) { "Already initialized. Use updateData()" }
 
         this.data = ArrayList(data)
@@ -57,10 +57,10 @@ class SubjectsRecyclerViewAdapter(
      *
      * @return [SubjectsRecyclerViewAdapterEvent] Whether it deleted or added an item
      *
-     * @throws IllegalStateException If the data has not yet been initialised.
+     * @throws IllegalStateException If the data has not yet been initialized.
      */
     fun updateData(newData: List<Subject>): SubjectsRecyclerViewAdapterEvent {
-        check(isDataInitialized) { "Not yet initialized. Use setInitialData()" }
+        check(isDataInitialized) { "Not yet initialized. Use initializeData()" }
 
         // Adds items
         if (newData.size > data.size) {
@@ -69,11 +69,11 @@ class SubjectsRecyclerViewAdapter(
         }
 
         // Removes items
-        val positionOfDeletedItems: ArrayList<Int> = arrayListOf()
+        val positionsOfDeletedItems: ArrayList<Int> = arrayListOf()
         for (i in 0 until data.size) {
-            if (!newData.contains(data[i])) positionOfDeletedItems.add(i)
+            if (!newData.contains(data[i])) positionsOfDeletedItems.add(i)
         }
-        positionOfDeletedItems.reversed().forEach { position ->
+        positionsOfDeletedItems.reversed().forEach { position ->
             deleteItem(position)
         }
         return SubjectsRecyclerViewAdapterEvent.ITEMS_DELETED

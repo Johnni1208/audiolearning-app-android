@@ -54,39 +54,39 @@ class SubjectsViewModelTest {
 
     @Test
     fun selectSubjectItem_ShouldAddItemToSelectedList() {
-        assertTrue(viewModel.selectSubjectItem(testSubject))
-        assertEquals(testSubject, viewModel.subjectsSelectedList.value?.first())
+        assertTrue(viewModel.selectSubject(testSubject))
+        assertEquals(testSubject, viewModel.selectedSubjectsList.value?.first())
     }
 
     @Test
     fun selectSubjectItem_ShouldNotAddItemToListIfItIsAlreadyInIt() {
-        viewModel.selectSubjectItem(testSubject)
+        viewModel.selectSubject(testSubject)
 
-        assertFalse(viewModel.subjectsSelectedList.value?.size!! > 1)
-        assertFalse(viewModel.selectSubjectItem(testSubject))
+        assertFalse(viewModel.selectedSubjectsList.value?.size!! > 1)
+        assertFalse(viewModel.selectSubject(testSubject))
     }
 
     @Test
     fun deselectSubjectItem_ShouldRemoveSubjectFromSelectedList() {
-        viewModel.selectSubjectItem(testSubject)
+        viewModel.selectSubject(testSubject)
 
-        assertTrue(viewModel.deselectSubjectItem(testSubject))
-        assertFalse(viewModel.subjectsSelectedList.value?.contains(testSubject)!!)
+        assertTrue(viewModel.deselectSubject(testSubject))
+        assertFalse(viewModel.selectedSubjectsList.value?.contains(testSubject)!!)
     }
 
     @Test
     fun deselectSubjectItem_ShouldNotRemoveSubjectIfItIsNotInTheList() {
         val secondTestSubject = Subject("testSubject2", "")
 
-        viewModel.selectSubjectItem(secondTestSubject)
+        viewModel.selectSubject(secondTestSubject)
 
-        assertFalse(viewModel.deselectSubjectItem(testSubject))
-        assertTrue(viewModel.subjectsSelectedList.value?.size!! == 1)
+        assertFalse(viewModel.deselectSubject(testSubject))
+        assertTrue(viewModel.selectedSubjectsList.value?.size!! == 1)
     }
 
     @Test
     fun deleteAllSelectedSubjects_ShouldCallRepositoryDelete() = runBlocking {
-        viewModel.selectSubjectItem(testSubject)
+        viewModel.selectSubject(testSubject)
 
         viewModel.deleteAllSelectedSubjects()
 
@@ -95,19 +95,19 @@ class SubjectsViewModelTest {
 
     @Test
     fun deleteALlSelectedSubjects_ShouldClearSelectedSubjectsList() = runBlocking {
-        viewModel.selectSubjectItem(testSubject)
+        viewModel.selectSubject(testSubject)
 
         viewModel.deleteAllSelectedSubjects()
 
-        assertTrue(viewModel.subjectsSelectedList.value?.isEmpty()!!)
+        assertTrue(viewModel.selectedSubjectsList.value?.isEmpty()!!)
     }
 
     @Test
-    fun deselectAllSelectSubjects_ShouldEmptySelectedSubjectsList() {
-        viewModel.selectSubjectItem(testSubject)
+    fun deselectAllSubjects_ShouldEmptySelectedSubjectsList() {
+        viewModel.selectSubject(testSubject)
 
-        viewModel.deselectAllSelectSubjects()
+        viewModel.deselectAllSubjects()
 
-        assertTrue(viewModel.subjectsSelectedList.value?.isEmpty()!!)
+        assertTrue(viewModel.selectedSubjectsList.value?.isEmpty()!!)
     }
 }

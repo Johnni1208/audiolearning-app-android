@@ -13,7 +13,7 @@
             android:id="@+id/nr_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:navigationIcon="@drawable/ic_cross"
+            android:navigationIcon="@drawable/ic_cross_24dp"
             android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
             android:title="@string/nrDialog_title" />
 
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_weight="1"
-                android:text="@string/nrDialog_negative_button_text"
+                android:text="@string/discard"
                 android:textColor="@color/colorAccent" />
 
             <com.google.android.material.button.MaterialButton

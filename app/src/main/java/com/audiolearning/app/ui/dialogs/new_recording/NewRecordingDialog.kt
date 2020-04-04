@@ -15,16 +15,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.audiolearning.app.R
-import com.audiolearning.app.adapters.SubjectArrayAdapter
+import com.audiolearning.app.adapters.SubjectSpinnerAdapter
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.extensions.hideKeyboard
 import com.audiolearning.app.extensions.showKeyboard
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialogTexts
+import com.audiolearning.app.util.MissingArgumentException
 import dagger.android.support.DaggerDialogFragment
 import kotlinx.android.synthetic.main.dialog_new_recording.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -33,7 +33,7 @@ class NewRecordingDialog : DaggerDialogFragment() {
     private lateinit var newRecording: File
     private lateinit var dialogContext: Context
     private lateinit var discardRecordingDialogTexts: DefaultYesNoDialogTexts
-    private var dialogRequestCode: Int = 0 // Initialized later
+    private var dialogRequestCode: Int = 0 // lateinit
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -72,12 +72,14 @@ class NewRecordingDialog : DaggerDialogFragment() {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.AppTheme_FullScreenDialog)
 
-        arguments?.let { newRecording = viewModel.receiveNewRecordingFromArguments(it) }
+        newRecording = viewModel.receiveNewRecordingFromArguments(
+            arguments ?: throw MissingArgumentException("")
+        )
 
         discardRecordingDialogTexts = DefaultYesNoDialogTexts(
             getString(R.string.drDialog_title),
             getString(R.string.drDialog_message),
-            getString(R.string.drDialog_positive_button_text),
+            getString(R.string.discard),
             getString(R.string.cancel)
         )
 
@@ -111,9 +113,8 @@ class NewRecordingDialog : DaggerDialogFragment() {
          * and then loads it into the spinner.
          */
         viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
-            val spinnerAdapter = SubjectArrayAdapter.createWithAddHint(
+            val spinnerAdapter = SubjectSpinnerAdapter.createWithAddHint(
                 dialogContext,
-                R.layout.subject_spinner_item,
                 subjects,
                 true
             )
@@ -152,7 +153,7 @@ class NewRecordingDialog : DaggerDialogFragment() {
                 return@setOnClickListener
             }
 
-            CoroutineScope(Dispatchers.Main).launch {
+            MainScope().launch {
                 viewModel.saveAudio(newRecording, name, subject)
                 dismiss()
             }
@@ -172,14 +173,14 @@ class NewRecordingDialog : DaggerDialogFragment() {
         when (validation) {
             NewRecordingInputValidation.SUBJECT_IS_BLANK -> {
                 (sp_select_subject.selectedView as TextView).error =
-                    getString(R.string.dialog_error_message_missing_info)
+                    getString(R.string.error_missing_info)
             }
 
             NewRecordingInputValidation.NAME_IS_BLANK -> et_audio_name.error =
-                getString(R.string.dialog_error_message_missing_info)
+                getString(R.string.error_missing_info)
 
             NewRecordingInputValidation.NAME_CONTAINS_INVALID_CHARS -> et_audio_name.error =
-                getString(R.string.dialog_error_message_contains_not_allowed_character)
+                getString(R.string.error_contains_not_allowed_character)
 
             else -> {
             }

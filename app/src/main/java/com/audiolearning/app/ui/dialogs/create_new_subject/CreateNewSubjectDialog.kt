@@ -76,13 +76,13 @@ class CreateNewSubjectDialog : DaggerDialogFragment() {
     private fun setError(validation: CreateNewSubjectInputValidation) {
         when (validation) {
             CreateNewSubjectInputValidation.INPUT_FIELD_CONTAINS_INVALID_CHARS -> et_subject_name.error =
-                getString(R.string.dialog_error_message_contains_not_allowed_character)
+                getString(R.string.error_contains_not_allowed_character)
 
             CreateNewSubjectInputValidation.INPUT_FIELD_IS_BLANK -> et_subject_name.error =
-                getString(R.string.dialog_error_message_missing_info)
+                getString(R.string.error_missing_info)
 
             CreateNewSubjectInputValidation.SUBJECT_ALREADY_EXISTS -> et_subject_name.error =
-                getString(R.string.cnsDialog_error_subject_already_exists)
+                getString(R.string.error_subject_already_exists)
 
             else -> {
             }
