@@ -20,4 +20,7 @@ interface SubjectDao {
 
     @Query("SELECT * FROM subjects where subject_name = :name")
     suspend fun getSubjectByName(name: String): Subject?
+
+    @Query("SELECT * FROM subjects where subject_id = :id")
+    suspend fun getSubjectById(id: Int): Subject?
 }

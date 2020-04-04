@@ -48,7 +48,7 @@ class AudioRecorder @Inject constructor(private var recorder: MediaRecorder?) {
     /**
      * Stops the recording and returns the temporary file.
      *
-     * IMPORTANT: This function needs 500 milliseconds delay,
+     * __IMPORTANT__: This function needs 500 milliseconds delay,
      * since the MPEG_4 audio format cuts audio to early.
      *
      */

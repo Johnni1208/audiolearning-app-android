@@ -7,7 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import com.audiolearning.app.audio.audio_recorder.AudioRecorder
 import com.audiolearning.app.audio.audio_recorder.AudioRecorderState
 import com.audiolearning.app.util.timer.Timer
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -50,7 +51,7 @@ class RecordingAndTimerHandler(
 
     private fun stopRecording() {
         recordTimer.stop()
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.Unconfined).launch {
             val file = audioRecorder.stop()
             _recordedFile.postValue(file)
         }

@@ -1,41 +1,45 @@
 <resources>
     <string name="app_name">AudioLearning</string>
     <string name="title_recorder">Recorder</string>
-    <string name="title_about_us">Über uns</string>
-    <string name="title_subjects">Fächer</string>
+    <string name="title_about_us">About us</string>
+    <string name="title_subjects">Subjects</string>
 
     <!-- Generic strings -->
     <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="discard">Discard</string>
+    <string name="subject_spinner_select_subject">Select subject…</string>
+
+    <!-- Error Texts -->
+    <string name="error_missing_info">Cannot be left blank</string>
+    <string name="error_contains_not_allowed_character">Cannot contain |\u005c?*&lt;\u0022:>/\'.</string>
+    <string name="error_subject_already_exists">Subject already exists</string>
 
     <!-- Texts for recording buttons -->
     <string name="record_text">Record</string>
     <string name="stop_text">Stop</string>
     <string name="pause_text">Pause</string>
     <string name="resume_text">Resume</string>
-    <string name="subject_spinner_select_subject">Select subject…</string>
-
-    <!-- Texts for dialogs -->
-    <string name="dialog_error_message_missing_info">Cannot be left blank</string>
-    <string name="dialog_error_message_contains_not_allowed_character">Cannot contain |\u005c?*&lt;\u0022:>/\'.</string>
 
     <!-- Text for NewRecordingDialog -->
     <string name="nrDialog_title">Save new recording?</string>
     <string name="nrDialog_audio_name_hint">Name of your recording</string>
     <string name="nrDialog_add_subject">Add new subject…</string>
     <string name="nrDialog_positive_button_text">Save</string>
-    <string name="nrDialog_negative_button_text">Discard</string>
 
     <!-- Text for discard Recording? Dialog -->
     <string name="drDialog_title">Discard recording?</string>
     <string name="drDialog_message">The recording will be lost forever.</string>
-    <string name="drDialog_positive_button_text">Discard</string>
 
     <!-- Text for CreateNewSubjectDialog -->
     <string name="cnsDialog_title">Create new subject</string>
     <string name="cnsDialog_subject_name_hint">Name of new subject</string>
     <string name="cnsDialog_save_button_text">Save</string>
-    <string name="cnsDialog_error_subject_already_exists">Subject already exists</string>
 
-    <!-- Text for subject list -->
-    <string name="subjectFragment_empty_text">No subjects yet, try adding one…</string>
+    <!-- Text for subjectsFragment -->
+    <string name="subjectsFragment_empty_text">No subjects yet, try adding one…</string>
+
+    <!-- Text for Delete Subjects? Dialog -->
+    <string name="dsDialog_title">Delete subjects?</string>
+    <string name="dsDialog_message">The subject\'s recordings will be lost forever, too.</string>
 </resources>

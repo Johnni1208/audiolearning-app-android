@@ -2,7 +2,6 @@ package com.audiolearning.app.adapters
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.audiolearning.app.R
 import com.audiolearning.app.data.db.entities.Subject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -12,10 +11,9 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class SubjectArrayAdapterTest {
+class SubjectSpinnerAdapterTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
     private var testSubjectList = ArrayList<Subject>()
-    private val textViewResourceId = R.layout.subject_spinner_item
 
     @Before
     fun setUp() {
@@ -31,9 +29,8 @@ class SubjectArrayAdapterTest {
         val expectedAddHintItem = Subject("Add new subject…", "")
 
         val subjectArrayAdapter =
-            SubjectArrayAdapter.createWithAddHint(
+            SubjectSpinnerAdapter.createWithAddHint(
                 context,
-                textViewResourceId,
                 testSubjectList,
                 false
             )
@@ -46,9 +43,8 @@ class SubjectArrayAdapterTest {
         val expectedSelectHint = Subject("Select subject…", "")
 
         val subjectArrayAdapter =
-            SubjectArrayAdapter.createWithAddHint(
+            SubjectSpinnerAdapter.createWithAddHint(
                 context,
-                textViewResourceId,
                 testSubjectList,
                 true
             )
@@ -59,9 +55,8 @@ class SubjectArrayAdapterTest {
     @Test
     fun if_hasSelectHint_getCountShouldReturnSizeOfInsertedSubjects() {
         val subjectArrayAdapter =
-            SubjectArrayAdapter.create(
+            SubjectSpinnerAdapter.create(
                 context,
-                textViewResourceId,
                 testSubjectList,
                 true
             )

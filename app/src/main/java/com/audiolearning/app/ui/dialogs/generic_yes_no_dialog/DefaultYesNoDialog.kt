@@ -9,15 +9,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog.Companion.YES_NO_CALL
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog.Companion.display
-import com.audiolearning.app.util.ArgumentMissingException
+import com.audiolearning.app.util.MissingArgumentException
 
 /**
  * Shows a default yes/no dialog with given parameters for: title, message, positive button text
  * and negative button text.
  *
- * Receive positive and negative callbacks through [onActivityResult] with [YES_NO_CALL] as requestCode
+ * Receive positive and negative callbacks through [onActivityResult] with the requestCode from [display]
  *
  * **Use [display] to show the fragment.**
  */
@@ -30,7 +29,6 @@ class DefaultYesNoDialog : DialogFragment() {
     private lateinit var negativeButtonText: String
 
     companion object {
-        const val YES_NO_CALL = 420
         private const val ARG_TITLE = "GenericYesNoDialog.Title"
         private const val ARG_MESSAGE = "GenericYesNoDialog.Message"
         private const val ARG_POSITIVE_BUTTON_TEXT = "GenericYesNoDialog.PositiveButtonText"
@@ -46,7 +44,8 @@ class DefaultYesNoDialog : DialogFragment() {
         fun display(
             fragmentManager: FragmentManager,
             defaultYesNoDialogTexts: DefaultYesNoDialogTexts,
-            targetFragment: Fragment
+            targetFragment: Fragment,
+            requestCode: Int
         ) {
             val genericYesNoDialog = DefaultYesNoDialog()
 
@@ -58,7 +57,7 @@ class DefaultYesNoDialog : DialogFragment() {
             }
             genericYesNoDialog.arguments = args
 
-            genericYesNoDialog.setTargetFragment(targetFragment, YES_NO_CALL)
+            genericYesNoDialog.setTargetFragment(targetFragment, requestCode)
 
             genericYesNoDialog.show(fragmentManager, "GenericYesNoDialog")
         }
@@ -91,14 +90,14 @@ class DefaultYesNoDialog : DialogFragment() {
 
     private fun receiveArguments() {
         val args = requireArguments()
-        title = args.getString(ARG_TITLE) ?: throw ArgumentMissingException(ARG_TITLE)
-        message = args.getString(ARG_MESSAGE) ?: throw ArgumentMissingException(ARG_MESSAGE)
+        title = args.getString(ARG_TITLE) ?: throw MissingArgumentException(ARG_TITLE)
+        message = args.getString(ARG_MESSAGE) ?: throw MissingArgumentException(ARG_MESSAGE)
         positiveButtonText =
-            args.getString(ARG_POSITIVE_BUTTON_TEXT) ?: throw ArgumentMissingException(
+            args.getString(ARG_POSITIVE_BUTTON_TEXT) ?: throw MissingArgumentException(
                 ARG_POSITIVE_BUTTON_TEXT
             )
         negativeButtonText =
-            args.getString(ARG_NEGATIVE_BUTTON_TEXT) ?: throw ArgumentMissingException(
+            args.getString(ARG_NEGATIVE_BUTTON_TEXT) ?: throw MissingArgumentException(
                 ARG_NEGATIVE_BUTTON_TEXT
             )
     }

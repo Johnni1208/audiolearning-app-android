@@ -7,21 +7,35 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.audiolearning.app.R
+import com.audiolearning.app.adapters.SubjectSpinnerAdapter.Companion.create
+import com.audiolearning.app.adapters.SubjectSpinnerAdapter.Companion.createWithAddHint
 import com.audiolearning.app.data.db.entities.Subject
 
-class SubjectArrayAdapter(
+/**
+ * ArrayAdapter for a spinner. Displays a list of given subjects.
+ *
+ * __IMPORTANT__: Use [createWithAddHint] or [create] to initialize this adapter.
+ */
+class SubjectSpinnerAdapter(
     context: Context,
-    textViewResourceId: Int,
     private var subjects: List<Subject>,
     private var hasSelectHint: Boolean
-) : ArrayAdapter<Subject>(context, textViewResourceId, subjects) {
+) : ArrayAdapter<Subject>(context, R.layout.subject_spinner_item, subjects) {
     companion object {
+        /**
+         * Creates the adapter with an "Add new subject..." hint at the first position.
+         *
+         * @param context Context
+         * @param subjects List of Subjects to be displayed.
+         * @param hasSelectHint If true, adds an "Select subject..." hint *at the end*.
+         *
+         * @return [SubjectSpinnerAdapter] with add hint.
+         */
         fun createWithAddHint(
             context: Context,
-            textViewResourceId: Int,
             subjects: List<Subject>,
             hasSelectHint: Boolean
-        ): SubjectArrayAdapter {
+        ): SubjectSpinnerAdapter {
             val addSubjectItem =
                 Subject(context.getString(R.string.nrDialog_add_subject), "").apply {
                     isRealSubject = false
@@ -41,20 +55,27 @@ class SubjectArrayAdapter(
                 subjectsWithAddHint = subjectsWithAddHint + listOf(subjectHintItem)
             }
 
-            return SubjectArrayAdapter(
+            return SubjectSpinnerAdapter(
                 context,
-                textViewResourceId,
                 subjectsWithAddHint,
                 hasSelectHint
             )
         }
 
+        /**
+         * Creates an normal [SubjectSpinnerAdapter]. Currently used for testing purposes.
+         *
+         * @param context Context
+         * @param subjects List of Subjects to be displayed.
+         * @param hasSelectHint If true, adds an "Select subject..." hint *at the end*.
+         *
+         * @return Normal [SubjectSpinnerAdapter]
+         */
         fun create(
             context: Context,
-            textViewResourceId: Int,
             subjects: List<Subject>,
             hasSelectHint: Boolean
-        ): SubjectArrayAdapter {
+        ): SubjectSpinnerAdapter {
             var mutableSubjectList = subjects
 
             if (hasSelectHint) {
@@ -69,9 +90,8 @@ class SubjectArrayAdapter(
                 mutableSubjectList = mutableSubjectList + listOf(subjectHintItem)
             }
 
-            return SubjectArrayAdapter(
+            return SubjectSpinnerAdapter(
                 context,
-                textViewResourceId,
                 mutableSubjectList,
                 hasSelectHint
             )

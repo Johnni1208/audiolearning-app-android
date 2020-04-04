@@ -5,5 +5,5 @@ package com.audiolearning.app.util
  *
  * @param missingArgumentKey Key of the argument, example: ARG_TITLE
  */
-class ArgumentMissingException(missingArgumentKey: String) :
+class MissingArgumentException(missingArgumentKey: String) :
     Exception("No argument provided for: $missingArgumentKey")

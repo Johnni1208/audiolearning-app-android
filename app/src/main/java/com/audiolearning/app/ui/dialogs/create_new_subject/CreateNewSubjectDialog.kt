@@ -13,8 +13,9 @@ import com.audiolearning.app.extensions.hideKeyboard
 import com.audiolearning.app.extensions.showKeyboard
 import dagger.android.support.DaggerDialogFragment
 import kotlinx.android.synthetic.main.dialog_create_new_subject.*
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 /**
@@ -59,13 +60,13 @@ class CreateNewSubjectDialog : DaggerDialogFragment() {
         btn_save_subject.setOnClickListener {
             val subjectName = et_subject_name.text.toString()
 
-            val inputValidation = viewModel.validateInput(subjectName)
+            val inputValidation = runBlocking { viewModel.validateInput(subjectName) }
             if (inputValidation != CreateNewSubjectInputValidation.CORRECT) {
                 setError(inputValidation)
                 return@setOnClickListener
             }
 
-            GlobalScope.launch {
+            MainScope().launch {
                 viewModel.createNewSubject(subjectName)
                 dismiss()
             }
@@ -75,13 +76,13 @@ class CreateNewSubjectDialog : DaggerDialogFragment() {
     private fun setError(validation: CreateNewSubjectInputValidation) {
         when (validation) {
             CreateNewSubjectInputValidation.INPUT_FIELD_CONTAINS_INVALID_CHARS -> et_subject_name.error =
-                getString(R.string.dialog_error_message_contains_not_allowed_character)
+                getString(R.string.error_contains_not_allowed_character)
 
             CreateNewSubjectInputValidation.INPUT_FIELD_IS_BLANK -> et_subject_name.error =
-                getString(R.string.dialog_error_message_missing_info)
+                getString(R.string.error_missing_info)
 
             CreateNewSubjectInputValidation.SUBJECT_ALREADY_EXISTS -> et_subject_name.error =
-                getString(R.string.cnsDialog_error_subject_already_exists)
+                getString(R.string.error_subject_already_exists)
 
             else -> {
             }
