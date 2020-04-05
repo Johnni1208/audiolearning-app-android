@@ -16,12 +16,6 @@ class SubjectActivityViewModel @Inject constructor(private val subjectRepository
     val title: LiveData<String>
         get() = _title
 
-    private val _transitionName = MutableLiveData<String>().apply {
-        value = ""
-    }
-    val transitionName: LiveData<String>
-        get() = _transitionName
-
     suspend fun setTitleToSubjectName(id: Int) {
         _title.postValue(getSubjectById(id).name)
     }
@@ -29,9 +23,5 @@ class SubjectActivityViewModel @Inject constructor(private val subjectRepository
     private suspend fun getSubjectById(id: Int) = withContext(Dispatchers.IO) {
         return@withContext subjectRepository.getSubjectById(id)
             ?: throw IllegalArgumentException("No subject with id: $id")
-    }
-
-    fun setTransitionName(name: String) {
-        _transitionName.value = name
     }
 }

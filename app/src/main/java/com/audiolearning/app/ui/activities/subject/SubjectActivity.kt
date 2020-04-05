@@ -1,7 +1,7 @@
 package com.audiolearning.app.ui.activities.subject
 
-import android.graphics.Typeface
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -24,12 +24,12 @@ class SubjectActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_SUBJECT_ID = "extra_subject_id"
-        const val EXTRA_TRANSITION_NAME = "transition_name"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_subject)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -40,15 +40,25 @@ class SubjectActivity : AppCompatActivity() {
     private fun setupToolbar() {
         setSupportActionBar(tb_subjects)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-
-        binding.tvSubjectsTitle.typeface = Typeface.DEFAULT_BOLD
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val subjectId: Int = intent.extras?.getInt(EXTRA_SUBJECT_ID)
             ?: throw MissingArgumentException(EXTRA_SUBJECT_ID)
         MainScope().launch { viewModel.setTitleToSubjectName(subjectId) }
+    }
 
-        val transitionName: String = intent.extras?.getString(EXTRA_TRANSITION_NAME)
-            ?: throw MissingArgumentException(EXTRA_TRANSITION_NAME)
-        viewModel.setTransitionName(transitionName)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right)
     }
 }

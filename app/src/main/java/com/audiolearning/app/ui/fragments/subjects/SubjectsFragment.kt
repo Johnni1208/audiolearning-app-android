@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -140,20 +138,10 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
         return viewModel.selectSubject(subject)
     }
 
-    override fun onSubjectItemClick(id: Int, sharedView: View) {
-        val transitionName = ViewCompat.getTransitionName(sharedView)!!
-
-        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            activity as Activity,
-            sharedView,
-            transitionName
-        )
-
+    override fun onSubjectItemClick(id: Int) {
         Intent(context, SubjectActivity::class.java).apply {
             putExtra(SubjectActivity.EXTRA_SUBJECT_ID, id)
-            putExtra(SubjectActivity.EXTRA_TRANSITION_NAME, transitionName)
-
-            startActivity(this, options.toBundle())
+            startActivity(this)
         }
     }
 

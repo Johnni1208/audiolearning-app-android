@@ -50,10 +50,7 @@ class SubjectViewHolderTest {
         subjectsRecyclerViewAdapter.isSelecting = false
         subjectsViewHolder.onClick(mockView)
 
-        verify(mockListener, times(1)).onSubjectItemClick(
-            testSubject.id!!.toInt(),
-            mockSubjectsCardView.tv_subject_name
-        )
+        verify(mockListener, times(1)).onSubjectItemClick(testSubject.id!!.toInt())
     }
 
     @Test

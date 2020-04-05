@@ -98,15 +98,16 @@ class MainActivity : AppCompatActivity(), MainActivityToolBarChangeListener {
 
     private fun changeTitleOfToolBar(position: Int) {
         when (position) {
-            POSITION_ABOUT_US_FRAGMENT -> tb_main.setTitle(R.string.title_about_us)
-            POSITION_RECORDER_FRAGMENT -> tb_main.setTitle(R.string.title_recorder)
-            POSITION_SUBJECT_FRAGMENT -> tb_main.setTitle(R.string.title_subjects)
+            POSITION_ABOUT_US_FRAGMENT -> tv_main_title.setText(R.string.title_about_us)
+            POSITION_RECORDER_FRAGMENT -> tv_main_title.setText(R.string.title_recorder)
+            POSITION_SUBJECT_FRAGMENT -> tv_main_title.setText(R.string.title_subjects)
             else -> throw IllegalStateException("No title for position: $position")
         }
     }
 
     private fun setupToolbars() {
         setSupportActionBar(binding.tbMain)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         binding.tbMainSelectedSubjects.setNavigationOnClickListener {
             subjectsFragment.deselectAllSubjects()

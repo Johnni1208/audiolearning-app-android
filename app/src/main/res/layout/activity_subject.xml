@@ -19,7 +19,6 @@
             android:id="@+id/ab_subjects"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:transitionName="@{ viewModel.transitionName }"
             app:liftOnScroll="true">
 
             <com.google.android.material.appbar.MaterialToolbar
