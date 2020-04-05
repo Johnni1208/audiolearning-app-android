@@ -4,6 +4,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/default_transition
+        </item>
+        <item name="android:windowSharedElementExitTransition">@transition/default_transition</item>
     </style>
 
     <style name="AppTheme.FullScreenDialog" parent="Theme.MaterialComponents.Light.Dialog">
@@ -32,7 +37,6 @@
     </style>
 
     <style name="SubjectCardView.TextView" parent="">
-        <item name="android:padding">24dp</item>
         <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
         <item name="android:textColor">@android:color/white</item>

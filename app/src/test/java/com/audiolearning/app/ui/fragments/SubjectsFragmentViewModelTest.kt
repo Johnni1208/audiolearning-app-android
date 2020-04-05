@@ -3,7 +3,7 @@ package com.audiolearning.app.ui.fragments
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.data.repositories.SubjectRepository
-import com.audiolearning.app.ui.fragments.subjects.SubjectsViewModel
+import com.audiolearning.app.ui.fragments.subjects.SubjectsFragmentViewModel
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -15,22 +15,22 @@ import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class SubjectsViewModelTest {
+class SubjectsFragmentViewModelTest {
     @get:Rule
     val instantExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val testSubject = Subject("testSubject", "testDir")
     private val mockRepository: SubjectRepository = mock()
-    private lateinit var viewModel: SubjectsViewModel
+    private lateinit var fragmentViewModel: SubjectsFragmentViewModel
 
     @Before
     fun setup() {
-        viewModel = SubjectsViewModel(mockRepository)
+        fragmentViewModel = SubjectsFragmentViewModel(mockRepository)
     }
 
     @Test
     fun getSubjects_ShouldCallRepository() {
-        viewModel.getSubjects()
+        fragmentViewModel.getSubjects()
 
         verify(mockRepository).getAllSubjects()
     }
@@ -42,72 +42,72 @@ class SubjectsViewModelTest {
         val testSubject = Subject(subjectName, "testDir").apply { id = 0 }
         whenever(mockRepository.getSubjectById(subjectId)).thenReturn(testSubject)
 
-        val returnedSubject: Subject = viewModel.getSubjectById(subjectId)
+        val returnedSubject: Subject = fragmentViewModel.getSubjectById(subjectId)
         assertTrue(testSubject == returnedSubject)
     }
 
     @Suppress("UNUSED_VARIABLE")
     @Test(expected = IllegalArgumentException::class)
     fun getSubjectById_ShouldThrowError_IfSubjectIsNotFound() = runBlocking {
-        val returnedSubject = viewModel.getSubjectById(1)
+        val returnedSubject = fragmentViewModel.getSubjectById(1)
     }
 
     @Test
     fun selectSubjectItem_ShouldAddItemToSelectedList() {
-        assertTrue(viewModel.selectSubject(testSubject))
-        assertEquals(testSubject, viewModel.selectedSubjectsList.value?.first())
+        assertTrue(fragmentViewModel.selectSubject(testSubject))
+        assertEquals(testSubject, fragmentViewModel.selectedSubjectsList.value?.first())
     }
 
     @Test
     fun selectSubjectItem_ShouldNotAddItemToListIfItIsAlreadyInIt() {
-        viewModel.selectSubject(testSubject)
+        fragmentViewModel.selectSubject(testSubject)
 
-        assertFalse(viewModel.selectedSubjectsList.value?.size!! > 1)
-        assertFalse(viewModel.selectSubject(testSubject))
+        assertFalse(fragmentViewModel.selectedSubjectsList.value?.size!! > 1)
+        assertFalse(fragmentViewModel.selectSubject(testSubject))
     }
 
     @Test
     fun deselectSubjectItem_ShouldRemoveSubjectFromSelectedList() {
-        viewModel.selectSubject(testSubject)
+        fragmentViewModel.selectSubject(testSubject)
 
-        assertTrue(viewModel.deselectSubject(testSubject))
-        assertFalse(viewModel.selectedSubjectsList.value?.contains(testSubject)!!)
+        assertTrue(fragmentViewModel.deselectSubject(testSubject))
+        assertFalse(fragmentViewModel.selectedSubjectsList.value?.contains(testSubject)!!)
     }
 
     @Test
     fun deselectSubjectItem_ShouldNotRemoveSubjectIfItIsNotInTheList() {
         val secondTestSubject = Subject("testSubject2", "")
 
-        viewModel.selectSubject(secondTestSubject)
+        fragmentViewModel.selectSubject(secondTestSubject)
 
-        assertFalse(viewModel.deselectSubject(testSubject))
-        assertTrue(viewModel.selectedSubjectsList.value?.size!! == 1)
+        assertFalse(fragmentViewModel.deselectSubject(testSubject))
+        assertTrue(fragmentViewModel.selectedSubjectsList.value?.size!! == 1)
     }
 
     @Test
     fun deleteAllSelectedSubjects_ShouldCallRepositoryDelete() = runBlocking {
-        viewModel.selectSubject(testSubject)
+        fragmentViewModel.selectSubject(testSubject)
 
-        viewModel.deleteAllSelectedSubjects()
+        fragmentViewModel.deleteAllSelectedSubjects()
 
         verify(mockRepository).delete(testSubject)
     }
 
     @Test
     fun deleteALlSelectedSubjects_ShouldClearSelectedSubjectsList() = runBlocking {
-        viewModel.selectSubject(testSubject)
+        fragmentViewModel.selectSubject(testSubject)
 
-        viewModel.deleteAllSelectedSubjects()
+        fragmentViewModel.deleteAllSelectedSubjects()
 
-        assertTrue(viewModel.selectedSubjectsList.value?.isEmpty()!!)
+        assertTrue(fragmentViewModel.selectedSubjectsList.value?.isEmpty()!!)
     }
 
     @Test
     fun deselectAllSubjects_ShouldEmptySelectedSubjectsList() {
-        viewModel.selectSubject(testSubject)
+        fragmentViewModel.selectSubject(testSubject)
 
-        viewModel.deselectAllSubjects()
+        fragmentViewModel.deselectAllSubjects()
 
-        assertTrue(viewModel.selectedSubjectsList.value?.isEmpty()!!)
+        assertTrue(fragmentViewModel.selectedSubjectsList.value?.isEmpty()!!)
     }
 }

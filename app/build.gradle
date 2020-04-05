@@ -24,7 +24,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         kapt {
-            arguments{
+            arguments {
                 arg("room.schemaLocation", "$projectDir/schemas".toString())
                 arg("room.incremental", "true")
             }
@@ -43,7 +43,9 @@ android {
 
     testOptions {
         unitTests.includeAndroidResources = true
-        unitTests.all { systemProperty 'robolectric.dependency.repo.url', 'https://repo1.maven.org/maven2' }
+        unitTests.all {
+            systemProperty 'robolectric.dependency.repo.url', 'https://repo1.maven.org/maven2'
+        }
     }
 }
 

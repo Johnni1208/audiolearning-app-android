@@ -2,6 +2,7 @@ package com.audiolearning.app.adapters
 
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.audiolearning.app.adapters.subjects_recycler_view.SubjectsRecyclerViewAdapter
 import com.audiolearning.app.data.db.entities.Subject
@@ -31,6 +32,7 @@ class SubjectViewHolderTest {
         subjectsViewHolder =
             subjectsRecyclerViewAdapter.SubjectViewHolder(mockSubjectsCardView, mockListener)
         whenever(mockSubjectsCardView.iv_check_circle).thenReturn(mock(ImageView::class.java))
+        whenever(mockSubjectsCardView.tv_subject_name).thenReturn(mock(TextView::class.java))
         whenever(mockData[anyInt()]).thenReturn(testSubject)
     }
 
@@ -48,7 +50,10 @@ class SubjectViewHolderTest {
         subjectsRecyclerViewAdapter.isSelecting = false
         subjectsViewHolder.onClick(mockView)
 
-        verify(mockListener, times(1)).onSubjectItemClick(testSubject.id!!.toInt())
+        verify(mockListener, times(1)).onSubjectItemClick(
+            testSubject.id!!.toInt(),
+            mockSubjectsCardView.tv_subject_name
+        )
     }
 
     @Test

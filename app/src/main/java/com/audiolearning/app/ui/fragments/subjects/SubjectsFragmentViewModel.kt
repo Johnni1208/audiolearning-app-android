@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class SubjectsViewModel @Inject constructor(private val subjectRepository: SubjectRepository) :
+class SubjectsFragmentViewModel @Inject constructor(private val subjectRepository: SubjectRepository) :
     ViewModel() {
     private var mutableSelectedSubjectsList: ArrayList<Subject> = arrayListOf()
     private val _selectedSubjectsList = MutableLiveData<ArrayList<Subject>>().apply {

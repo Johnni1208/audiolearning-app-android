@@ -108,14 +108,14 @@ class MainActivity : AppCompatActivity(), MainActivityToolBarChangeListener {
     private fun setupToolbars() {
         setSupportActionBar(binding.tbMain)
 
-        binding.tbSelectedSubjects.setNavigationOnClickListener {
+        binding.tbMainSelectedSubjects.setNavigationOnClickListener {
             subjectsFragment.deselectAllSubjects()
-            binding.tbSelectedSubjects.hide()
+            binding.tbMainSelectedSubjects.hide()
             binding.tbMain.show()
         }
 
-        binding.tbSelectedSubjects.inflateMenu(R.menu.delete_selected_subjects_menu)
-        binding.tbSelectedSubjects.setOnMenuItemClickListener { item: MenuItem ->
+        binding.tbMainSelectedSubjects.inflateMenu(R.menu.delete_selected_subjects_menu)
+        binding.tbMainSelectedSubjects.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.menu_item_delete -> {
                     subjectsFragment.requestDeletionOfSelectedSubjects()
@@ -130,14 +130,14 @@ class MainActivity : AppCompatActivity(), MainActivityToolBarChangeListener {
     override fun onSelectedSubjectsChange(selectedSubjectsList: ArrayList<Subject>) {
         if (selectedSubjectsList.isEmpty()) {
             binding.tbMain.show()
-            binding.tbSelectedSubjects.hide()
+            binding.tbMainSelectedSubjects.hide()
             return
         }
 
         binding.tbMain.hide()
-        binding.tbSelectedSubjects.show()
+        binding.tbMainSelectedSubjects.show()
 
-        binding.tbSelectedSubjects.title = selectedSubjectsList.size.toString()
+        binding.tbMainSelectedSubjects.title = selectedSubjectsList.size.toString()
     }
 }
 

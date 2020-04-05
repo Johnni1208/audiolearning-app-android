@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -19,6 +21,7 @@ import com.audiolearning.app.databinding.FragmentSubjectsBinding
 import com.audiolearning.app.extensions.hide
 import com.audiolearning.app.extensions.show
 import com.audiolearning.app.ui.activities.MainActivityToolBarChangeListener
+import com.audiolearning.app.ui.activities.subject.SubjectActivity
 import com.audiolearning.app.ui.dialogs.create_new_subject.CreateNewSubjectDialog
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialogTexts
@@ -35,7 +38,7 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by viewModels<SubjectsViewModel> { viewModelFactory }
+    private val viewModel by viewModels<SubjectsFragmentViewModel> { viewModelFactory }
     private lateinit var binding: FragmentSubjectsBinding
 
     override fun onCreateView(
@@ -137,7 +140,22 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
         return viewModel.selectSubject(subject)
     }
 
-    override fun onSubjectItemClick(id: Int) {}
+    override fun onSubjectItemClick(id: Int, sharedView: View) {
+        val transitionName = ViewCompat.getTransitionName(sharedView)!!
+
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            activity as Activity,
+            sharedView,
+            transitionName
+        )
+
+        Intent(context, SubjectActivity::class.java).apply {
+            putExtra(SubjectActivity.EXTRA_SUBJECT_ID, id)
+            putExtra(SubjectActivity.EXTRA_TRANSITION_NAME, transitionName)
+
+            startActivity(this, options.toBundle())
+        }
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode != dialogRequestCode) return

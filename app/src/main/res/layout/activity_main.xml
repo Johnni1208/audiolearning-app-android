@@ -20,7 +20,7 @@
             app:titleTextColor="@android:color/white" />
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/tb_selected_subjects"
+            android:id="@+id/tb_main_selected_subjects"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"

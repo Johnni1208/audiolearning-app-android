@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.audiolearning.app.R
 import com.audiolearning.app.data.db.entities.Subject
@@ -29,6 +30,7 @@ class SubjectsRecyclerViewAdapter(
         holder.subjectCardView.tv_subject_name.text = data[position].name
         holder.subjectCardView.alpha = 1f
         holder.subjectCardView.iv_check_circle.hide()
+        ViewCompat.setTransitionName(holder.subjectCardView.tv_subject_name, data[position].name)
     }
 
     override fun getItemCount() = data.size
@@ -101,10 +103,11 @@ class SubjectsRecyclerViewAdapter(
         }
 
         override fun onClick(v: View?) {
-            data[adapterPosition].id?.let {
-                if (isSelecting) onLongClick(v)
-                else listener.onSubjectItemClick(it.toInt())
-            }
+            if (isSelecting) onLongClick(v)
+            else listener.onSubjectItemClick(
+                data[adapterPosition].id!!.toInt(),
+                this.subjectCardView.tv_subject_name
+            )
         }
 
         override fun onLongClick(v: View?): Boolean {
@@ -138,6 +141,6 @@ class SubjectsRecyclerViewAdapter(
     interface SubjectEventListener {
         fun onSubjectItemDeselect(id: Int)
         fun onSubjectItemSelect(id: Int): Boolean
-        fun onSubjectItemClick(id: Int)
+        fun onSubjectItemClick(id: Int, sharedView: View)
     }
 }

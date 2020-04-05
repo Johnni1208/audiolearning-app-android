@@ -2,10 +2,7 @@ package com.audiolearning.app.di
 
 import android.content.Context
 import com.audiolearning.app.AudioLearningApplication
-import com.audiolearning.app.di.ui.CreateNewSubjectDialogModule
-import com.audiolearning.app.di.ui.NewRecordingDialogModule
-import com.audiolearning.app.di.ui.RecorderModule
-import com.audiolearning.app.di.ui.SubjectsModule
+import com.audiolearning.app.di.ui.*
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -17,10 +14,11 @@ import javax.inject.Singleton
     modules = [
         AndroidInjectionModule::class,
         ApplicationModule::class,
-        RecorderModule::class,
-        SubjectsModule::class,
+        RecorderFragmentModule::class,
+        SubjectsFragmentModule::class,
         NewRecordingDialogModule::class,
-        CreateNewSubjectDialogModule::class
+        CreateNewSubjectDialogModule::class,
+        SubjectActivityModule::class
     ]
 )
 interface ApplicationComponent : AndroidInjector<AudioLearningApplication> {
