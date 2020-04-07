@@ -101,10 +101,8 @@ class SubjectsRecyclerViewAdapter(
         }
 
         override fun onClick(v: View?) {
-            data[adapterPosition].id?.let {
-                if (isSelecting) onLongClick(v)
-                else listener.onSubjectItemClick(it.toInt())
-            }
+            if (isSelecting) onLongClick(v)
+            else listener.onSubjectItemClick(data[adapterPosition].id!!.toInt())
         }
 
         override fun onLongClick(v: View?): Boolean {

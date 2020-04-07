@@ -26,7 +26,7 @@ class RecorderFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by viewModels<RecorderViewModel> { viewModelFactory }
+    private val viewModel by viewModels<RecorderFragmentViewModel> { viewModelFactory }
     private lateinit var binding: FragmentRecorderBinding
 
     override fun onCreateView(

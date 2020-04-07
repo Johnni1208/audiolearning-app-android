@@ -19,6 +19,7 @@ import com.audiolearning.app.databinding.FragmentSubjectsBinding
 import com.audiolearning.app.extensions.hide
 import com.audiolearning.app.extensions.show
 import com.audiolearning.app.ui.activities.MainActivityToolBarChangeListener
+import com.audiolearning.app.ui.activities.subject.SubjectActivity
 import com.audiolearning.app.ui.dialogs.create_new_subject.CreateNewSubjectDialog
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialogTexts
@@ -35,7 +36,7 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by viewModels<SubjectsViewModel> { viewModelFactory }
+    private val viewModel by viewModels<SubjectsFragmentViewModel> { viewModelFactory }
     private lateinit var binding: FragmentSubjectsBinding
 
     override fun onCreateView(
@@ -137,7 +138,12 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
         return viewModel.selectSubject(subject)
     }
 
-    override fun onSubjectItemClick(id: Int) {}
+    override fun onSubjectItemClick(id: Int) {
+        Intent(context, SubjectActivity::class.java).apply {
+            putExtra(SubjectActivity.EXTRA_SUBJECT_ID, id)
+            startActivity(this)
+        }
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode != dialogRequestCode) return

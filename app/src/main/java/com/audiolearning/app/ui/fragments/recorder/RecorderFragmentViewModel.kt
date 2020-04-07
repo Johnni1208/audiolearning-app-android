@@ -12,7 +12,7 @@ import javax.inject.Inject
  *
  * @param timer Inject a custom instance of [Timer].
  */
-class RecorderViewModel @Inject constructor(
+class RecorderFragmentViewModel @Inject constructor(
     private val audioRecorder: AudioRecorder,
     timer: Timer
 ) : ViewModel() {

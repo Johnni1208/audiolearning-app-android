@@ -98,24 +98,25 @@ class MainActivity : AppCompatActivity(), MainActivityToolBarChangeListener {
 
     private fun changeTitleOfToolBar(position: Int) {
         when (position) {
-            POSITION_ABOUT_US_FRAGMENT -> tb_main.setTitle(R.string.title_about_us)
-            POSITION_RECORDER_FRAGMENT -> tb_main.setTitle(R.string.title_recorder)
-            POSITION_SUBJECT_FRAGMENT -> tb_main.setTitle(R.string.title_subjects)
+            POSITION_ABOUT_US_FRAGMENT -> tv_main_title.setText(R.string.title_about_us)
+            POSITION_RECORDER_FRAGMENT -> tv_main_title.setText(R.string.title_recorder)
+            POSITION_SUBJECT_FRAGMENT -> tv_main_title.setText(R.string.title_subjects)
             else -> throw IllegalStateException("No title for position: $position")
         }
     }
 
     private fun setupToolbars() {
         setSupportActionBar(binding.tbMain)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        binding.tbSelectedSubjects.setNavigationOnClickListener {
+        binding.tbMainSelectedSubjects.setNavigationOnClickListener {
             subjectsFragment.deselectAllSubjects()
-            binding.tbSelectedSubjects.hide()
+            binding.tbMainSelectedSubjects.hide()
             binding.tbMain.show()
         }
 
-        binding.tbSelectedSubjects.inflateMenu(R.menu.delete_selected_subjects_menu)
-        binding.tbSelectedSubjects.setOnMenuItemClickListener { item: MenuItem ->
+        binding.tbMainSelectedSubjects.inflateMenu(R.menu.delete_selected_subjects_menu)
+        binding.tbMainSelectedSubjects.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.menu_item_delete -> {
                     subjectsFragment.requestDeletionOfSelectedSubjects()
@@ -130,14 +131,14 @@ class MainActivity : AppCompatActivity(), MainActivityToolBarChangeListener {
     override fun onSelectedSubjectsChange(selectedSubjectsList: ArrayList<Subject>) {
         if (selectedSubjectsList.isEmpty()) {
             binding.tbMain.show()
-            binding.tbSelectedSubjects.hide()
+            binding.tbMainSelectedSubjects.hide()
             return
         }
 
         binding.tbMain.hide()
-        binding.tbSelectedSubjects.show()
+        binding.tbMainSelectedSubjects.show()
 
-        binding.tbSelectedSubjects.title = selectedSubjectsList.size.toString()
+        binding.tbMainSelectedSubjects.title = selectedSubjectsList.size.toString()
     }
 }
 
