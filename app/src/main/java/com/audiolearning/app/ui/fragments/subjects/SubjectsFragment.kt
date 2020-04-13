@@ -12,8 +12,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.audiolearning.app.R
-import com.audiolearning.app.adapters.subjects_recycler_view.SubjectsRecyclerViewAdapter
-import com.audiolearning.app.adapters.subjects_recycler_view.SubjectsRecyclerViewAdapterEvent
+import com.audiolearning.app.adapters.AdapterDataEvent
+import com.audiolearning.app.adapters.recycler_view_adapter.SubjectsRecyclerViewAdapter
+import com.audiolearning.app.adapters.recycler_view_adapter.base_selectable_adapter.ItemSelectListener
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.databinding.FragmentSubjectsBinding
 import com.audiolearning.app.extensions.hide
@@ -30,7 +31,8 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarChangeListener) :
-    DaggerFragment(), SubjectsRecyclerViewAdapter.SubjectEventListener {
+    DaggerFragment(),
+    ItemSelectListener {
     private var dialogRequestCode: Int = 0 // lateinit
     private lateinit var deleteSubjectsDialogTexts: DefaultYesNoDialogTexts
 
@@ -80,16 +82,16 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
     }
 
     private fun setupRecyclerView() {
-        val subjectsAdapter = SubjectsRecyclerViewAdapter(arrayListOf(), this)
+        val subjectsAdapter = SubjectsRecyclerViewAdapter(this)
 
         // Update adapters data
         viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
             if (subjectsAdapter.isDataInitialized) {
                 when (subjectsAdapter.updateData(subjects)) {
-                    SubjectsRecyclerViewAdapterEvent.ITEMS_ADDED ->
+                    AdapterDataEvent.ITEMS_ADDED ->
                         binding.rvSubjects.smoothScrollToPosition(subjects.size - 1)
 
-                    SubjectsRecyclerViewAdapterEvent.ITEMS_DELETED ->
+                    AdapterDataEvent.ITEMS_DELETED ->
                         binding.rvSubjects.smoothScrollToPosition(0)
                 }
             } else subjectsAdapter.initializeData(subjects)
@@ -128,17 +130,17 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
             })
     }
 
-    override fun onSubjectItemDeselect(id: Int) {
+    override fun onItemDeselect(id: Int) {
         val subject: Subject = runBlocking { viewModel.getSubjectById(id) }
         if (viewModel.deselectSubject(subject)) return
     }
 
-    override fun onSubjectItemSelect(id: Int): Boolean {
+    override fun onItemSelect(id: Int): Boolean {
         val subject: Subject = runBlocking { viewModel.getSubjectById(id) }
         return viewModel.selectSubject(subject)
     }
 
-    override fun onSubjectItemClick(id: Int) {
+    override fun onItemClick(id: Int) {
         Intent(context, SubjectActivity::class.java).apply {
             putExtra(SubjectActivity.EXTRA_SUBJECT_ID, id)
             startActivity(this)

@@ -8,14 +8,14 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "subjects")
 data class Subject(
     @ColumnInfo(name = "subject_name")
-    val name: String,
+    override val name: String,
 
     @ColumnInfo(name = "subject_directory_uri")
     val directoryUriString: String
-) {
+) : BaseEntity {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "subject_id")
-    var id: Long? = null
+    override var id: Long? = null
 
     /**
      * Used for placeholder items in a subject spinner.
