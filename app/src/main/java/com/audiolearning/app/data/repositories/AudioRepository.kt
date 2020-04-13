@@ -1,5 +1,6 @@
 package com.audiolearning.app.data.repositories
 
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import com.audiolearning.app.data.db.AudioLearningDatabase
 import com.audiolearning.app.data.db.entities.Audio
@@ -22,8 +23,13 @@ class AudioRepository @Inject constructor(
 
         val audioFile =
             File(subjectDirectory + File.separatorChar + name + Audio.fileExtension)
-        val audioFileUri = Uri.fromFile(audioFile)
+        val audioFileUri: Uri = Uri.fromFile(audioFile)
 
-        db.getAudioDao().insert(Audio(name, audioFileUri.toString(), subject.id!!))
+        val audioDuration: Int = MediaMetadataRetriever().run {
+            setDataSource(audioFile.path)
+            Integer.parseInt(extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION))
+        }
+
+        db.getAudioDao().insert(Audio(name, audioFileUri.toString(), audioDuration, subject.id!!))
     }
 }

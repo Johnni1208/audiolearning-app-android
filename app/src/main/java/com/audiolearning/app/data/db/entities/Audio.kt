@@ -13,13 +13,19 @@ import androidx.room.*
 )
 data class Audio(
     @ColumnInfo(name = "audio_name")
-    override val name: String,
+    val name: String,
 
     @ColumnInfo(name = "audio_file_uri")
     val audioFileUriString: String,
 
+    @ColumnInfo(name = "audio_duration")
+    val durationInMilliseconds: Int,
+
     @ColumnInfo(name = "audio_subject_id")
-    val subjectId: Long
+    val subjectId: Long,
+
+    @ColumnInfo(name = "create_date")
+    val createDate: Long = System.currentTimeMillis()
 ) : BaseEntity {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "audio_id")

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "8053d3f57a4930cfb644508318923b66",
+    "identityHash": "3336773ffa9636d3ab86a13034505610",
     "entities": [
       {
         "tableName": "audios",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`audio_id` INTEGER PRIMARY KEY AUTOINCREMENT, `audio_name` TEXT NOT NULL, `audio_file_uri` TEXT NOT NULL, `audio_subject_id` INTEGER NOT NULL, FOREIGN KEY(`audio_subject_id`) REFERENCES `subjects`(`subject_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`audio_id` INTEGER PRIMARY KEY AUTOINCREMENT, `audio_name` TEXT NOT NULL, `audio_file_uri` TEXT NOT NULL, `audio_duration` INTEGER NOT NULL, `audio_subject_id` INTEGER NOT NULL, `create_date` INTEGER NOT NULL, FOREIGN KEY(`audio_subject_id`) REFERENCES `subjects`(`subject_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -27,8 +27,20 @@
             "notNull": true
           },
           {
+            "fieldPath": "audioDurationInMilliseconds",
+            "columnName": "audio_duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "subjectId",
             "columnName": "audio_subject_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createDate",
+            "columnName": "create_date",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -90,7 +102,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8053d3f57a4930cfb644508318923b66')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3336773ffa9636d3ab86a13034505610')"
     ]
   }
 }

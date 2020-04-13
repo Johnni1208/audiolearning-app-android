@@ -3,5 +3,6 @@
     <color name="colorPrimary">#FFD60A</color>
     <color name="colorPrimaryDark">#FFCC00</color>
     <color name="colorAccent">#FF0053</color>
-    <color name="colorText">#000000</color>
+    <color name="colorText">#333333</color>
+    <color name="colorDivider">#ECECEC</color>
 </resources>

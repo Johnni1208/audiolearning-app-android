@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "subjects")
 data class Subject(
     @ColumnInfo(name = "subject_name")
-    override val name: String,
+    val name: String,
 
     @ColumnInfo(name = "subject_directory_uri")
     val directoryUriString: String

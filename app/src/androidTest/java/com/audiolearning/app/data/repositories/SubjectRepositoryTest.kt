@@ -111,6 +111,7 @@ class SubjectRepositoryTest {
         val testAudio = Audio(
             "testAudio",
             "",
+            0,
             testSubject?.id!!
         )
         audioDao.insert(testAudio)
