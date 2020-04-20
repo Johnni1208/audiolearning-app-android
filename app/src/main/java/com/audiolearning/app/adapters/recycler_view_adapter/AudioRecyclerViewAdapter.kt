@@ -25,7 +25,7 @@ class AudioRecyclerViewAdapter(private var listener: ItemSelectListener) :
         holder.itemView.tv_audio_create_date.text =
             (data[position] as Audio).createDate.toFormattedDate()
         holder.itemView.tv_audio_duration.text = getTimeStringFromMillis(
-            (data[position] as Audio).durationInMilliseconds.toLong()
+            (data[position] as Audio).durationInMilliseconds
         )
     }
 

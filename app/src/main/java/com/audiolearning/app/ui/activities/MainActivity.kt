@@ -139,6 +139,11 @@ class MainActivity : AppCompatActivity(), MainActivityToolBarChangeListener {
 
         binding.tbMainSelectedSubjects.title = selectedSubjectsList.size.toString()
     }
+
+    override fun onBackPressed() {
+        if (binding.pager.currentItem != POSITION_RECORDER_FRAGMENT)
+            binding.pager.currentItem = POSITION_RECORDER_FRAGMENT
+    }
 }
 
 /**

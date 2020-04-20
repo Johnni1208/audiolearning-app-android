@@ -9,7 +9,7 @@ import com.audiolearning.app.data.db.entities.Subject
 
 @Database(
     entities = [Audio::class, Subject::class],
-    version = 3
+    version = 4
 )
 abstract class AudioLearningDatabase : RoomDatabase() {
     abstract fun getAudioDao(): AudioDao

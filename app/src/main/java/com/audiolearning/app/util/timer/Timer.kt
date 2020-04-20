@@ -8,7 +8,6 @@ import javax.inject.Inject
  * This class provides a Timer which counts up.
  * Only usable with Android LiveData.
  */
-
 class Timer @Inject constructor() {
     private val _time =
         TimeMutableLiveData()

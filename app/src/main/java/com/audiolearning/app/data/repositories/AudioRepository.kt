@@ -25,10 +25,11 @@ class AudioRepository @Inject constructor(
             File(subjectDirectory + File.separatorChar + name + Audio.fileExtension)
         val audioFileUri: Uri = Uri.fromFile(audioFile)
 
-        // TODO: Length is wrong on API 22
-        val audioDuration: Int = MediaMetadataRetriever().run {
-            setDataSource(audioFile.path)
-            Integer.parseInt(extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION))
+        val audioDuration: Long = MediaMetadataRetriever().run {
+            setDataSource(audioFile.absolutePath)
+            val time = extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+            release()
+            return@run time
         }
 
         db.getAudioDao().insert(Audio(name, audioFileUri.toString(), audioDuration, subject.id!!))

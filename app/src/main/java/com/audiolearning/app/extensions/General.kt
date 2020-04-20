@@ -1,9 +1,11 @@
 package com.audiolearning.app.extensions
 
-fun getTimeStringFromMillis(millis: Long): String {
-    val minutes = millis / 1000 / 60 % 60
-    val seconds = millis / 1000 % 60
+import java.util.concurrent.TimeUnit
 
-    return "${if (minutes > 9) "$minutes" else "0$minutes"}:" +
-            if (seconds > 9) "$seconds" else "0$seconds"
-}
+fun getTimeStringFromMillis(millis: Long) =
+    String.format(
+        "%02d:%02d",
+        TimeUnit.MILLISECONDS.toMinutes(millis),
+        TimeUnit.MILLISECONDS.toSeconds(millis) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+    )
