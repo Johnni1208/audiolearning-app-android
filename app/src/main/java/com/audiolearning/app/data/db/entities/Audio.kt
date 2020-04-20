@@ -22,14 +22,14 @@ data class Audio(
     val durationInMilliseconds: Int,
 
     @ColumnInfo(name = "audio_subject_id")
-    val subjectId: Long,
+    val subjectId: Int,
 
     @ColumnInfo(name = "create_date")
     val createDate: Long = System.currentTimeMillis()
 ) : BaseEntity {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "audio_id")
-    override var id: Long? = null
+    override var id: Int? = null
 
     companion object {
         @Ignore

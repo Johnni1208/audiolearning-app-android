@@ -1,5 +1,6 @@
 package com.audiolearning.app.data.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -15,4 +16,7 @@ interface AudioDao {
 
     @Query("SELECT * FROM audios WHERE audio_name = :name")
     suspend fun getAudioByName(name: String): Audio?
+
+    @Query("SELECT * FROM audios WHERE audio_subject_id = :subjectId")
+    fun getAudiosOfSubject(subjectId: Int): LiveData<List<Audio>>
 }

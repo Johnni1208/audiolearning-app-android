@@ -148,7 +148,7 @@ class SubjectRepositoryTest {
 
     @Test
     fun getSubjectById_ShouldReturnSpecifiedSubject() = runBlocking {
-        val testSubject = Subject(testSubjectName, "").apply { id = testSubjectId.toLong() }
+        val testSubject = Subject(testSubjectName, "").apply { id = testSubjectId }
         subjectDao.insert(testSubject)
 
         assertEquals(testSubject.id, subjectRepository.getSubjectById(testSubjectId)?.id)

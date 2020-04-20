@@ -15,7 +15,7 @@ data class Subject(
 ) : BaseEntity {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "subject_id")
-    override var id: Long? = null
+    override var id: Int? = null
 
     /**
      * Used for placeholder items in a subject spinner.

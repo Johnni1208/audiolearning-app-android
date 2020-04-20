@@ -19,6 +19,7 @@
             android:id="@+id/ab_subjects"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:fitsSystemWindows="true"
             app:liftOnScroll="true"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -29,8 +30,8 @@
                 android:fitsSystemWindows="true"
                 app:contentScrim="@color/colorPrimary"
                 app:expandedTitleGravity="center"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:title="@{ viewModel.title }">
+                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+                app:title="@{ viewModel.subject.name }">
 
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/tb_subjects"
@@ -42,5 +43,12 @@
                     tools:ignore="RtlSymmetry" />
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_audios"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

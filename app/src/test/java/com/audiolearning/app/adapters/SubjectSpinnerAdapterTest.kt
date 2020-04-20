@@ -19,7 +19,7 @@ class SubjectSpinnerAdapterTest {
     fun setUp() {
         for (i in 1..10) {
             testSubjectList.add(Subject("testSubject$i", "").apply {
-                id = i.toLong()
+                id = i
             })
         }
     }
