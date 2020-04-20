@@ -159,6 +159,19 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    override fun onResume() {
+        // Reloads Items (necessary on older devices)
+        (binding.rvSubjects.adapter as SubjectsRecyclerViewAdapter).apply {
+            notifyItemRangeChanged(0, this.itemCount)
+        }
+        super.onResume()
+    }
+
+    override fun onPause() {
+        deselectAllSubjects()
+        super.onPause()
+    }
+
     fun requestDeletionOfSelectedSubjects() {
         DefaultYesNoDialog.display(
             parentFragmentManager,
@@ -169,6 +182,8 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
     }
 
     fun deselectAllSubjects() {
+        if (viewModel.selectedSubjectsList.value?.size!! == 0) return
+
         viewModel.deselectAllSubjects()
 
         // Update RecyclerView items

@@ -89,7 +89,6 @@ class MainActivity : AppCompatActivity(), MainActivityToolBarChangeListener {
             binding.navView.menu.getItem(position).isChecked = true
             previousMenuItem = binding.navView.menu.getItem(position)
 
-            if (previousPosition == POSITION_SUBJECT_FRAGMENT) subjectsFragment.deselectAllSubjects()
             previousPosition = position
 
             changeTitleOfToolBar(position)
