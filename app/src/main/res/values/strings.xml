@@ -37,9 +37,12 @@
     <string name="cnsDialog_save_button_text">Save</string>
 
     <!-- Text for subjectsFragment -->
-    <string name="subjectsFragment_empty_text">No subjects yet, try adding one…</string>
+    <string name="subjectsFragment_empty_state_text">No subjects yet, try adding one…</string>
 
     <!-- Text for Delete Subjects? Dialog -->
     <string name="dsDialog_title">Delete subjects?</string>
     <string name="dsDialog_message">The subject\'s recordings will be lost forever, too.</string>
+
+    <!-- Text for SubjectActivity -->
+    <string name="subjectActivity_empty_state_text">No audios yet, record one!</string>
 </resources>

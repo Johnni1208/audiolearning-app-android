@@ -30,7 +30,7 @@
                 android:fitsSystemWindows="true"
                 app:contentScrim="@color/colorPrimary"
                 app:expandedTitleGravity="center"
-                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:title="@{ viewModel.subject.name }">
 
                 <com.google.android.material.appbar.MaterialToolbar
@@ -50,5 +50,13 @@
             android:layout_height="match_parent"
             android:scrollbars="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <TextView
+            android:id="@+id/tv_no_audios"
+            style="@style/EmptyStateText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/subjectActivity_empty_state_text" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -14,7 +14,10 @@ import com.audiolearning.app.adapters.recycler_view_adapter.AudioRecyclerViewAda
 import com.audiolearning.app.adapters.recycler_view_adapter.base_selectable_adapter.ItemSelectListener
 import com.audiolearning.app.data.db.entities.Audio
 import com.audiolearning.app.databinding.ActivitySubjectBinding
+import com.audiolearning.app.extensions.hide
+import com.audiolearning.app.extensions.show
 import com.audiolearning.app.util.MissingArgumentException
+import com.google.android.material.appbar.AppBarLayout
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_subject.*
 import kotlinx.coroutines.runBlocking
@@ -47,6 +50,7 @@ class SubjectActivity : AppCompatActivity(), ItemSelectListener {
             )
         }
         setupToolbar()
+        setupEmptyStateMessage()
         setupRecyclerView()
     }
 
@@ -54,6 +58,21 @@ class SubjectActivity : AppCompatActivity(), ItemSelectListener {
         setSupportActionBar(tb_subjects)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun setupEmptyStateMessage() {
+        viewModel.getAudios().observe(this, Observer { audios: List<Audio> ->
+            if (audios.isEmpty()) {
+                binding.tvNoAudios.show()
+
+                // Don't scroll the toolbar
+                (binding.ctb.layoutParams as AppBarLayout.LayoutParams).scrollFlags =
+                    AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
+                return@Observer
+            }
+
+            binding.tvNoAudios.hide()
+        })
     }
 
     private fun setupRecyclerView() {

@@ -19,11 +19,11 @@
 
         <TextView
             android:id="@+id/tv_no_subjects"
-            style="@style/SubjectFragment.EmptyText"
+            style="@style/EmptyStateText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="@string/subjectsFragment_empty_text"
+            android:text="@string/subjectsFragment_empty_state_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
