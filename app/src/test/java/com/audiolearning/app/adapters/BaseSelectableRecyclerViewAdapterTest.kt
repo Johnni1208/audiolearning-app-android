@@ -72,7 +72,7 @@ class BaseSelectableRecyclerViewAdapterTest {
     @Test
     fun getItemViewType_ShouldReturnArgument() {
         val argument = 1
-        assertEquals(1, baseSelectableRecyclerViewAdapter.getItemViewType(argument))
+        assertEquals(argument, baseSelectableRecyclerViewAdapter.getItemViewType(argument))
     }
 
     @Test(expected = IllegalStateException::class)
@@ -100,10 +100,11 @@ class BaseSelectableRecyclerViewAdapterTest {
     fun updateData_ShouldAddItemToDataIfNewListSizeIsBigger() {
         baseSelectableRecyclerViewAdapter.isDataInitialized = true
         whenever(mockData.size).thenReturn(1)
+        whenever(mockData.contains(ArgumentMatchers.any(Subject::class.java))).thenReturn(false)
 
         baseSelectableRecyclerViewAdapter.updateData(realData)
 
-        verify(mockData, Mockito.times(1)).add(realData.last())
+        verify(mockData, Mockito.times(4)).add(ArgumentMatchers.any(Subject::class.java))
     }
 
     @Test

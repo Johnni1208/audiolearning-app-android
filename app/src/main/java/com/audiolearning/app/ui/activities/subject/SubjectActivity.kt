@@ -124,7 +124,7 @@ class SubjectActivity : AppCompatActivity(), ItemSelectListener {
         TODO("Not yet implemented")
     }
 
-    override fun onItemSelect(id: Int): Boolean {
+    override fun onItemSelect(id: Int) {
         TODO("Not yet implemented")
     }
 

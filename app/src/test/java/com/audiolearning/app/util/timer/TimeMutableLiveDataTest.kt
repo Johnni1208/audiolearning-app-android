@@ -2,10 +2,8 @@ package com.audiolearning.app.util.timer
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
-import java.util.regex.Pattern
 
 class TimeMutableLiveDataTest {
     @get:Rule
@@ -19,17 +17,6 @@ class TimeMutableLiveDataTest {
     @Test(expected = NoSuchMethodException::class)
     fun setValue_ShouldNotBeCallable() {
         TimeMutableLiveData().value = "xyz"
-    }
-
-    @Test
-    fun setValueFromMillis_ReturnsRightFormattedTimeString() {
-        // 00:00:00
-        val expectedFormat = "\\d\\d:\\d\\d"
-        val outputTimeString = TimeMutableLiveData().apply {
-            setValueFromMillis(1000L)
-        }.value
-
-        assertTrue(Pattern.matches(expectedFormat, outputTimeString!!))
     }
 
     @Test

@@ -1,7 +1,7 @@
 package com.audiolearning.app.util.timer
 
 import androidx.lifecycle.MutableLiveData
-import com.audiolearning.app.extensions.getTimeStringFromMillis
+import com.audiolearning.app.extensions.toTimeString
 
 /**
  * This class is an extension of [MutableLiveData].
@@ -16,7 +16,7 @@ class TimeMutableLiveData : MutableLiveData<String>("00:00") {
      * @param millis Milliseconds to be processed
      */
     fun setValueFromMillis(millis: Long) {
-        super.setValue(getTimeStringFromMillis(millis))
+        super.setValue(millis.toTimeString())
     }
 
     /**

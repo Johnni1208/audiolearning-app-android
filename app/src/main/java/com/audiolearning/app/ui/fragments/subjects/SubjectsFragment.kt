@@ -135,9 +135,9 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
         if (viewModel.deselectSubject(subject)) return
     }
 
-    override fun onItemSelect(id: Int): Boolean {
+    override fun onItemSelect(id: Int) {
         val subject: Subject = runBlocking { viewModel.getSubjectById(id) }
-        return viewModel.selectSubject(subject)
+        viewModel.selectSubject(subject)
     }
 
     override fun onItemClick(id: Int) {

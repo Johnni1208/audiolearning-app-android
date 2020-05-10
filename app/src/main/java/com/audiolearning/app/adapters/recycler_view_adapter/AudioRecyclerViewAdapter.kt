@@ -7,8 +7,8 @@ import com.audiolearning.app.R
 import com.audiolearning.app.adapters.recycler_view_adapter.base_selectable_adapter.BaseSelectableRecyclerViewAdapter
 import com.audiolearning.app.adapters.recycler_view_adapter.base_selectable_adapter.ItemSelectListener
 import com.audiolearning.app.data.db.entities.Audio
-import com.audiolearning.app.extensions.getTimeStringFromMillis
 import com.audiolearning.app.extensions.toFormattedDate
+import com.audiolearning.app.extensions.toTimeString
 import kotlinx.android.synthetic.main.audio_item.view.*
 
 class AudioRecyclerViewAdapter(private var listener: ItemSelectListener) :
@@ -24,9 +24,8 @@ class AudioRecyclerViewAdapter(private var listener: ItemSelectListener) :
         holder.itemView.tv_audio_name.text = (data[position] as Audio).name
         holder.itemView.tv_audio_create_date.text =
             (data[position] as Audio).createDate.toFormattedDate()
-        holder.itemView.tv_audio_duration.text = getTimeStringFromMillis(
-            (data[position] as Audio).durationInMilliseconds
-        )
+        holder.itemView.tv_audio_duration.text =
+            (data[position] as Audio).durationInMilliseconds.toTimeString()
     }
 
     inner class AudioViewHolder(

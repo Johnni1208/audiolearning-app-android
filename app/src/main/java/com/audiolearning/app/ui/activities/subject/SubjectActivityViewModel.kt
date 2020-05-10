@@ -14,7 +14,7 @@ class SubjectActivityViewModel @Inject constructor(
     private val subjectRepository: SubjectRepository,
     private val audioRepository: AudioRepository
 ) : ViewModel() {
-    private val _subject = MutableLiveData<Subject>().apply {
+    private val _subject: MutableLiveData<Subject> = MutableLiveData<Subject>().apply {
         value = null
     }
     val subject: LiveData<Subject>

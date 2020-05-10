@@ -16,7 +16,7 @@ data class Audio(
     val name: String,
 
     @ColumnInfo(name = "audio_file_uri")
-    val audioFileUriString: String,
+    val fileUriString: String,
 
     @ColumnInfo(name = "audio_duration")
     val durationInMilliseconds: Long,

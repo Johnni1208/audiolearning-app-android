@@ -48,7 +48,7 @@ abstract class BaseSelectableRecyclerViewAdapter :
     /**
      * Use this function to update the data of the adapter (remove/add)
      *
-     * @param newData List of new Subjects
+     * @param newData List of new BaseEntities
      *
      * @return [AdapterDataEvent] Whether it deleted or added an item
      *
@@ -59,7 +59,10 @@ abstract class BaseSelectableRecyclerViewAdapter :
 
         // Adds items
         if (newData.size > data.size) {
-            addItem(newData.last())
+            for (i in newData.lastIndex downTo 0) {
+                if (!data.contains(newData[i])) addItem(newData[i])
+            }
+
             return AdapterDataEvent.ITEMS_ADDED
         }
 
@@ -76,8 +79,8 @@ abstract class BaseSelectableRecyclerViewAdapter :
 
     private fun addItem(item: BaseEntity) {
         data.add(item)
-        notifyItemInserted(data.size - 1)
-        notifyItemRangeInserted(data.size - 1, 1)
+        notifyItemInserted(data.lastIndex)
+        notifyItemRangeInserted(data.lastIndex, 1)
     }
 
     private fun deleteItem(position: Int) {
@@ -102,7 +105,7 @@ abstract class BaseSelectableRecyclerViewAdapter :
 
         override fun onClick(v: View?) {
             if (isSelecting) onLongClick(v)
-            else listener.onItemClick(data[adapterPosition].id!!.toInt())
+            else listener.onItemClick(data[adapterPosition].id!!)
         }
 
         override fun onLongClick(v: View?): Boolean {
@@ -110,11 +113,11 @@ abstract class BaseSelectableRecyclerViewAdapter :
                 if (this.view.isSelected) {
                     this.view.isSelected = false
                     setViewDeselectUi()
-                    listener.onItemDeselect(it.toInt())
+                    listener.onItemDeselect(it)
                 } else {
                     this.view.isSelected = true
                     setViewSelectedUi()
-                    listener.onItemSelect(it.toInt())
+                    listener.onItemSelect(it)
                 }
                 return true
             }
