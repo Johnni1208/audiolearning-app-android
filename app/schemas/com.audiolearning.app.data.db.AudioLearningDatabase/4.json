@@ -1,7 +1,7 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 2,
+    "version": 4,
     "identityHash": "3336773ffa9636d3ab86a13034505610",
     "entities": [
       {
@@ -27,7 +27,7 @@
             "notNull": true
           },
           {
-            "fieldPath": "audioDurationInMilliseconds",
+            "fieldPath": "durationInMilliseconds",
             "columnName": "audio_duration",
             "affinity": "INTEGER",
             "notNull": true

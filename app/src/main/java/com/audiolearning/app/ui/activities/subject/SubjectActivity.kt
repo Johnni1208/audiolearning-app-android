@@ -5,17 +5,25 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiolearning.app.R
+import com.audiolearning.app.adapters.AdapterDataEvent
+import com.audiolearning.app.adapters.recycler_view_adapter.AudioRecyclerViewAdapter
+import com.audiolearning.app.adapters.recycler_view_adapter.base_selectable_adapter.ItemSelectListener
+import com.audiolearning.app.data.db.entities.Audio
 import com.audiolearning.app.databinding.ActivitySubjectBinding
+import com.audiolearning.app.extensions.hide
+import com.audiolearning.app.extensions.show
 import com.audiolearning.app.util.MissingArgumentException
+import com.google.android.material.appbar.AppBarLayout
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_subject.*
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-class SubjectActivity : AppCompatActivity() {
+class SubjectActivity : AppCompatActivity(), ItemSelectListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by viewModels<SubjectActivityViewModel> { viewModelFactory }
@@ -30,21 +38,71 @@ class SubjectActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left)
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_subject)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        runBlocking {
+            viewModel.setSubject(
+                intent.extras?.getInt(EXTRA_SUBJECT_ID)
+                    ?: throw MissingArgumentException(EXTRA_SUBJECT_ID)
+            )
+        }
         setupToolbar()
+        setupEmptyStateMessage()
+        setupRecyclerView()
     }
 
     private fun setupToolbar() {
         setSupportActionBar(tb_subjects)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
 
-        val subjectId: Int = intent.extras?.getInt(EXTRA_SUBJECT_ID)
-            ?: throw MissingArgumentException(EXTRA_SUBJECT_ID)
-        MainScope().launch { viewModel.setTitleToSubjectName(subjectId) }
+    private fun setupEmptyStateMessage() {
+        viewModel.getAudios().observe(this, Observer { audios: List<Audio> ->
+            if (audios.isEmpty()) {
+                binding.tvNoAudios.show()
+
+                // Don't scroll the toolbar
+                (binding.ctb.layoutParams as AppBarLayout.LayoutParams).scrollFlags =
+                    AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
+                return@Observer
+            }
+
+            binding.tvNoAudios.hide()
+        })
+    }
+
+    private fun setupRecyclerView() {
+        val audioAdapter = AudioRecyclerViewAdapter(this)
+
+        // Update adapters data
+        viewModel.getAudios().observe(this, Observer { audios: List<Audio> ->
+            if (audioAdapter.isDataInitialized) {
+                when (audioAdapter.updateData(audios)) {
+                    AdapterDataEvent.ITEMS_ADDED ->
+                        binding.rvAudios.smoothScrollToPosition(audios.size - 1)
+
+                    AdapterDataEvent.ITEMS_DELETED ->
+                        binding.rvAudios.smoothScrollToPosition(0)
+                }
+            } else audioAdapter.initializeData(audios)
+        })
+
+        // Update selecting state
+//        viewModel.selectedSubjectsList.observe(
+//            viewLifecycleOwner,
+//            Observer { selectedSubjectsList: ArrayList<Subject> ->
+//                audioAdapter.isSelecting = selectedSubjectsList.isNotEmpty()
+//            })
+
+        binding.rvAudios.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context)
+            adapter = audioAdapter
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -60,5 +118,17 @@ class SubjectActivity : AppCompatActivity() {
     override fun finish() {
         super.finish()
         overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right)
+    }
+
+    override fun onItemDeselect(id: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onItemSelect(id: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onItemClick(id: Int) {
+        TODO("Not yet implemented")
     }
 }

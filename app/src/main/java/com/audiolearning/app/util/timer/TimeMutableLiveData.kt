@@ -1,12 +1,13 @@
 package com.audiolearning.app.util.timer
 
 import androidx.lifecycle.MutableLiveData
+import com.audiolearning.app.extensions.toTimeString
 
 /**
  * This class is an extension of [MutableLiveData].
  * Only usable with the [setValueFromMillis].
  */
-class TimeMutableLiveData : MutableLiveData<String>("00:00:00") {
+class TimeMutableLiveData : MutableLiveData<String>("00:00") {
 
     /**
      * Sets the value of this MutableLiveData to a formatted string ("00:00:00"),
@@ -15,15 +16,7 @@ class TimeMutableLiveData : MutableLiveData<String>("00:00:00") {
      * @param millis Milliseconds to be processed
      */
     fun setValueFromMillis(millis: Long) {
-        val hours = millis / 1000 / 60 / 60
-        val minutes = millis / 1000 / 60 % 60
-        val seconds = millis / 1000 % 60
-
-        val timeString = "${if (hours > 9) "$hours" else "0$hours"}:" +
-                "${if (minutes > 9) "$minutes" else "0$minutes"}:" +
-                if (seconds > 9) "$seconds" else "0$seconds"
-
-        super.setValue(timeString)
+        super.setValue(millis.toTimeString())
     }
 
     /**

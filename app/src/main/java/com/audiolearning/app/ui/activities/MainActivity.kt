@@ -89,7 +89,6 @@ class MainActivity : AppCompatActivity(), MainActivityToolBarChangeListener {
             binding.navView.menu.getItem(position).isChecked = true
             previousMenuItem = binding.navView.menu.getItem(position)
 
-            if (previousPosition == POSITION_SUBJECT_FRAGMENT) subjectsFragment.deselectAllSubjects()
             previousPosition = position
 
             changeTitleOfToolBar(position)
@@ -139,6 +138,11 @@ class MainActivity : AppCompatActivity(), MainActivityToolBarChangeListener {
         binding.tbMainSelectedSubjects.show()
 
         binding.tbMainSelectedSubjects.title = selectedSubjectsList.size.toString()
+    }
+
+    override fun onBackPressed() {
+        if (binding.pager.currentItem != POSITION_RECORDER_FRAGMENT)
+            binding.pager.currentItem = POSITION_RECORDER_FRAGMENT
     }
 }
 

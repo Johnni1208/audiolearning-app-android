@@ -12,10 +12,10 @@ data class Subject(
 
     @ColumnInfo(name = "subject_directory_uri")
     val directoryUriString: String
-) {
+) : BaseEntity {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "subject_id")
-    var id: Long? = null
+    override var id: Int? = null
 
     /**
      * Used for placeholder items in a subject spinner.
