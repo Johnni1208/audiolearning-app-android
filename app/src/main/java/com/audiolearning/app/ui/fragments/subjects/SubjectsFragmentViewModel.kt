@@ -1,25 +1,19 @@
 package com.audiolearning.app.ui.fragments.subjects
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.data.repositories.SubjectRepository
-import com.audiolearning.app.extensions.addIfNotContained
-import com.audiolearning.app.extensions.removeIfContained
+import com.audiolearning.app.data.store.SelectedEntityStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class SubjectsFragmentViewModel @Inject constructor(private val subjectRepository: SubjectRepository) :
-    ViewModel() {
-    private var mutableSelectedSubjectsList: ArrayList<Subject> = arrayListOf()
-    private val _selectedSubjectsList = MutableLiveData<ArrayList<Subject>>().apply {
-        value = arrayListOf()
-    }
-
-    val selectedSubjectsList: LiveData<ArrayList<Subject>>
-        get() = _selectedSubjectsList
+class SubjectsFragmentViewModel @Inject constructor(
+    private val subjectRepository: SubjectRepository,
+    private val selectedSubjectStore: SelectedEntityStore<Subject>
+) : ViewModel() {
+    val selectedSubjectsList: LiveData<ArrayList<Subject>> = selectedSubjectStore.selectedEntityList
 
     fun getSubjects() = subjectRepository.getAllSubjects()
 
@@ -28,39 +22,21 @@ class SubjectsFragmentViewModel @Inject constructor(private val subjectRepositor
             ?: throw IllegalArgumentException("Could not find subject with id $id")
     }
 
-    fun selectSubject(subject: Subject): Boolean {
-        if (mutableSelectedSubjectsList.addIfNotContained(subject)) {
-            _selectedSubjectsList.postValue(mutableSelectedSubjectsList)
-            return true
-        }
+    fun selectSubject(subject: Subject) = selectedSubjectStore.select(subject)
 
-        return false
-    }
+    fun deselectSubject(subject: Subject) = selectedSubjectStore.deselect(subject)
 
-    fun deselectSubject(subject: Subject): Boolean {
-        if (mutableSelectedSubjectsList.removeIfContained(subject)) {
-            _selectedSubjectsList.postValue(mutableSelectedSubjectsList)
-            return true
-        }
-
-        return false
-    }
+    fun deselectAllSubjects() = selectedSubjectStore.clear()
 
     suspend fun deleteAllSelectedSubjects() {
         deleteSelectedSubjectsFromDb()
 
-        mutableSelectedSubjectsList.clear()
-        _selectedSubjectsList.postValue(mutableSelectedSubjectsList)
+        selectedSubjectStore.clear()
     }
 
     private suspend fun deleteSelectedSubjectsFromDb() = withContext(Dispatchers.IO) {
-        mutableSelectedSubjectsList.forEach { selectedSubject ->
+        selectedSubjectStore.selectedEntityList.value?.forEach { selectedSubject ->
             subjectRepository.delete(selectedSubject)
         }
-    }
-
-    fun deselectAllSubjects() {
-        mutableSelectedSubjectsList.clear()
-        _selectedSubjectsList.postValue(mutableSelectedSubjectsList)
     }
 }

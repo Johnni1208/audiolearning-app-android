@@ -1,7 +1,6 @@
-package com.audiolearning.app.util
+package com.audiolearning.app.util.file
 
 import com.audiolearning.app.data.db.entities.Audio
-import com.audiolearning.app.util.file.AudioFileUtils
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule

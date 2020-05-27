@@ -1,4 +1,4 @@
-package com.audiolearning.app.util
+package com.audiolearning.app
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
