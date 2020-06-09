@@ -1,4 +1,4 @@
-package com.audiolearning.app.ui.activities.subject
+package com.audiolearning.app.ui.activities.audios_of_subject
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -13,22 +13,22 @@ import com.audiolearning.app.adapters.AdapterDataEvent
 import com.audiolearning.app.adapters.recycler_view_adapter.AudioRecyclerViewAdapter
 import com.audiolearning.app.adapters.recycler_view_adapter.base_selectable_adapter.ItemSelectListener
 import com.audiolearning.app.data.db.entities.Audio
-import com.audiolearning.app.databinding.ActivitySubjectBinding
+import com.audiolearning.app.databinding.ActivityAudiosOfSubjectBinding
 import com.audiolearning.app.extensions.hide
 import com.audiolearning.app.extensions.show
 import com.audiolearning.app.util.MissingArgumentException
 import com.google.android.material.appbar.AppBarLayout
 import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_subject.*
+import kotlinx.android.synthetic.main.activity_audios_of_subject.*
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-class SubjectActivity : AppCompatActivity(), ItemSelectListener {
+class AudiosOfSubjectActivity : AppCompatActivity(), ItemSelectListener<Audio> {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by viewModels<SubjectActivityViewModel> { viewModelFactory }
+    private val viewModel by viewModels<AudiosOfSubjectActivityViewModel> { viewModelFactory }
 
-    private lateinit var binding: ActivitySubjectBinding
+    private lateinit var binding: ActivityAudiosOfSubjectBinding
 
     companion object {
         const val EXTRA_SUBJECT_ID = "extra_subject_id"
@@ -39,19 +39,21 @@ class SubjectActivity : AppCompatActivity(), ItemSelectListener {
         AndroidInjection.inject(this)
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_subject)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_audios_of_subject)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        runBlocking {
-            viewModel.setSubject(
-                intent.extras?.getInt(EXTRA_SUBJECT_ID)
-                    ?: throw MissingArgumentException(EXTRA_SUBJECT_ID)
-            )
-        }
+        setupSubject()
         setupToolbar()
         setupEmptyStateMessage()
         setupRecyclerView()
+    }
+
+    private fun setupSubject() = runBlocking {
+        viewModel.setSubject(
+            intent.extras?.getInt(EXTRA_SUBJECT_ID)
+                ?: throw MissingArgumentException(EXTRA_SUBJECT_ID)
+        )
     }
 
     private fun setupToolbar() {
@@ -92,17 +94,29 @@ class SubjectActivity : AppCompatActivity(), ItemSelectListener {
         })
 
         // Update selecting state
-//        viewModel.selectedSubjectsList.observe(
-//            viewLifecycleOwner,
-//            Observer { selectedSubjectsList: ArrayList<Subject> ->
-//                audioAdapter.isSelecting = selectedSubjectsList.isNotEmpty()
-//            })
+        viewModel.selectedAudiosList.observe(
+            this,
+            Observer { selectedAudiosList: ArrayList<Audio> ->
+                audioAdapter.isSelecting = selectedAudiosList.isNotEmpty()
+            })
 
         binding.rvAudios.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             adapter = audioAdapter
         }
+    }
+
+    override fun onItemSelect(item: Audio) {
+        viewModel.selectAudio(item)
+    }
+
+    override fun onItemDeselect(item: Audio) {
+        viewModel.deselectAudio(item)
+    }
+
+    override fun onItemClick(item: Audio) {
+        TODO("Not yet implemented")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -118,17 +132,5 @@ class SubjectActivity : AppCompatActivity(), ItemSelectListener {
     override fun finish() {
         super.finish()
         overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right)
-    }
-
-    override fun onItemDeselect(id: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onItemSelect(id: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onItemClick(id: Int) {
-        TODO("Not yet implemented")
     }
 }

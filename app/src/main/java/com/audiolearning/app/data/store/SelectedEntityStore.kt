@@ -3,8 +3,6 @@ package com.audiolearning.app.data.store
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.audiolearning.app.data.db.entities.BaseEntity
-import com.audiolearning.app.extensions.addIfNotContained
-import com.audiolearning.app.extensions.removeIfContained
 
 /**
  * Class for storing selected children of [BaseEntity].
@@ -21,22 +19,14 @@ class SelectedEntityStore<T : BaseEntity> {
     val selectedEntityList: LiveData<ArrayList<T>>
         get() = _selectedEntityList
 
-    fun select(entity: T): Boolean {
-        if (mutableSelectedEntityList.addIfNotContained(entity)) {
-            _selectedEntityList.postValue(mutableSelectedEntityList)
-            return true
-        }
-
-        return false
+    fun select(entity: T) {
+        mutableSelectedEntityList.add(entity)
+        _selectedEntityList.postValue(mutableSelectedEntityList)
     }
 
-    fun deselect(entity: T): Boolean {
-        if (mutableSelectedEntityList.removeIfContained(entity)) {
-            _selectedEntityList.postValue(mutableSelectedEntityList)
-            return true
-        }
-
-        return false
+    fun deselect(entity: T) {
+        mutableSelectedEntityList.remove(entity)
+        _selectedEntityList.postValue(mutableSelectedEntityList)
     }
 
     fun clear() {

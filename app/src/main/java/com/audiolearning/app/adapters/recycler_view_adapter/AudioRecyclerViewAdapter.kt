@@ -11,8 +11,8 @@ import com.audiolearning.app.extensions.toFormattedDate
 import com.audiolearning.app.extensions.toTimeString
 import kotlinx.android.synthetic.main.audio_item.view.*
 
-class AudioRecyclerViewAdapter(private var listener: ItemSelectListener) :
-    BaseSelectableRecyclerViewAdapter() {
+class AudioRecyclerViewAdapter(private var listener: ItemSelectListener<Audio>) :
+    BaseSelectableRecyclerViewAdapter<Audio>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseSelectableViewHolder {
         val audioItem: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.audio_item, parent, false)
@@ -21,16 +21,16 @@ class AudioRecyclerViewAdapter(private var listener: ItemSelectListener) :
     }
 
     override fun onBindViewHolder(holder: BaseSelectableViewHolder, position: Int) {
-        holder.itemView.tv_audio_name.text = (data[position] as Audio).name
+        holder.itemView.tv_audio_name.text = (data[position]).name
         holder.itemView.tv_audio_create_date.text =
-            (data[position] as Audio).createDate.toFormattedDate()
+            (data[position]).createDate.toFormattedDate()
         holder.itemView.tv_audio_duration.text =
-            (data[position] as Audio).durationInMilliseconds.toTimeString()
+            (data[position]).durationInMilliseconds.toTimeString()
     }
 
     inner class AudioViewHolder(
         view: View,
-        listener: ItemSelectListener
+        listener: ItemSelectListener<Audio>
     ) : BaseSelectableViewHolder(view, listener) {
         override fun setViewSelectedUi() {
             TODO("Not yet implemented")

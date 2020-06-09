@@ -12,12 +12,13 @@ import com.audiolearning.app.data.db.entities.BaseEntity
  * data ([initializeData]) and updating data ([updateData]).
  * Use a child of [BaseSelectableViewHolder] as Adapter.
  */
-abstract class BaseSelectableRecyclerViewAdapter :
-    RecyclerView.Adapter<BaseSelectableRecyclerViewAdapter.BaseSelectableViewHolder>() {
+@Suppress("LeakingThis")
+abstract class BaseSelectableRecyclerViewAdapter<T : BaseEntity> :
+    RecyclerView.Adapter<BaseSelectableRecyclerViewAdapter<T>.BaseSelectableViewHolder>() {
     var isDataInitialized = false
     var isSelecting = false
 
-    protected var data: ArrayList<BaseEntity> = arrayListOf()
+    protected var data: ArrayList<T> = arrayListOf()
 
     abstract override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -37,7 +38,7 @@ abstract class BaseSelectableRecyclerViewAdapter :
      *
      * @throws IllegalStateException If the adapter's data has already been initialized
      */
-    fun initializeData(data: List<BaseEntity>) {
+    fun initializeData(data: List<T>) {
         check(!isDataInitialized) { "Already initialized. Use updateData()" }
 
         this.data = ArrayList(data)
@@ -54,7 +55,7 @@ abstract class BaseSelectableRecyclerViewAdapter :
      *
      * @throws IllegalStateException If the data has not yet been initialized.
      */
-    fun updateData(newData: List<BaseEntity>): AdapterDataEvent {
+    fun updateData(newData: List<T>): AdapterDataEvent {
         check(isDataInitialized) { "Not yet initialized. Use initializeData()" }
 
         // Adds items
@@ -77,7 +78,7 @@ abstract class BaseSelectableRecyclerViewAdapter :
         return AdapterDataEvent.ITEMS_DELETED
     }
 
-    private fun addItem(item: BaseEntity) {
+    private fun addItem(item: T) {
         data.add(item)
         notifyItemInserted(data.lastIndex)
         notifyItemRangeInserted(data.lastIndex, 1)
@@ -95,7 +96,7 @@ abstract class BaseSelectableRecyclerViewAdapter :
      */
     abstract inner class BaseSelectableViewHolder(
         private val view: View,
-        private val listener: ItemSelectListener
+        private val listener: ItemSelectListener<T>
     ) : RecyclerView.ViewHolder(view),
         View.OnClickListener, View.OnLongClickListener {
         init {
@@ -105,11 +106,11 @@ abstract class BaseSelectableRecyclerViewAdapter :
 
         override fun onClick(v: View?) {
             if (isSelecting) onLongClick(v)
-            else listener.onItemClick(data[adapterPosition].id!!)
+            else listener.onItemClick(data[adapterPosition])
         }
 
         override fun onLongClick(v: View?): Boolean {
-            data[adapterPosition].id?.let {
+            data[adapterPosition].let {
                 if (this.view.isSelected) {
                     this.view.isSelected = false
                     setViewDeselectUi()
@@ -121,8 +122,6 @@ abstract class BaseSelectableRecyclerViewAdapter :
                 }
                 return true
             }
-
-            return false
         }
 
         /**

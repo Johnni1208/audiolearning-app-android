@@ -2,6 +2,7 @@ package com.audiolearning.app.data.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.audiolearning.app.data.db.entities.Audio
@@ -11,6 +12,9 @@ interface AudioDao {
     @Insert
     suspend fun insert(audio: Audio)
 
+    @Delete
+    suspend fun delete(audio: Audio)
+
     @Query("SELECT * FROM audios")
     suspend fun getAllAudios(): List<Audio>
 
@@ -19,4 +23,7 @@ interface AudioDao {
 
     @Query("SELECT * FROM audios WHERE audio_subject_id = :subjectId")
     fun getAudiosOfSubject(subjectId: Int): LiveData<List<Audio>>
+
+    @Query("SELECT * FROM audios WHERE audio_id = :id")
+    suspend fun getAudioById(id: Int): Audio?
 }

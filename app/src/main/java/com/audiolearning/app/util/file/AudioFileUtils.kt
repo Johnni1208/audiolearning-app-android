@@ -1,5 +1,6 @@
 package com.audiolearning.app.util.file
 
+import android.net.Uri
 import android.util.Log
 import com.audiolearning.app.data.db.entities.Audio
 import java.io.*
@@ -56,6 +57,16 @@ class AudioFileUtils {
             } catch (e: Exception) {
                 Log.e("tag", e.message!!)
             }
+        }
+
+        /**
+         * Deletes the [Audio] from the device.
+         *
+         * @param audio The audio which should be deleted.
+         */
+        fun deleteAudioFile(audio: Audio) {
+            val audioFile = File(Uri.parse(audio.fileUriString).path!!)
+            audioFile.delete()
         }
     }
 }

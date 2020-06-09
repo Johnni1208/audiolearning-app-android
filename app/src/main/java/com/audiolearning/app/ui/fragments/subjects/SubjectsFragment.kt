@@ -20,19 +20,18 @@ import com.audiolearning.app.databinding.FragmentSubjectsBinding
 import com.audiolearning.app.extensions.hide
 import com.audiolearning.app.extensions.show
 import com.audiolearning.app.ui.activities.MainActivityToolBarChangeListener
-import com.audiolearning.app.ui.activities.subject.SubjectActivity
+import com.audiolearning.app.ui.activities.audios_of_subject.AudiosOfSubjectActivity
 import com.audiolearning.app.ui.dialogs.create_new_subject.CreateNewSubjectDialog
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog
 import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialogTexts
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarChangeListener) :
     DaggerFragment(),
-    ItemSelectListener {
+    ItemSelectListener<Subject> {
     private var dialogRequestCode: Int = 0 // lateinit
     private lateinit var deleteSubjectsDialogTexts: DefaultYesNoDialogTexts
 
@@ -130,19 +129,17 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
             })
     }
 
-    override fun onItemDeselect(id: Int) {
-        val subject: Subject = runBlocking { viewModel.getSubjectById(id) }
-        if (viewModel.deselectSubject(subject)) return
+    override fun onItemSelect(item: Subject) {
+        viewModel.selectSubject(item)
     }
 
-    override fun onItemSelect(id: Int) {
-        val subject: Subject = runBlocking { viewModel.getSubjectById(id) }
-        viewModel.selectSubject(subject)
+    override fun onItemDeselect(item: Subject) {
+        viewModel.deselectSubject(item)
     }
 
-    override fun onItemClick(id: Int) {
-        Intent(context, SubjectActivity::class.java).apply {
-            putExtra(SubjectActivity.EXTRA_SUBJECT_ID, id)
+    override fun onItemClick(item: Subject) {
+        Intent(context, AudiosOfSubjectActivity::class.java).apply {
+            putExtra(AudiosOfSubjectActivity.EXTRA_SUBJECT_ID, item.id)
             startActivity(this)
         }
     }

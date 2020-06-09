@@ -11,8 +11,8 @@ import com.audiolearning.app.extensions.hide
 import com.audiolearning.app.extensions.show
 import kotlinx.android.synthetic.main.subject_cardview.view.*
 
-class SubjectsRecyclerViewAdapter(private var listener: ItemSelectListener) :
-    BaseSelectableRecyclerViewAdapter() {
+class SubjectsRecyclerViewAdapter(private var listener: ItemSelectListener<Subject>) :
+    BaseSelectableRecyclerViewAdapter<Subject>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseSelectableViewHolder {
         val subjectCardView: CardView = LayoutInflater.from(parent.context)
             .inflate(R.layout.subject_cardview, parent, false) as CardView
@@ -21,14 +21,14 @@ class SubjectsRecyclerViewAdapter(private var listener: ItemSelectListener) :
     }
 
     override fun onBindViewHolder(holder: BaseSelectableViewHolder, position: Int) {
-        holder.itemView.tv_subject_name.text = (data[position] as Subject).name
+        holder.itemView.tv_subject_name.text = (data[position]).name
         holder.itemView.alpha = 1f
         holder.itemView.iv_check_circle.hide()
     }
 
     inner class SubjectViewHolder(
         private val subjectCardView: CardView,
-        listener: ItemSelectListener
+        listener: ItemSelectListener<Subject>
     ) : BaseSelectableViewHolder(subjectCardView, listener) {
         override fun setViewSelectedUi() {
             this.subjectCardView.alpha = 0.75f

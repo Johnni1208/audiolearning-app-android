@@ -18,7 +18,7 @@ import javax.inject.Singleton
         SubjectsFragmentModule::class,
         NewRecordingDialogModule::class,
         CreateNewSubjectDialogModule::class,
-        SubjectActivityModule::class
+        AudiosOfSubjectActivityModule::class
     ]
 )
 interface ApplicationComponent : AndroidInjector<AudioLearningApplication> {

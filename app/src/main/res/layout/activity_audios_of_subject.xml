@@ -2,13 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.activities.subject.SubjectActivity">
+    tools:context=".ui.activities.audios_of_subject.AudiosOfSubjectActivity">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.audiolearning.app.ui.activities.subject.SubjectActivityViewModel" />
+            type="com.audiolearning.app.ui.activities.audios_of_subject.AudiosOfSubjectActivityViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -57,6 +57,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="@string/subjectActivity_empty_state_text" />
+            android:text="@string/aosActivity_empty_state_text" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

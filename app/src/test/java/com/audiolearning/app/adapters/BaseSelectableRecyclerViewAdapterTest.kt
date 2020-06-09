@@ -18,12 +18,13 @@ import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.robolectric.RobolectricTestRunner
 
+@Suppress("UNCHECKED_CAST")
 @RunWith(RobolectricTestRunner::class)
 class BaseSelectableRecyclerViewAdapterTest {
     private val mockData: ArrayList<BaseEntity> = mock()
 
     private inner class TestBaseSelectableRecyclerViewAdapterClass :
-        BaseSelectableRecyclerViewAdapter() {
+        BaseSelectableRecyclerViewAdapter<BaseEntity>() {
         init {
             data = mockData
         }
@@ -35,7 +36,7 @@ class BaseSelectableRecyclerViewAdapterTest {
             object :
                 BaseSelectableViewHolder(
                     mock(View::class.java),
-                    mock(ItemSelectListener::class.java)
+                    mock(ItemSelectListener::class.java) as ItemSelectListener<BaseEntity>
                 ) {
                 override fun setViewSelectedUi() {}
 
