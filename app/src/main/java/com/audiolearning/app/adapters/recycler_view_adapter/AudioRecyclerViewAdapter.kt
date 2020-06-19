@@ -28,6 +28,7 @@ class AudioRecyclerViewAdapter(private var listener: ItemSelectListener<Audio>) 
             (data[position]).createDate.toFormattedDate()
         holder.itemView.tv_audio_duration.text =
             (data[position]).durationInMilliseconds.toTimeString()
+        holder.itemView.iv_audio_check_circle.hide()
     }
 
     inner class AudioViewHolder(

@@ -1,7 +1,9 @@
 package com.audiolearning.app.ui.activities.audios_of_subject
 
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -19,7 +21,6 @@ import com.audiolearning.app.extensions.show
 import com.audiolearning.app.util.MissingArgumentException
 import com.google.android.material.appbar.AppBarLayout
 import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_audios_of_subject.*
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -57,9 +58,14 @@ class AudiosOfSubjectActivity : AppCompatActivity(), ItemSelectListener<Audio> {
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(tb_subjects)
+        setSupportActionBar(binding.tbAudiosOfSubject)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        viewModel.selectedAudiosList.observe(this, Observer { list ->
+            if (list.isNotEmpty()) binding.tbAudiosOfSubject.setNavigationIcon(R.drawable.ic_cross_24dp)
+            else binding.tbAudiosOfSubject.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24)
+        })
     }
 
     private fun setupEmptyStateMessage() {
@@ -119,14 +125,49 @@ class AudiosOfSubjectActivity : AppCompatActivity(), ItemSelectListener<Audio> {
         TODO("Not yet implemented")
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.delete_menu, menu)
+
+        // Show / Hide deleteIcon, whether there are selected items or not
+        val deleteItem = menu?.findItem(R.id.menu_item_delete)
+        viewModel.selectedAudiosList.observe(this, Observer { list ->
+            deleteItem?.isVisible = list.isNotEmpty()
+        })
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
+                if (viewModel.selectedAudiosList.value!!.isNotEmpty()) {
+                    deselectAllAudios()
+                    return true
+                }
+
                 onBackPressed()
                 return true
             }
+
+            R.id.menu_item_delete -> {
+                Toast.makeText(
+                    this,
+                    viewModel.selectedAudiosList.value!!.size.toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun deselectAllAudios() {
+        if (viewModel.selectedAudiosList.value?.size!! == 0) return
+
+        viewModel.deselectAllAudios()
+
+        // Update RecyclerView items
+        (binding.rvAudios.adapter as AudioRecyclerViewAdapter).apply {
+            notifyItemRangeChanged(0, this.itemCount)
+        }
     }
 
     override fun finish() {

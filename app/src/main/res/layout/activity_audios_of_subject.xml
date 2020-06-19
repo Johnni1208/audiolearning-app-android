@@ -16,7 +16,7 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/ab_subjects"
+            android:id="@+id/ab_audios_of_subject"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:fitsSystemWindows="true"
@@ -34,13 +34,11 @@
                 app:title="@{ viewModel.subject.name }">
 
                 <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/tb_subjects"
+                    android:id="@+id/tb_audios_of_subject"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:paddingEnd="64dp"
                     app:layout_collapseMode="pin"
-                    app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark"
-                    tools:ignore="RtlSymmetry" />
+                    app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark" />
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
 

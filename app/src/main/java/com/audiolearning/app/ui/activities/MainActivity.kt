@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity(), MainActivityToolBarChangeListener {
             binding.tbMain.show()
         }
 
-        binding.tbMainSelectedSubjects.inflateMenu(R.menu.delete_selected_subjects_menu)
+        binding.tbMainSelectedSubjects.inflateMenu(R.menu.delete_menu)
         binding.tbMainSelectedSubjects.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.menu_item_delete -> {
