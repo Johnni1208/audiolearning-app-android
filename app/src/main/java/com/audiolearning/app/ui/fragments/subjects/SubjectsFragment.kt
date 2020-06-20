@@ -21,9 +21,10 @@ import com.audiolearning.app.extensions.hide
 import com.audiolearning.app.extensions.show
 import com.audiolearning.app.ui.activities.MainActivityToolBarChangeListener
 import com.audiolearning.app.ui.activities.audios_of_subject.AudiosOfSubjectActivity
+import com.audiolearning.app.ui.components.generic_yes_no_dialog.DialogDataReceiver
+import com.audiolearning.app.ui.components.generic_yes_no_dialog.GenericYesNoDialog
+import com.audiolearning.app.ui.components.generic_yes_no_dialog.GenericYesNoDialogTexts
 import com.audiolearning.app.ui.dialogs.create_new_subject.CreateNewSubjectDialog
-import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog
-import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialogTexts
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -31,9 +32,10 @@ import javax.inject.Inject
 
 class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarChangeListener) :
     DaggerFragment(),
-    ItemSelectListener<Subject> {
+    ItemSelectListener<Subject>,
+    DialogDataReceiver {
     private var dialogRequestCode: Int = 0 // lateinit
-    private lateinit var deleteSubjectsDialogTexts: DefaultYesNoDialogTexts
+    private lateinit var deleteSubjectsDialogTexts: GenericYesNoDialogTexts
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -57,12 +59,13 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
         dialogRequestCode =
             resources.getInteger(R.integer.request_code_subjectFragment_delete_subject)
 
-        deleteSubjectsDialogTexts = DefaultYesNoDialogTexts(
-            getString(R.string.dsDialog_title),
-            getString(R.string.dsDialog_message),
-            getString(R.string.delete),
-            getString(R.string.cancel)
-        )
+        deleteSubjectsDialogTexts =
+            GenericYesNoDialogTexts(
+                getString(R.string.dsDialog_title),
+                getString(R.string.dsDialog_message),
+                getString(R.string.delete),
+                getString(R.string.cancel)
+            )
 
         setupEmptyStateMessage()
         setupRecyclerView()
@@ -144,7 +147,7 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onDialogResult(requestCode: Int, resultCode: Int) {
         if (requestCode != dialogRequestCode) return
 
         if (resultCode == Activity.RESULT_OK) {
@@ -152,8 +155,6 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
                 viewModel.deleteAllSelectedSubjects()
             }
         }
-
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onResume() {
@@ -170,7 +171,7 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
     }
 
     fun requestDeletionOfSelectedSubjects() {
-        DefaultYesNoDialog.display(
+        GenericYesNoDialog.display(
             parentFragmentManager,
             deleteSubjectsDialogTexts,
             this@SubjectsFragment,

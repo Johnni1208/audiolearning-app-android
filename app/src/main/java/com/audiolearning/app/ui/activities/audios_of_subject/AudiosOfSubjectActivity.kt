@@ -1,9 +1,9 @@
 package com.audiolearning.app.ui.activities.audios_of_subject
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -18,17 +18,24 @@ import com.audiolearning.app.data.db.entities.Audio
 import com.audiolearning.app.databinding.ActivityAudiosOfSubjectBinding
 import com.audiolearning.app.extensions.hide
 import com.audiolearning.app.extensions.show
+import com.audiolearning.app.ui.components.generic_yes_no_dialog.DialogDataReceiver
+import com.audiolearning.app.ui.components.generic_yes_no_dialog.GenericYesNoDialog
+import com.audiolearning.app.ui.components.generic_yes_no_dialog.GenericYesNoDialogTexts
 import com.audiolearning.app.util.MissingArgumentException
 import com.google.android.material.appbar.AppBarLayout
 import dagger.android.AndroidInjection
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-class AudiosOfSubjectActivity : AppCompatActivity(), ItemSelectListener<Audio> {
+class AudiosOfSubjectActivity : AppCompatActivity(), ItemSelectListener<Audio>, DialogDataReceiver {
+    private var dialogRequestCode: Int = 0 // lateinit
+    private lateinit var deleteAudiosDialogText: GenericYesNoDialogTexts
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by viewModels<AudiosOfSubjectActivityViewModel> { viewModelFactory }
-
     private lateinit var binding: ActivityAudiosOfSubjectBinding
 
     companion object {
@@ -43,6 +50,17 @@ class AudiosOfSubjectActivity : AppCompatActivity(), ItemSelectListener<Audio> {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_audios_of_subject)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+        dialogRequestCode =
+            resources.getInteger(R.integer.request_code_audiosOfSubjectsActivity_delete_audios)
+
+        deleteAudiosDialogText =
+            GenericYesNoDialogTexts(
+                getString(R.string.daDialog_title),
+                getString(R.string.daDialog_message),
+                getString(R.string.delete),
+                getString(R.string.cancel)
+            )
 
         setupSubject()
         setupToolbar()
@@ -125,6 +143,16 @@ class AudiosOfSubjectActivity : AppCompatActivity(), ItemSelectListener<Audio> {
         TODO("Not yet implemented")
     }
 
+    override fun onDialogResult(requestCode: Int, resultCode: Int) {
+        if (requestCode != dialogRequestCode) return
+
+        if (resultCode == Activity.RESULT_OK) {
+            MainScope().launch {
+                viewModel.deleteAllSelectedAudios()
+            }
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.delete_menu, menu)
 
@@ -148,15 +176,18 @@ class AudiosOfSubjectActivity : AppCompatActivity(), ItemSelectListener<Audio> {
                 return true
             }
 
-            R.id.menu_item_delete -> {
-                Toast.makeText(
-                    this,
-                    viewModel.selectedAudiosList.value!!.size.toString(),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            R.id.menu_item_delete -> requestDeletionOfSelectedAudios()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun requestDeletionOfSelectedAudios() {
+        GenericYesNoDialog.display(
+            supportFragmentManager,
+            deleteAudiosDialogText,
+            this,
+            dialogRequestCode
+        )
     }
 
     private fun deselectAllAudios() {
