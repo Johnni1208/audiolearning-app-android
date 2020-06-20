@@ -8,14 +8,12 @@ import com.audiolearning.app.ui.fragments.subjects.SubjectsFragmentViewModel
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class SubjectsFragmentViewModelTest {
     @get:Rule
     val instantExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
@@ -65,7 +63,7 @@ class SubjectsFragmentViewModelTest {
     }
 
     @Test
-    fun deleteALlSelectedSubjects_ShouldClearSelectedSubjectsList() = runBlocking {
+    fun deleteAllSelectedSubjects_ShouldClearSelectedSubjectsList() = runBlocking {
         fragmentViewModel.selectSubject(testSubject)
 
         fragmentViewModel.deleteAllSelectedSubjects()

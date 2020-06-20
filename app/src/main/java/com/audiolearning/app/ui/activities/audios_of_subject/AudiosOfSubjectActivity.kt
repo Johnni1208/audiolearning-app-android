@@ -143,16 +143,6 @@ class AudiosOfSubjectActivity : AppCompatActivity(), ItemSelectListener<Audio>, 
         TODO("Not yet implemented")
     }
 
-    override fun onDialogResult(requestCode: Int, resultCode: Int) {
-        if (requestCode != dialogRequestCode) return
-
-        if (resultCode == Activity.RESULT_OK) {
-            MainScope().launch {
-                viewModel.deleteAllSelectedAudios()
-            }
-        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.delete_menu, menu)
 
@@ -198,6 +188,16 @@ class AudiosOfSubjectActivity : AppCompatActivity(), ItemSelectListener<Audio>, 
         // Update RecyclerView items
         (binding.rvAudios.adapter as AudioRecyclerViewAdapter).apply {
             notifyItemRangeChanged(0, this.itemCount)
+        }
+    }
+
+    override fun onDialogResult(requestCode: Int, resultCode: Int) {
+        if (requestCode != dialogRequestCode) return
+
+        if (resultCode == Activity.RESULT_OK) {
+            MainScope().launch {
+                viewModel.deleteAllSelectedAudios()
+            }
         }
     }
 

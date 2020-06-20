@@ -34,11 +34,6 @@ class AudiosOfSubjectActivityViewModel @Inject constructor(
             ?: throw IllegalArgumentException("No subject with id: $id")
     }
 
-    suspend fun getAudioById(id: Int) = withContext(Dispatchers.IO) {
-        return@withContext audioRepository.getAudioById(id)
-            ?: throw IllegalArgumentException("No audio with id: $id")
-    }
-
     fun getAudios() = audioRepository.getAudiosOfSubject(subject.value?.id!!)
 
     fun selectAudio(audio: Audio) = selectedAudiosStore.select(audio)
