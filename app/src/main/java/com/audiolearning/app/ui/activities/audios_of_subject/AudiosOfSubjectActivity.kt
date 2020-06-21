@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiolearning.app.R
 import com.audiolearning.app.adapters.AdapterDataEvent
-import com.audiolearning.app.adapters.recycler_view_adapter.AudioRecyclerViewAdapter
+import com.audiolearning.app.adapters.recycler_view_adapter.AudiosRecyclerViewAdapter
 import com.audiolearning.app.adapters.recycler_view_adapter.base_selectable_adapter.ItemSelectListener
 import com.audiolearning.app.data.db.entities.Audio
 import com.audiolearning.app.databinding.ActivityAudiosOfSubjectBinding
@@ -31,7 +31,6 @@ import javax.inject.Inject
 
 class AudiosOfSubjectActivity : AppCompatActivity(), ItemSelectListener<Audio>, DialogDataReceiver {
     private var dialogRequestCode: Int = 0 // lateinit
-    private lateinit var deleteAudiosDialogText: GenericYesNoDialogTexts
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -54,14 +53,6 @@ class AudiosOfSubjectActivity : AppCompatActivity(), ItemSelectListener<Audio>, 
         dialogRequestCode =
             resources.getInteger(R.integer.request_code_audiosOfSubjectsActivity_delete_audios)
 
-        deleteAudiosDialogText =
-            GenericYesNoDialogTexts(
-                getString(R.string.daDialog_title),
-                getString(R.string.daDialog_message),
-                getString(R.string.delete),
-                getString(R.string.cancel)
-            )
-
         setupSubject()
         setupToolbar()
         setupEmptyStateMessage()
@@ -82,12 +73,12 @@ class AudiosOfSubjectActivity : AppCompatActivity(), ItemSelectListener<Audio>, 
 
         viewModel.selectedAudiosList.observe(this, Observer { list ->
             if (list.isNotEmpty()) binding.tbAudiosOfSubject.setNavigationIcon(R.drawable.ic_cross_24dp)
-            else binding.tbAudiosOfSubject.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24)
+            else binding.tbAudiosOfSubject.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24dp)
         })
     }
 
     private fun setupEmptyStateMessage() {
-        viewModel.getAudios().observe(this, Observer { audios: List<Audio> ->
+        viewModel.audios.observe(this, Observer { audios: List<Audio> ->
             if (audios.isEmpty()) {
                 binding.tvNoAudios.show()
 
@@ -102,10 +93,10 @@ class AudiosOfSubjectActivity : AppCompatActivity(), ItemSelectListener<Audio>, 
     }
 
     private fun setupRecyclerView() {
-        val audioAdapter = AudioRecyclerViewAdapter(this)
+        val audioAdapter = AudiosRecyclerViewAdapter(this)
 
         // Update adapters data
-        viewModel.getAudios().observe(this, Observer { audios: List<Audio> ->
+        viewModel.audios.observe(this, Observer { audios: List<Audio> ->
             if (audioAdapter.isDataInitialized) {
                 when (audioAdapter.updateData(audios)) {
                     AdapterDataEvent.ITEMS_ADDED ->
@@ -122,7 +113,8 @@ class AudiosOfSubjectActivity : AppCompatActivity(), ItemSelectListener<Audio>, 
             this,
             Observer { selectedAudiosList: ArrayList<Audio> ->
                 audioAdapter.isSelecting = selectedAudiosList.isNotEmpty()
-            })
+            }
+        )
 
         binding.rvAudios.apply {
             setHasFixedSize(true)
@@ -171,24 +163,31 @@ class AudiosOfSubjectActivity : AppCompatActivity(), ItemSelectListener<Audio>, 
         return super.onOptionsItemSelected(item)
     }
 
-    private fun requestDeletionOfSelectedAudios() {
-        GenericYesNoDialog.display(
-            supportFragmentManager,
-            deleteAudiosDialogText,
-            this,
-            dialogRequestCode
-        )
-    }
-
     private fun deselectAllAudios() {
         if (viewModel.selectedAudiosList.value?.size!! == 0) return
 
         viewModel.deselectAllAudios()
 
         // Update RecyclerView items
-        (binding.rvAudios.adapter as AudioRecyclerViewAdapter).apply {
+        (binding.rvAudios.adapter as AudiosRecyclerViewAdapter).apply {
             notifyItemRangeChanged(0, this.itemCount)
         }
+    }
+
+    private fun requestDeletionOfSelectedAudios() {
+        val deleteAudiosDialogText = GenericYesNoDialogTexts(
+            getString(R.string.daDialog_title),
+            getString(R.string.daDialog_message),
+            getString(R.string.delete),
+            getString(R.string.cancel)
+        )
+
+        GenericYesNoDialog.display(
+            supportFragmentManager,
+            deleteAudiosDialogText,
+            this,
+            dialogRequestCode
+        )
     }
 
     override fun onDialogResult(requestCode: Int, resultCode: Int) {

@@ -15,7 +15,8 @@ class SubjectsFragmentViewModel @Inject constructor(
 ) : ViewModel() {
     val selectedSubjectsList: LiveData<ArrayList<Subject>> = selectedSubjectStore.selectedEntityList
 
-    fun getSubjects() = subjectRepository.getAllSubjects()
+    val subjects: LiveData<List<Subject>>
+        get() = subjectRepository.getAllSubjects()
 
     suspend fun getSubjectById(id: Int) = withContext(Dispatchers.IO) {
         subjectRepository.getSubjectById(id)
@@ -29,12 +30,12 @@ class SubjectsFragmentViewModel @Inject constructor(
     fun deselectAllSubjects() = selectedSubjectStore.clear()
 
     suspend fun deleteAllSelectedSubjects() {
-        deleteSelectedSubjectsFromDb()
+        deleteSelectedSubjectsFromRepository()
 
         selectedSubjectStore.clear()
     }
 
-    private suspend fun deleteSelectedSubjectsFromDb() = withContext(Dispatchers.IO) {
+    private suspend fun deleteSelectedSubjectsFromRepository() = withContext(Dispatchers.IO) {
         selectedSubjectStore.selectedEntityList.value?.forEach { selectedSubject ->
             subjectRepository.delete(selectedSubject)
         }

@@ -55,7 +55,7 @@ class AudiosOfSubjectActivityViewModelTest {
             viewModel.setSubject(testSubjectId)
         }
 
-        viewModel.getAudios()
+        viewModel.audios
 
         verify(mockAudioRepository).getAudiosOfSubject(testSubjectId)
     }

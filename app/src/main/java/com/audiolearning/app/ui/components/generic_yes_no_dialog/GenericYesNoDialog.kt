@@ -20,8 +20,8 @@ import com.audiolearning.app.util.MissingArgumentException
  * **Use [display] to show the fragment.**
  */
 class GenericYesNoDialog(
-    private val dataReceiver: DialogDataReceiver,
-    private val requestCode: Int
+    private val requestCode: Int,
+    private val dataReceiver: DialogDataReceiver
 ) : DialogFragment() {
 
 
@@ -51,7 +51,7 @@ class GenericYesNoDialog(
             dataReceiver: DialogDataReceiver,
             requestCode: Int
         ) {
-            val genericYesNoDialog = GenericYesNoDialog(dataReceiver, requestCode)
+            val genericYesNoDialog = GenericYesNoDialog(requestCode, dataReceiver)
 
             genericYesNoDialog.arguments = Bundle().apply {
                 putString(ARG_TITLE, genericYesNoDialogTexts.title)
@@ -91,12 +91,8 @@ class GenericYesNoDialog(
 
     private fun receiveArguments() {
         val args = requireArguments()
-        title = args.getString(ARG_TITLE) ?: throw MissingArgumentException(
-            ARG_TITLE
-        )
-        message = args.getString(ARG_MESSAGE) ?: throw MissingArgumentException(
-            ARG_MESSAGE
-        )
+        title = args.getString(ARG_TITLE) ?: throw MissingArgumentException(ARG_TITLE)
+        message = args.getString(ARG_MESSAGE) ?: throw MissingArgumentException(ARG_MESSAGE)
         positiveButtonText =
             args.getString(ARG_POSITIVE_BUTTON_TEXT) ?: throw MissingArgumentException(
                 ARG_POSITIVE_BUTTON_TEXT

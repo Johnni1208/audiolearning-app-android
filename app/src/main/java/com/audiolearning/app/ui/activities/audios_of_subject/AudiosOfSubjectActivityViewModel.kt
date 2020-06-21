@@ -19,9 +19,13 @@ class AudiosOfSubjectActivityViewModel @Inject constructor(
 ) : ViewModel() {
     val selectedAudiosList: LiveData<ArrayList<Audio>> = selectedAudiosStore.selectedEntityList
 
+    val audios: LiveData<List<Audio>>
+        get() = audioRepository.getAudiosOfSubject(subject.value?.id!!)
+
     private val _subject: MutableLiveData<Subject> = MutableLiveData<Subject>().apply {
         value = null
     }
+
     val subject: LiveData<Subject>
         get() = _subject
 
@@ -34,8 +38,6 @@ class AudiosOfSubjectActivityViewModel @Inject constructor(
             ?: throw IllegalArgumentException("No subject with id: $id")
     }
 
-    fun getAudios() = audioRepository.getAudiosOfSubject(subject.value?.id!!)
-
     fun selectAudio(audio: Audio) = selectedAudiosStore.select(audio)
 
     fun deselectAudio(audio: Audio) = selectedAudiosStore.deselect(audio)
@@ -43,12 +45,12 @@ class AudiosOfSubjectActivityViewModel @Inject constructor(
     fun deselectAllAudios() = selectedAudiosStore.clear()
 
     suspend fun deleteAllSelectedAudios() {
-        deleteSelectedAudiosFromDb()
+        deleteSelectedAudiosFromRepository()
 
         selectedAudiosStore.clear()
     }
 
-    private suspend fun deleteSelectedAudiosFromDb() = withContext(Dispatchers.IO) {
+    private suspend fun deleteSelectedAudiosFromRepository() = withContext(Dispatchers.IO) {
         selectedAudiosStore.selectedEntityList.value?.forEach { selectedAudio ->
             audioRepository.delete(selectedAudio)
         }

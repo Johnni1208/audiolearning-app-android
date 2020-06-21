@@ -35,7 +35,6 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
     ItemSelectListener<Subject>,
     DialogDataReceiver {
     private var dialogRequestCode: Int = 0 // lateinit
-    private lateinit var deleteSubjectsDialogTexts: GenericYesNoDialogTexts
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -59,14 +58,6 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
         dialogRequestCode =
             resources.getInteger(R.integer.request_code_subjectFragment_delete_subject)
 
-        deleteSubjectsDialogTexts =
-            GenericYesNoDialogTexts(
-                getString(R.string.dsDialog_title),
-                getString(R.string.dsDialog_message),
-                getString(R.string.delete),
-                getString(R.string.cancel)
-            )
-
         setupEmptyStateMessage()
         setupRecyclerView()
         setupFab()
@@ -77,7 +68,7 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
 
     private fun setupEmptyStateMessage() {
         // Updates the empty state message
-        viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
+        viewModel.subjects.observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
             if (subjects.isEmpty()) binding.tvNoSubjects.show()
             else binding.tvNoSubjects.hide()
         })
@@ -87,7 +78,7 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
         val subjectsAdapter = SubjectsRecyclerViewAdapter(this)
 
         // Update adapters data
-        viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
+        viewModel.subjects.observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
             if (subjectsAdapter.isDataInitialized) {
                 when (subjectsAdapter.updateData(subjects)) {
                     AdapterDataEvent.ITEMS_ADDED ->
@@ -104,7 +95,8 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
             viewLifecycleOwner,
             Observer { selectedSubjectsList: ArrayList<Subject> ->
                 subjectsAdapter.isSelecting = selectedSubjectsList.isNotEmpty()
-            })
+            }
+        )
 
         binding.rvSubjects.apply {
             setHasFixedSize(true)
@@ -171,6 +163,14 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
     }
 
     fun requestDeletionOfSelectedSubjects() {
+        val deleteSubjectsDialogTexts =
+            GenericYesNoDialogTexts(
+                getString(R.string.dsDialog_title),
+                getString(R.string.dsDialog_message),
+                getString(R.string.delete),
+                getString(R.string.cancel)
+            )
+
         GenericYesNoDialog.display(
             parentFragmentManager,
             deleteSubjectsDialogTexts,

@@ -13,7 +13,7 @@ import com.audiolearning.app.extensions.toFormattedDate
 import com.audiolearning.app.extensions.toTimeString
 import kotlinx.android.synthetic.main.audio_item.view.*
 
-class AudioRecyclerViewAdapter(private var listener: ItemSelectListener<Audio>) :
+class AudiosRecyclerViewAdapter(private var listener: ItemSelectListener<Audio>) :
     BaseSelectableRecyclerViewAdapter<Audio>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseSelectableViewHolder {
         val audioItem: View = LayoutInflater.from(parent.context)
@@ -32,15 +32,15 @@ class AudioRecyclerViewAdapter(private var listener: ItemSelectListener<Audio>) 
     }
 
     inner class AudioViewHolder(
-        itemView: View,
+        private val audioItemView: View,
         listener: ItemSelectListener<Audio>
-    ) : BaseSelectableViewHolder(itemView, listener) {
+    ) : BaseSelectableViewHolder(audioItemView, listener) {
         override fun setViewSelectedUi() {
-            this.itemView.iv_audio_check_circle.show()
+            this.audioItemView.iv_audio_check_circle.show()
         }
 
         override fun setViewDeselectUi() {
-            this.itemView.iv_audio_check_circle.hide()
+            this.audioItemView.iv_audio_check_circle.hide()
         }
     }
 }

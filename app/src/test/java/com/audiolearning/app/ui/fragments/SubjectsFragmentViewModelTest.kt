@@ -31,7 +31,7 @@ class SubjectsFragmentViewModelTest {
 
     @Test
     fun getSubjects_ShouldCallRepository() {
-        fragmentViewModel.getSubjects()
+        fragmentViewModel.subjects
 
         verify(mockRepository).getAllSubjects()
     }

@@ -17,7 +17,6 @@ import com.audiolearning.app.ui.fragments.about_us.AboutUsFragment
 import com.audiolearning.app.ui.fragments.recorder.RecorderFragment
 import com.audiolearning.app.ui.fragments.subjects.SubjectsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainActivityToolBarChangeListener {
     private val subjectsFragment = SubjectsFragment(this)
@@ -97,9 +96,9 @@ class MainActivity : AppCompatActivity(), MainActivityToolBarChangeListener {
 
     private fun changeTitleOfToolBar(position: Int) {
         when (position) {
-            POSITION_ABOUT_US_FRAGMENT -> tv_main_title.setText(R.string.title_about_us)
-            POSITION_RECORDER_FRAGMENT -> tv_main_title.setText(R.string.title_recorder)
-            POSITION_SUBJECT_FRAGMENT -> tv_main_title.setText(R.string.title_subjects)
+            POSITION_ABOUT_US_FRAGMENT -> binding.tvMainTitle.setText(R.string.title_about_us)
+            POSITION_RECORDER_FRAGMENT -> binding.tvMainTitle.setText(R.string.title_recorder)
+            POSITION_SUBJECT_FRAGMENT -> binding.tvMainTitle.setText(R.string.title_subjects)
             else -> throw IllegalStateException("No title for position: $position")
         }
     }
