@@ -1,9 +1,7 @@
-package com.audiolearning.app.util
+package com.audiolearning.app.util.file
 
 import com.audiolearning.app.data.db.entities.Subject
-import com.audiolearning.app.util.file.SubjectFileUtils
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -51,6 +49,6 @@ class SubjectFileUtilsTest {
 
         SubjectFileUtils.deleteSubjectDirectory(testSubject)
 
-        assertTrue(!testSubjectFolder.exists())
+        assertFalse(testSubjectFolder.exists())
     }
 }

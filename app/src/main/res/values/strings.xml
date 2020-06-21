@@ -23,7 +23,7 @@
 
     <!-- Text for NewRecordingDialog -->
     <string name="nrDialog_title">Save new recording?</string>
-    <string name="nrDialog_audio_name_hint">Name of your recording</string>
+    <string name="nrDialog_recording_name_hint">Name of your recording</string>
     <string name="nrDialog_add_subject">Add new subject…</string>
     <string name="nrDialog_positive_button_text">Save</string>
 
@@ -40,9 +40,13 @@
     <string name="subjectsFragment_empty_state_text">No subjects yet, try adding one…</string>
 
     <!-- Text for Delete Subjects? Dialog -->
-    <string name="dsDialog_title">Delete subjects?</string>
+    <string name="dsDialog_title">Delete selected subjects?</string>
     <string name="dsDialog_message">The subject\'s recordings will be lost forever, too.</string>
 
-    <!-- Text for SubjectActivity -->
-    <string name="subjectActivity_empty_state_text">No audios yet, record one!</string>
+    <!-- Text for AudiosOfSubjectActivity -->
+    <string name="aosActivity_empty_state_text">No audios yet, record one!</string>
+
+    <!-- Text for Delete Audios? Dialog -->
+    <string name="daDialog_title">Delete selected audios?</string>
+    <string name="daDialog_message">The audios will be lost forever!</string>
 </resources>

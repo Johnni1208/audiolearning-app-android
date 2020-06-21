@@ -1,6 +1,6 @@
 package com.audiolearning.app.data.repositories
 
-import android.net.Uri
+import androidx.core.net.toUri
 import com.audiolearning.app.data.db.AudioLearningDatabase
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.util.file.SubjectFileUtils
@@ -14,7 +14,7 @@ class SubjectRepository @Inject constructor(
     suspend fun insert(subjectName: String) {
         val subjectDir = SubjectFileUtils.createNewSubjectDirectory(filesDir, subjectName)
 
-        db.getSubjectDao().insert(Subject(subjectName, Uri.fromFile(subjectDir).toString()))
+        db.getSubjectDao().insert(Subject(subjectName, subjectDir.toUri().toString()))
     }
 
     suspend fun delete(subject: Subject) {

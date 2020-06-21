@@ -3,7 +3,6 @@ package com.audiolearning.app.ui.dialogs.new_recording
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -19,8 +18,9 @@ import com.audiolearning.app.adapters.SubjectSpinnerAdapter
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.extensions.hideKeyboard
 import com.audiolearning.app.extensions.showKeyboard
-import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog
-import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialogTexts
+import com.audiolearning.app.ui.components.generic_yes_no_dialog.DialogDataReceiver
+import com.audiolearning.app.ui.components.generic_yes_no_dialog.GenericYesNoDialog
+import com.audiolearning.app.ui.components.generic_yes_no_dialog.GenericYesNoDialogTexts
 import com.audiolearning.app.util.MissingArgumentException
 import dagger.android.support.DaggerDialogFragment
 import kotlinx.android.synthetic.main.dialog_new_recording.*
@@ -29,10 +29,10 @@ import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
-class NewRecordingDialog : DaggerDialogFragment() {
+class NewRecordingDialog : DaggerDialogFragment(), DialogDataReceiver {
     private lateinit var newRecording: File
     private lateinit var dialogContext: Context
-    private lateinit var discardRecordingDialogTexts: DefaultYesNoDialogTexts
+    private lateinit var discardRecordingDialogTexts: GenericYesNoDialogTexts
     private var dialogRequestCode: Int = 0 // lateinit
 
     @Inject
@@ -76,12 +76,13 @@ class NewRecordingDialog : DaggerDialogFragment() {
             arguments ?: throw MissingArgumentException("")
         )
 
-        discardRecordingDialogTexts = DefaultYesNoDialogTexts(
-            getString(R.string.drDialog_title),
-            getString(R.string.drDialog_message),
-            getString(R.string.discard),
-            getString(R.string.cancel)
-        )
+        discardRecordingDialogTexts =
+            GenericYesNoDialogTexts(
+                getString(R.string.drDialog_title),
+                getString(R.string.drDialog_message),
+                getString(R.string.discard),
+                getString(R.string.cancel)
+            )
 
         dialogRequestCode =
             dialogContext.resources.getInteger(R.integer.request_code_nrDialog_discard_recording)
@@ -161,7 +162,7 @@ class NewRecordingDialog : DaggerDialogFragment() {
     }
 
     private fun showDiscardRecordingDialog() {
-        DefaultYesNoDialog.display(
+        GenericYesNoDialog.display(
             parentFragmentManager,
             discardRecordingDialogTexts,
             this,
@@ -181,7 +182,6 @@ class NewRecordingDialog : DaggerDialogFragment() {
 
             NewRecordingInputValidation.NAME_CONTAINS_INVALID_CHARS -> et_audio_name.error =
                 getString(R.string.error_contains_not_allowed_character)
-
             else -> {
             }
         }
@@ -204,13 +204,9 @@ class NewRecordingDialog : DaggerDialogFragment() {
         super.onDismiss(dialog)
     }
 
-    /**
-     * Receives Results from the [DefaultYesNoDialog] started when trying to dismiss the dialog.
-     */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onDialogResult(requestCode: Int, resultCode: Int) {
         if (requestCode != this.dialogRequestCode) return
 
         if (resultCode == Activity.RESULT_OK) dismiss()
-        super.onActivityResult(requestCode, resultCode, data)
     }
 }

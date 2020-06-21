@@ -1,14 +1,16 @@
-package com.audiolearning.app.util
+package com.audiolearning.app.util.file
 
 import com.audiolearning.app.data.db.entities.Audio
-import com.audiolearning.app.util.file.AudioFileUtils
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import java.io.File
 
+@RunWith(RobolectricTestRunner::class)
 class AudioFileUtilsTest {
     @get:Rule
     val tempFolderFile = TemporaryFolder()
@@ -37,5 +39,15 @@ class AudioFileUtilsTest {
         val expectedFile =
             File(tempDestinationFolder.path + "/testFile" + Audio.fileExtension)
         assertTrue(expectedFile.exists())
+    }
+
+    @Test
+    fun deleteAudioFile_ShouldDeleteTheAudioFile() {
+        val tempAudioFile = tempFolderFile.newFile()
+        val testAudio = Audio("", tempAudioFile.toURI().toString(), 0L, 0)
+
+        AudioFileUtils.deleteAudioFile(testAudio)
+
+        assertFalse(tempAudioFile.exists())
     }
 }

@@ -20,21 +20,21 @@ import com.audiolearning.app.databinding.FragmentSubjectsBinding
 import com.audiolearning.app.extensions.hide
 import com.audiolearning.app.extensions.show
 import com.audiolearning.app.ui.activities.MainActivityToolBarChangeListener
-import com.audiolearning.app.ui.activities.subject.SubjectActivity
+import com.audiolearning.app.ui.activities.audios_of_subject.AudiosOfSubjectActivity
+import com.audiolearning.app.ui.components.generic_yes_no_dialog.DialogDataReceiver
+import com.audiolearning.app.ui.components.generic_yes_no_dialog.GenericYesNoDialog
+import com.audiolearning.app.ui.components.generic_yes_no_dialog.GenericYesNoDialogTexts
 import com.audiolearning.app.ui.dialogs.create_new_subject.CreateNewSubjectDialog
-import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog
-import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialogTexts
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarChangeListener) :
     DaggerFragment(),
-    ItemSelectListener {
+    ItemSelectListener<Subject>,
+    DialogDataReceiver {
     private var dialogRequestCode: Int = 0 // lateinit
-    private lateinit var deleteSubjectsDialogTexts: DefaultYesNoDialogTexts
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -58,13 +58,6 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
         dialogRequestCode =
             resources.getInteger(R.integer.request_code_subjectFragment_delete_subject)
 
-        deleteSubjectsDialogTexts = DefaultYesNoDialogTexts(
-            getString(R.string.dsDialog_title),
-            getString(R.string.dsDialog_message),
-            getString(R.string.delete),
-            getString(R.string.cancel)
-        )
-
         setupEmptyStateMessage()
         setupRecyclerView()
         setupFab()
@@ -75,7 +68,7 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
 
     private fun setupEmptyStateMessage() {
         // Updates the empty state message
-        viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
+        viewModel.subjects.observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
             if (subjects.isEmpty()) binding.tvNoSubjects.show()
             else binding.tvNoSubjects.hide()
         })
@@ -85,7 +78,7 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
         val subjectsAdapter = SubjectsRecyclerViewAdapter(this)
 
         // Update adapters data
-        viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
+        viewModel.subjects.observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
             if (subjectsAdapter.isDataInitialized) {
                 when (subjectsAdapter.updateData(subjects)) {
                     AdapterDataEvent.ITEMS_ADDED ->
@@ -102,7 +95,8 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
             viewLifecycleOwner,
             Observer { selectedSubjectsList: ArrayList<Subject> ->
                 subjectsAdapter.isSelecting = selectedSubjectsList.isNotEmpty()
-            })
+            }
+        )
 
         binding.rvSubjects.apply {
             setHasFixedSize(true)
@@ -130,24 +124,22 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
             })
     }
 
-    override fun onItemDeselect(id: Int) {
-        val subject: Subject = runBlocking { viewModel.getSubjectById(id) }
-        if (viewModel.deselectSubject(subject)) return
+    override fun onItemSelect(item: Subject) {
+        viewModel.selectSubject(item)
     }
 
-    override fun onItemSelect(id: Int) {
-        val subject: Subject = runBlocking { viewModel.getSubjectById(id) }
-        viewModel.selectSubject(subject)
+    override fun onItemDeselect(item: Subject) {
+        viewModel.deselectSubject(item)
     }
 
-    override fun onItemClick(id: Int) {
-        Intent(context, SubjectActivity::class.java).apply {
-            putExtra(SubjectActivity.EXTRA_SUBJECT_ID, id)
+    override fun onItemClick(item: Subject) {
+        Intent(context, AudiosOfSubjectActivity::class.java).apply {
+            putExtra(AudiosOfSubjectActivity.EXTRA_SUBJECT_ID, item.id)
             startActivity(this)
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onDialogResult(requestCode: Int, resultCode: Int) {
         if (requestCode != dialogRequestCode) return
 
         if (resultCode == Activity.RESULT_OK) {
@@ -155,8 +147,6 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
                 viewModel.deleteAllSelectedSubjects()
             }
         }
-
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onResume() {
@@ -173,7 +163,15 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
     }
 
     fun requestDeletionOfSelectedSubjects() {
-        DefaultYesNoDialog.display(
+        val deleteSubjectsDialogTexts =
+            GenericYesNoDialogTexts(
+                getString(R.string.dsDialog_title),
+                getString(R.string.dsDialog_message),
+                getString(R.string.delete),
+                getString(R.string.cancel)
+            )
+
+        GenericYesNoDialog.display(
             parentFragmentManager,
             deleteSubjectsDialogTexts,
             this@SubjectsFragment,

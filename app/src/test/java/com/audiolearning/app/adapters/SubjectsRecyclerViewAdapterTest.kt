@@ -25,7 +25,7 @@ class SubjectsRecyclerViewAdapterTest {
         add(Subject("test3", ""))
         add(Subject("test4", ""))
     }
-    private val mockSubjectEventListener: ItemSelectListener = mock()
+    private val mockSubjectEventListener: ItemSelectListener<Subject> = mock()
 
     @Test
     fun onBindViewHolder_ShouldApplyNormalStyleToViewHolder() {

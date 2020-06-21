@@ -13,10 +13,10 @@ import org.junit.Test
 class BaseSelectableViewHolderTest {
     private val mockData: ArrayList<BaseEntity> = mock()
     private val mockView: View = mock()
-    private val mockListener: ItemSelectListener = mock()
+    private val mockListener: ItemSelectListener<BaseEntity> = mock()
 
     private inner class TestBaseSelectableRecyclerViewAdapterClass :
-        BaseSelectableRecyclerViewAdapter() {
+        BaseSelectableRecyclerViewAdapter<BaseEntity>() {
         init {
             data = mockData
         }
@@ -62,7 +62,7 @@ class BaseSelectableViewHolderTest {
         baseSelectableRecyclerViewAdapter.isSelecting = false
         baseSelectableViewHolder.onClick(mockView)
 
-        verify(mockListener, times(1)).onItemClick(testSubject.id!!.toInt())
+        verify(mockListener, times(1)).onItemClick(testSubject)
     }
 
     @Test
@@ -70,7 +70,7 @@ class BaseSelectableViewHolderTest {
         baseSelectableRecyclerViewAdapter.isSelecting = true
         baseSelectableViewHolder.onClick(mockView)
 
-        verify(mockListener, times(1)).onItemSelect(testSubject.id!!.toInt())
+        verify(mockListener, times(1)).onItemSelect(testSubject)
         verify(mockView, times(1)).isSelected = true
     }
 
@@ -80,7 +80,7 @@ class BaseSelectableViewHolderTest {
         whenever(mockView.isSelected).thenReturn(true)
         baseSelectableViewHolder.onClick(mockView)
 
-        verify(mockListener, times(1)).onItemDeselect(testSubject.id!!.toInt())
+        verify(mockListener, times(1)).onItemDeselect(testSubject)
         verify(mockView, times(1)).isSelected = false
     }
 }

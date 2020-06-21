@@ -25,7 +25,7 @@ class SubjectFileUtils {
         }
 
         /**
-         * Deletes the directory of a [Subject]
+         * Deletes the directory of a [Subject] from the device
          *
          * @param subject The subject of which the directory should be deleted.
          */

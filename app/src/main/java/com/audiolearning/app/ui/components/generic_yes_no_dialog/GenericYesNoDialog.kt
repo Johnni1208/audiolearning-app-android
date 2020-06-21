@@ -1,4 +1,4 @@
-package com.audiolearning.app.ui.dialogs.generic_yes_no_dialog
+package com.audiolearning.app.ui.components.generic_yes_no_dialog
 
 import android.app.Activity
 import android.app.Dialog
@@ -7,20 +7,24 @@ import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.audiolearning.app.ui.dialogs.generic_yes_no_dialog.DefaultYesNoDialog.Companion.display
+import com.audiolearning.app.ui.components.generic_yes_no_dialog.GenericYesNoDialog.Companion.display
 import com.audiolearning.app.util.MissingArgumentException
 
 /**
- * Shows a default yes/no dialog with given parameters for: title, message, positive button text
+ * Shows a generic yes/no dialog with given parameters for: title, message, positive button text
  * and negative button text.
  *
  * Receive positive and negative callbacks through [onActivityResult] with the requestCode from [display]
  *
  * **Use [display] to show the fragment.**
  */
-class DefaultYesNoDialog : DialogFragment() {
+class GenericYesNoDialog(
+    private val requestCode: Int,
+    private val dataReceiver: DialogDataReceiver
+) : DialogFragment() {
+
+
     private lateinit var dialogContext: Context
 
     private lateinit var title: String
@@ -38,26 +42,23 @@ class DefaultYesNoDialog : DialogFragment() {
          * Use this method to show the dialog.
          *
          * @param fragmentManager fragmentManager to show the dialog
-         * @param defaultYesNoDialogTexts Instance of [DefaultYesNoDialogTexts].
-         * @param targetFragment target fragment which receives callbacks via the [onActivityResult] method.
+         * @param genericYesNoDialogTexts Instance of [GenericYesNoDialogTexts].
+         * @param dataReceiver Data receiver to receive data from this dialog via [DialogDataReceiver.onDialogResult]
          */
         fun display(
             fragmentManager: FragmentManager,
-            defaultYesNoDialogTexts: DefaultYesNoDialogTexts,
-            targetFragment: Fragment,
+            genericYesNoDialogTexts: GenericYesNoDialogTexts,
+            dataReceiver: DialogDataReceiver,
             requestCode: Int
         ) {
-            val genericYesNoDialog = DefaultYesNoDialog()
+            val genericYesNoDialog = GenericYesNoDialog(requestCode, dataReceiver)
 
-            val args = Bundle().apply {
-                putString(ARG_TITLE, defaultYesNoDialogTexts.title)
-                putString(ARG_MESSAGE, defaultYesNoDialogTexts.message)
-                putString(ARG_POSITIVE_BUTTON_TEXT, defaultYesNoDialogTexts.positiveButtonText)
-                putString(ARG_NEGATIVE_BUTTON_TEXT, defaultYesNoDialogTexts.negativeButtonText)
+            genericYesNoDialog.arguments = Bundle().apply {
+                putString(ARG_TITLE, genericYesNoDialogTexts.title)
+                putString(ARG_MESSAGE, genericYesNoDialogTexts.message)
+                putString(ARG_POSITIVE_BUTTON_TEXT, genericYesNoDialogTexts.positiveButtonText)
+                putString(ARG_NEGATIVE_BUTTON_TEXT, genericYesNoDialogTexts.negativeButtonText)
             }
-            genericYesNoDialog.arguments = args
-
-            genericYesNoDialog.setTargetFragment(targetFragment, requestCode)
 
             genericYesNoDialog.show(fragmentManager, "GenericYesNoDialog")
         }
@@ -75,16 +76,16 @@ class DefaultYesNoDialog : DialogFragment() {
             .setTitle(title)
             .setMessage(message)
             .setPositiveButton(positiveButtonText) { _, _ ->
-                targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, null)
+                dataReceiver.onDialogResult(requestCode, Activity.RESULT_OK)
             }
             .setNegativeButton(negativeButtonText) { _, _ ->
-                targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_CANCELED, null)
+                dataReceiver.onDialogResult(requestCode, Activity.RESULT_CANCELED)
             }
             .create()
     }
 
     override fun onCancel(dialog: DialogInterface) {
-        targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_CANCELED, null)
+        dataReceiver.onDialogResult(requestCode, Activity.RESULT_CANCELED)
         super.onCancel(dialog)
     }
 

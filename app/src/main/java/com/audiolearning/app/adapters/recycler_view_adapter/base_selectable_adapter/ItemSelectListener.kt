@@ -1,7 +1,9 @@
 package com.audiolearning.app.adapters.recycler_view_adapter.base_selectable_adapter
 
-interface ItemSelectListener {
-    fun onItemDeselect(id: Int)
-    fun onItemSelect(id: Int)
-    fun onItemClick(id: Int)
+import com.audiolearning.app.data.db.entities.BaseEntity
+
+interface ItemSelectListener<T : BaseEntity> {
+    fun onItemSelect(item: T)
+    fun onItemDeselect(item: T)
+    fun onItemClick(item: T)
 }

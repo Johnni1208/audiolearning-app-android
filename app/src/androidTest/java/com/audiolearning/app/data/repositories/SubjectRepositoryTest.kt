@@ -11,7 +11,7 @@ import com.audiolearning.app.data.db.AudioLearningDatabase
 import com.audiolearning.app.data.db.SubjectDao
 import com.audiolearning.app.data.db.entities.Audio
 import com.audiolearning.app.data.db.entities.Subject
-import com.audiolearning.app.util.getTestValue
+import com.audiolearning.app.getTestValue
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
