@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.audiolearning.app.audio.recorder.AudioRecorder
 import com.audiolearning.app.audio.recorder.AudioRecorderState
-import com.audiolearning.app.util.timer.Timer
+import com.audiolearning.app.timer.Timer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

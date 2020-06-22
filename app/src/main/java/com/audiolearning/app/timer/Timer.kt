@@ -1,4 +1,4 @@
-package com.audiolearning.app.util.timer
+package com.audiolearning.app.timer
 
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineScope

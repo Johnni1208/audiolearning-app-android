@@ -2,7 +2,7 @@ package com.audiolearning.app.ui.fragment.recorder
 
 import androidx.lifecycle.ViewModel
 import com.audiolearning.app.audio.recorder.AudioRecorder
-import com.audiolearning.app.util.timer.Timer
+import com.audiolearning.app.timer.Timer
 import javax.inject.Inject
 
 /**

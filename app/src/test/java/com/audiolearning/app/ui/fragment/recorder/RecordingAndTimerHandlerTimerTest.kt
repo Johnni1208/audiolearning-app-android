@@ -2,7 +2,7 @@ package com.audiolearning.app.ui.fragment.recorder
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.audiolearning.app.audio.recorder.AudioRecorder
-import com.audiolearning.app.util.timer.Timer
+import com.audiolearning.app.timer.Timer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify

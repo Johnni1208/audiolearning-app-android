@@ -1,7 +1,14 @@
 package com.audiolearning.app.util.timer
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import kotlinx.coroutines.*
+import com.audiolearning.app.timer.TimeMutableLiveData
+import com.audiolearning.app.timer.Timer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -45,9 +52,10 @@ class TimerUnitTest {
     @Test
     fun start_timeShouldBeXSecondsAfterXSeconds() {
         val testTime = 2100L
-        val expectedTimeString = TimeMutableLiveData().apply {
-            setValueFromMillis(testTime)
-        }.value
+        val expectedTimeString = TimeMutableLiveData()
+            .apply {
+                setValueFromMillis(testTime)
+            }.value
 
         timer.start()
         runBlocking {
@@ -60,9 +68,10 @@ class TimerUnitTest {
     /* stop() */
     @Test
     fun stop_ShouldStopAndResetTime() {
-        val expectedTimeString = TimeMutableLiveData().apply {
-            setValueFromMillis(0)
-        }.value
+        val expectedTimeString = TimeMutableLiveData()
+            .apply {
+                setValueFromMillis(0)
+            }.value
 
         timer.start()
         timer.stop()
@@ -85,9 +94,10 @@ class TimerUnitTest {
     @Test
     fun pause_ShouldPauseTime() {
         val testTime = 2100L
-        val expectedTimeString = TimeMutableLiveData().apply {
-            setValueFromMillis(testTime)
-        }.value
+        val expectedTimeString = TimeMutableLiveData()
+            .apply {
+                setValueFromMillis(testTime)
+            }.value
 
         timer.start()
         runBlocking {
@@ -100,9 +110,10 @@ class TimerUnitTest {
 
     @Test
     fun pauseThenStop_ShouldResetTime() {
-        val expectedTimeString = TimeMutableLiveData().apply {
-            setValueFromMillis(0)
-        }.value
+        val expectedTimeString = TimeMutableLiveData()
+            .apply {
+                setValueFromMillis(0)
+            }.value
 
         timer.start()
         timer.pause()
@@ -126,9 +137,10 @@ class TimerUnitTest {
     @Test
     fun resume_ShouldResumePausedTime() {
         val testTime = 1100L
-        val expectedTimeString = TimeMutableLiveData().apply {
-            setValueFromMillis(testTime * 2)
-        }.value
+        val expectedTimeString = TimeMutableLiveData()
+            .apply {
+                setValueFromMillis(testTime * 2)
+            }.value
 
         timer.start()
         runBlocking {
@@ -145,9 +157,10 @@ class TimerUnitTest {
 
     @Test
     fun resumeThenStop_ShouldResetTime() {
-        val expectedTimeString = TimeMutableLiveData().apply {
-            setValueFromMillis(0)
-        }.value
+        val expectedTimeString = TimeMutableLiveData()
+            .apply {
+                setValueFromMillis(0)
+            }.value
 
         timer.start()
         timer.pause()
