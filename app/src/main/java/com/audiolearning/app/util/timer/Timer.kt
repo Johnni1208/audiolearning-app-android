@@ -1,7 +1,11 @@
 package com.audiolearning.app.util.timer
 
 import androidx.lifecycle.LiveData
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -9,6 +13,13 @@ import javax.inject.Inject
  * Only usable with Android LiveData.
  */
 class Timer @Inject constructor() {
+    companion object {
+        private const val ERROR_TIMER_NOT_BEEN_STARTED = "Timer has not been started."
+        private const val ERROR_TIMER_ALREADY_STARTED = "Timer already started."
+        private const val ERROR_TIMER_ALREADY_PAUSED = "Timer already paused."
+        private const val ERROR_TIMER_NOT_BEEN_PAUSED = "Timer has not been paused."
+    }
+
     private val _time =
         TimeMutableLiveData()
     val time: LiveData<String>
@@ -18,24 +29,25 @@ class Timer @Inject constructor() {
     private var isRunning: Boolean = false
     private var isPausing: Boolean = false
     private var timeInMillis: Long = 0L
+    private val timeBetweenIntervals = 1000L
 
     fun start() {
         if (currentTimerJob != null && currentTimerJob?.isActive!!) {
-            throw IllegalStateException("Timer already running.")
+            throw IllegalStateException(ERROR_TIMER_ALREADY_STARTED)
         }
 
         isRunning = true
         currentTimerJob = CoroutineScope(Dispatchers.Main).launch {
             while (isRunning && !isPausing) {
-                delay(1000)
-                timeInMillis += 1000
+                delay(timeBetweenIntervals)
+                timeInMillis += timeBetweenIntervals
                 _time.setValueFromMillis(timeInMillis)
             }
         }
     }
 
     fun stop() {
-        check(isRunning) { "Timer has not been started." }
+        check(isRunning) { ERROR_TIMER_NOT_BEEN_STARTED }
 
         resetTimer()
 
@@ -52,8 +64,8 @@ class Timer @Inject constructor() {
     }
 
     fun pause() {
-        check(isRunning) { "Timer has not been started." }
-        check(!isPausing) { "Timer already paused." }
+        check(isRunning) { ERROR_TIMER_NOT_BEEN_STARTED }
+        check(!isPausing) { ERROR_TIMER_ALREADY_PAUSED }
         isPausing = true
 
         if (currentTimerJob != null && currentTimerJob?.isActive!!) {
@@ -62,8 +74,8 @@ class Timer @Inject constructor() {
     }
 
     fun resume() {
-        check(isRunning) { "Timer has not been started." }
-        check(isPausing) { "Timer has not been paused." }
+        check(isRunning) { ERROR_TIMER_NOT_BEEN_STARTED }
+        check(isPausing) { ERROR_TIMER_NOT_BEEN_PAUSED }
         isPausing = false
         start()
     }

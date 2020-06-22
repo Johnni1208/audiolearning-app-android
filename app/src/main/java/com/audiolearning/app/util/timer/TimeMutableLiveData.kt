@@ -1,7 +1,7 @@
 package com.audiolearning.app.util.timer
 
 import androidx.lifecycle.MutableLiveData
-import com.audiolearning.app.extensions.toTimeString
+import com.audiolearning.app.extension.toTimeString
 
 /**
  * This class is an extension of [MutableLiveData].

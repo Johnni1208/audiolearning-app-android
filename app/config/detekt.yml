@@ -519,14 +519,11 @@ style:
       '**/androidTest/**',
       '**/*.Test.kt',
       '**/*.Spec.kt',
-      '**/*.Spek.kt',
-      '**/CwaWebException.kt',
-      '**/HttpErrorParser.kt',
-      '**/ErrorCodes.kt'
+      '**/*.Spek.kt'
     ]
     ignoreNumbers: ['-1', '0', '1', '2']
     ignoreHashCodeFunction: true
-    ignorePropertyDeclaration: false
+    ignorePropertyDeclaration: true
     ignoreLocalVariableDeclaration: true
     ignoreConstantDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true

@@ -3,8 +3,8 @@ package com.audiolearning.app.di.ui
 import androidx.lifecycle.ViewModel
 import com.audiolearning.app.di.ViewModelBuilder
 import com.audiolearning.app.di.ViewModelKey
-import com.audiolearning.app.ui.fragments.recorder.RecorderFragment
-import com.audiolearning.app.ui.fragments.recorder.RecorderFragmentViewModel
+import com.audiolearning.app.ui.fragment.recorder.RecorderFragment
+import com.audiolearning.app.ui.fragment.recorder.RecorderFragmentViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector

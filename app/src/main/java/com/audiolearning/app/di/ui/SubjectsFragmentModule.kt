@@ -3,8 +3,8 @@ package com.audiolearning.app.di.ui
 import androidx.lifecycle.ViewModel
 import com.audiolearning.app.di.ViewModelBuilder
 import com.audiolearning.app.di.ViewModelKey
-import com.audiolearning.app.ui.fragments.subjects.SubjectsFragment
-import com.audiolearning.app.ui.fragments.subjects.SubjectsFragmentViewModel
+import com.audiolearning.app.ui.fragment.subjects.SubjectsFragment
+import com.audiolearning.app.ui.fragment.subjects.SubjectsFragmentViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector

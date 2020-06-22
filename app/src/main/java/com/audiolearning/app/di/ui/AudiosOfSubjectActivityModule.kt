@@ -3,8 +3,8 @@ package com.audiolearning.app.di.ui
 import androidx.lifecycle.ViewModel
 import com.audiolearning.app.di.ViewModelBuilder
 import com.audiolearning.app.di.ViewModelKey
-import com.audiolearning.app.ui.activities.audios_of_subject.AudiosOfSubjectActivity
-import com.audiolearning.app.ui.activities.audios_of_subject.AudiosOfSubjectActivityViewModel
+import com.audiolearning.app.ui.activity.audiosofsubject.AudiosOfSubjectActivity
+import com.audiolearning.app.ui.activity.audiosofsubject.AudiosOfSubjectActivityViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
