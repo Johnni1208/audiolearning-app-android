@@ -23,8 +23,6 @@ class GenericYesNoDialog(
     private val requestCode: Int,
     private val dataReceiver: DialogDataReceiver
 ) : DialogFragment() {
-
-
     private lateinit var dialogContext: Context
 
     private lateinit var title: String

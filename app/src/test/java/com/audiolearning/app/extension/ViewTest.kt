@@ -15,7 +15,6 @@ class ViewTest {
     private val mockView: View = mock()
     private val mockInputMethodManager: InputMethodManager = mock()
 
-
     @Before
     fun setupContext() {
         whenever(mockView.context).thenReturn(mock(Context::class.java))

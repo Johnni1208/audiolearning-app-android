@@ -130,7 +130,6 @@ class SubjectRepositoryTest {
             Subject("Subject 4", "")
         )
 
-
         testSubjects.forEach {
             subjectDao.insert(it)
         }

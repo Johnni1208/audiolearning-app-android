@@ -43,9 +43,7 @@ class BaseSelectableRecyclerViewAdapterTest {
                 override fun setViewDeselectUi() {}
             }
 
-
         override fun onBindViewHolder(holder: BaseSelectableViewHolder, position: Int) {}
-
     }
 
     private val realData = ArrayList<Subject>().apply {

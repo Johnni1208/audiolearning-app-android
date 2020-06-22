@@ -34,4 +34,3 @@ class CreateNewSubjectDialogViewModel @Inject constructor(
         subjectRepository.getSubjectByName(subjectName)
     }
 }
-

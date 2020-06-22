@@ -10,7 +10,8 @@ import com.audiolearning.app.extension.hide
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.android.synthetic.main.subject_cardview.view.*
+import kotlinx.android.synthetic.main.subject_cardview.view.iv_check_circle
+import kotlinx.android.synthetic.main.subject_cardview.view.tv_subject_name
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mock

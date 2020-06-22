@@ -56,7 +56,7 @@ class Timer @Inject constructor() {
         }
     }
 
-    private fun resetTimer(){
+    private fun resetTimer() {
         isRunning = false
         isPausing = false
         timeInMillis = 0

@@ -30,9 +30,7 @@ class BaseSelectableViewHolderTest {
             viewType: Int
         ): BaseSelectableViewHolder = TestBaseSelectableViewHolder()
 
-
         override fun onBindViewHolder(holder: BaseSelectableViewHolder, position: Int) {}
-
 
         inner class TestBaseSelectableViewHolder :
             BaseSelectableViewHolder(mockView, mockListener) {

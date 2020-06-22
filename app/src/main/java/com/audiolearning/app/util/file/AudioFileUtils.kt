@@ -27,7 +27,7 @@ object AudioFileUtils {
         destinationName: String? = null
     ) {
         try {
-            //create output directory if it doesn't exist
+            // create output directory if it doesn't exist
             val dir = File(destinationDirectory)
             if (!dir.exists()) {
                 dir.mkdirs()
@@ -53,7 +53,7 @@ object AudioFileUtils {
             bufferedOutputStream.flush()
             bufferedOutputStream.close()
 
-            //delete old file
+            // delete old file
             sourceFile.delete()
         } catch (fileNotFoundException: FileNotFoundException) {
             Log.e("tag", fileNotFoundException.message!!)
