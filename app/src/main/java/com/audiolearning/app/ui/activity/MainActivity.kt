@@ -17,7 +17,9 @@ import com.audiolearning.app.ui.fragment.aboutus.AboutUsFragment
 import com.audiolearning.app.ui.fragment.recorder.RecorderFragment
 import com.audiolearning.app.ui.fragment.subjects.SubjectsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), MainActivityToolBarChangeListener {
     companion object {
         private const val POSITION_ABOUT_US_FRAGMENT = 0

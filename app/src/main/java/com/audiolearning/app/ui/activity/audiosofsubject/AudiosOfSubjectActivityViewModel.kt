@@ -1,5 +1,6 @@
 package com.audiolearning.app.ui.activity.audiosofsubject
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,9 +11,9 @@ import com.audiolearning.app.data.repositories.SubjectRepository
 import com.audiolearning.app.data.store.SelectedEntityStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-class AudiosOfSubjectActivityViewModel @Inject constructor(
+
+class AudiosOfSubjectActivityViewModel @ViewModelInject constructor(
     private val subjectRepository: SubjectRepository,
     private val audioRepository: AudioRepository,
     private val selectedAudiosStore: SelectedEntityStore<Audio>

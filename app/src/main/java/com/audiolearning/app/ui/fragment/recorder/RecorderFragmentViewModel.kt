@@ -1,9 +1,9 @@
 package com.audiolearning.app.ui.fragment.recorder
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import com.audiolearning.app.audio.recorder.AudioRecorder
 import com.audiolearning.app.timer.Timer
-import javax.inject.Inject
 
 /**
  * ViewModel for the RecorderFragment.
@@ -12,7 +12,7 @@ import javax.inject.Inject
  *
  * @param timer Inject a custom instance of [Timer].
  */
-class RecorderFragmentViewModel @Inject constructor(
+class RecorderFragmentViewModel @ViewModelInject constructor(
     private val audioRecorder: AudioRecorder,
     timer: Timer
 ) : ViewModel() {

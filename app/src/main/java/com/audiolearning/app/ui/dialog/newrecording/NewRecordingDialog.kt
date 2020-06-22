@@ -9,10 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.audiolearning.app.R
 import com.audiolearning.app.adapter.SubjectSpinnerAdapter
 import com.audiolearning.app.data.db.entities.Subject
@@ -22,23 +22,28 @@ import com.audiolearning.app.extension.showKeyboard
 import com.audiolearning.app.ui.dialog.genericyesno.DialogDataReceiver
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialog
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialogTexts
-import dagger.android.support.DaggerDialogFragment
-import kotlinx.android.synthetic.main.dialog_new_recording.*
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.dialog_new_recording.btn_discard_recording
+import kotlinx.android.synthetic.main.dialog_new_recording.btn_save_recording
+import kotlinx.android.synthetic.main.dialog_new_recording.et_audio_name
+import kotlinx.android.synthetic.main.dialog_new_recording.nr_toolbar
+import kotlinx.android.synthetic.main.dialog_new_recording.sp_select_subject
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.io.File
-import javax.inject.Inject
 
-class NewRecordingDialog : DaggerDialogFragment(),
+/**
+ * Shown after the user has finished recording an audio.
+ */
+@AndroidEntryPoint
+class NewRecordingDialog : DialogFragment(),
     DialogDataReceiver {
     private lateinit var newRecording: File
     private lateinit var dialogContext: Context
     private lateinit var discardRecordingDialogTexts: GenericYesNoDialogTexts
     private var dialogRequestCode: Int = 0 // lateinit
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by viewModels<NewRecordingDialogViewModel> { viewModelFactory }
+    private val viewModel: NewRecordingDialogViewModel by viewModels()
 
     companion object {
         const val ARG_NEW_FILE_PATH = "NewRecordingDialog.newFilePath"

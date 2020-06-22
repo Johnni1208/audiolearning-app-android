@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.audiolearning.app.R
 import com.audiolearning.app.adapter.AdapterDataEvent
@@ -25,20 +25,18 @@ import com.audiolearning.app.ui.dialog.createnewsubject.CreateNewSubjectDialog
 import com.audiolearning.app.ui.dialog.genericyesno.DialogDataReceiver
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialog
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialogTexts
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarChangeListener) :
-    DaggerFragment(),
+    Fragment(),
     ItemSelectListener<Subject>,
     DialogDataReceiver {
     private var dialogRequestCode: Int = 0 // lateinit
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by viewModels<SubjectsFragmentViewModel> { viewModelFactory }
+    private val viewModel: SubjectsFragmentViewModel by viewModels()
     private lateinit var binding: FragmentSubjectsBinding
 
     override fun onCreateView(

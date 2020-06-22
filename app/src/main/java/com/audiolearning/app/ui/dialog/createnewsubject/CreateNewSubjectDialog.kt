@@ -6,25 +6,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import com.audiolearning.app.R
 import com.audiolearning.app.extension.hideKeyboard
 import com.audiolearning.app.extension.showKeyboard
-import dagger.android.support.DaggerDialogFragment
-import kotlinx.android.synthetic.main.dialog_create_new_subject.*
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.dialog_create_new_subject.btn_cancel_subject
+import kotlinx.android.synthetic.main.dialog_create_new_subject.btn_save_subject
+import kotlinx.android.synthetic.main.dialog_create_new_subject.et_subject_name
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
 
 /**
  * This shows a dialog, where the user can create a new subject.
  */
-class CreateNewSubjectDialog : DaggerDialogFragment() {
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by viewModels<CreateNewSubjectDialogViewModel> { viewModelFactory }
+@AndroidEntryPoint
+class CreateNewSubjectDialog : DialogFragment() {
+    private val viewModel: CreateNewSubjectDialogViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

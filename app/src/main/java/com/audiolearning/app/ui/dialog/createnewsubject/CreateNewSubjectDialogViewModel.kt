@@ -1,14 +1,14 @@
 package com.audiolearning.app.ui.dialog.createnewsubject
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import com.audiolearning.app.data.repositories.SubjectRepository
 import com.audiolearning.app.extension.isAllowedFileName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 @Suppress("ReturnCount")
-class CreateNewSubjectDialogViewModel @Inject constructor(
+class CreateNewSubjectDialogViewModel @ViewModelInject constructor(
     private val subjectRepository: SubjectRepository
 ) : ViewModel() {
     suspend fun createNewSubject(subjectName: String) =

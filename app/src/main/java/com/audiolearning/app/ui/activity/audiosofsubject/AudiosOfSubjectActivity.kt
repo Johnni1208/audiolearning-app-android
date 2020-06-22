@@ -8,7 +8,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiolearning.app.R
 import com.audiolearning.app.adapter.AdapterDataEvent
@@ -23,20 +22,18 @@ import com.audiolearning.app.ui.dialog.genericyesno.DialogDataReceiver
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialog
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialogTexts
 import com.google.android.material.appbar.AppBarLayout
-import dagger.android.AndroidInjection
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class AudiosOfSubjectActivity : AppCompatActivity(),
     ItemSelectListener<Audio>,
     DialogDataReceiver {
     private var dialogRequestCode: Int = 0 // lateinit
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by viewModels<AudiosOfSubjectActivityViewModel> { viewModelFactory }
+    private val viewModel: AudiosOfSubjectActivityViewModel by viewModels()
     private lateinit var binding: ActivityAudiosOfSubjectBinding
 
     companion object {
@@ -45,7 +42,6 @@ class AudiosOfSubjectActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AndroidInjection.inject(this)
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_audios_of_subject)

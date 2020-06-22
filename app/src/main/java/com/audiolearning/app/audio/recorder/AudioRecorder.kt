@@ -59,6 +59,7 @@ class AudioRecorder @Inject constructor(private var recorder: MediaRecorder?) {
         delay(timeBeforeStop)
         recorder?.apply {
             stop()
+            reset()
             release()
         }
 
@@ -86,9 +87,9 @@ class AudioRecorder @Inject constructor(private var recorder: MediaRecorder?) {
     private fun getAudioMediaRecorder(file: File) = MediaRecorder().apply {
         setAudioSource(MediaRecorder.AudioSource.MIC)
         setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+        setOutputFile(file.absolutePath)
         setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
         setAudioEncodingBitRate(audioEncodingBitRate)
         setAudioSamplingRate(audioSamplingRate)
-        setOutputFile(file.absolutePath)
     }
 }

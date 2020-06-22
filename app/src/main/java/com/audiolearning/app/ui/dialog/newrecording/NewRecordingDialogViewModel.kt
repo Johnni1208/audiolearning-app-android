@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import androidx.fragment.app.FragmentManager
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.data.repositories.AudioRepository
@@ -14,10 +15,9 @@ import com.audiolearning.app.ui.dialog.createnewsubject.CreateNewSubjectDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import javax.inject.Inject
 
 @Suppress("ReturnCount")
-class NewRecordingDialogViewModel @Inject constructor(
+class NewRecordingDialogViewModel @ViewModelInject constructor(
     private val subjectRepository: SubjectRepository,
     private val audioRepository: AudioRepository
 ) : ViewModel() {
