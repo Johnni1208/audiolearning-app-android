@@ -6,13 +6,15 @@ buildscript {
         kotlin_coroutines_version = '1.3.2'
         room_version = '2.2.5'
         lifecycle_version = '2.2.0'
-        dagger_version = '2.28'
+        dagger_version = '2.28.1'
         fragment_version = '1.2.5'
         fragment_ktx_version = '1.3.0-alpha06'
         androidx_test_version = '1.2.0'
+        hilt_version = '2.28.1-alpha'
     }
 
     repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
         google()
         jcenter()
     }
@@ -20,6 +22,37 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jlleitschuh.gradle:ktlint-gradle:9.2.1"
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.9.1"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
+    }
+}
+
+subprojects {
+    apply plugin: 'io.gitlab.arturbosch.detekt'
+    apply plugin: "org.jlleitschuh.gradle.ktlint"
+
+    detekt {
+        debug = true
+        ignoreFailures = false
+        failFast = false // fail build on any finding
+        buildUponDefaultConfig = true // preconfigure defaults
+        config = files("$projectDir/config/detekt.yml")
+        // point to your custom config defining rules to run, overwriting default behavior
+        baseline = file("$projectDir/config/detekt-baseline.xml")
+        parallel = true
+        reports {
+            html.enabled = true // observe findings in your browser with structure and code snippets
+            xml.enabled = true // checkstyle like format mainly for integrations like Jenkins
+            txt.enabled = true
+            // similar to the console output, contains issue signature to manually edit baseline files
+        }
+    }
+
+    ktlint {
+        debug = true
+        ignoreFailures = false
+        coloredOutput = false
     }
 }
 
@@ -32,4 +65,9 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+wrapper {
+    gradleVersion = "6.1.1"
+    distributionType = "all"
 }

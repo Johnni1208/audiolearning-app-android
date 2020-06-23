@@ -1,10 +1,13 @@
 package com.audiolearning.app
 
-import com.audiolearning.app.di.DaggerApplicationComponent
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
+import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
 
-open class AudioLearningApplication : DaggerApplication() {
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> =
-        DaggerApplicationComponent.factory().create(applicationContext)
+@HiltAndroidApp
+open class AudioLearningApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        Timber.plant(Timber.DebugTree())
+    }
 }
