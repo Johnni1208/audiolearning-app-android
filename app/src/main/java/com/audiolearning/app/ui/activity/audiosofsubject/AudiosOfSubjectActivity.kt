@@ -1,6 +1,7 @@
 package com.audiolearning.app.ui.activity.audiosofsubject
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -18,6 +19,7 @@ import com.audiolearning.app.databinding.ActivityAudiosOfSubjectBinding
 import com.audiolearning.app.exception.MissingArgumentException
 import com.audiolearning.app.extension.hide
 import com.audiolearning.app.extension.show
+import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerActivity
 import com.audiolearning.app.ui.dialog.genericyesno.DialogDataReceiver
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialog
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialogTexts
@@ -60,9 +62,7 @@ class AudiosOfSubjectActivity : AppCompatActivity(),
     private fun setupSubject() = runBlocking {
         viewModel.setSubject(
             intent.extras?.getInt(EXTRA_SUBJECT_ID)
-                ?: throw MissingArgumentException(
-                    EXTRA_SUBJECT_ID
-                )
+                ?: throw MissingArgumentException(EXTRA_SUBJECT_ID)
         )
     }
 
@@ -135,7 +135,10 @@ class AudiosOfSubjectActivity : AppCompatActivity(),
     }
 
     override fun onItemClick(item: Audio) {
-        TODO("Not yet implemented")
+        Intent(applicationContext, AudioPlayerActivity::class.java).apply {
+            putExtra(AudioPlayerActivity.EXTRA_AUDIO_ID, item.id)
+            startActivity(this)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

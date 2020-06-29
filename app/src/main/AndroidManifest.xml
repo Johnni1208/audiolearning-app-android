@@ -27,5 +27,8 @@
         <activity
             android:name=".ui.activity.audiosofsubject.AudiosOfSubjectActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.audioplayer.AudioPlayerActivity"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

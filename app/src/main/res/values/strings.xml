@@ -49,4 +49,7 @@
     <!-- Text for Delete Audios? Dialog -->
     <string name="daDialog_title">Delete selected audios?</string>
     <string name="daDialog_message">The audios will be lost forever!</string>
+
+    <!-- Text for AudioPlayer -->
+    <string name="ap_subject">Subject</string>
 </resources>
