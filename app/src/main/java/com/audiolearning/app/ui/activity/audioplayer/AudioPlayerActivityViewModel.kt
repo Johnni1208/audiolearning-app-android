@@ -18,7 +18,6 @@ class AudioPlayerActivityViewModel @ViewModelInject constructor(
     private val _audio: MutableLiveData<Audio> = MutableLiveData<Audio>().apply {
         value = null
     }
-
     val audio: LiveData<Audio>
         get() = _audio
 
