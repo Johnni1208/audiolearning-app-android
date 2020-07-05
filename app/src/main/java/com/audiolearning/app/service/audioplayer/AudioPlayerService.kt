@@ -5,13 +5,13 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.text.TextUtils
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
 import com.audiolearning.app.R
-import com.audiolearning.app.audio.player.AudioPlaybackPreparer
 import com.audiolearning.app.notification.AudioNotificationManager
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlaybackException
@@ -75,13 +75,20 @@ class AudioPlayerService : MediaBrowserServiceCompat() {
                 this, Util.getUserAgent(this, getString(R.string.app_name)), null
             )
 
-            val playBackPreparer = AudioPlaybackPreparer(
-                exoPlayer,
-                dataSourceFactory
-            )
+            val playBackPreparer =
+                AudioPlaybackPreparer(
+                    exoPlayer,
+                    dataSourceFactory
+                )
 
             connector.setPlayer(exoPlayer)
             connector.setPlaybackPreparer(playBackPreparer)
+        }
+
+        with(MediaMetadataCompat.Builder()) {
+            putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, "Test title")
+            putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, "Test subtitle")
+            mediaSession.setMetadata(build())
         }
     }
 

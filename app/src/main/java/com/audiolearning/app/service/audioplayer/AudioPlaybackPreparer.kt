@@ -1,4 +1,4 @@
-package com.audiolearning.app.audio.player
+package com.audiolearning.app.service.audioplayer
 
 import android.net.Uri
 import android.os.Bundle

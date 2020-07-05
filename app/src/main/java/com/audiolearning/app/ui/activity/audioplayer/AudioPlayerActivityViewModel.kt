@@ -8,12 +8,14 @@ import com.audiolearning.app.data.db.entities.Audio
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.data.repositories.AudioRepository
 import com.audiolearning.app.data.repositories.SubjectRepository
+import com.audiolearning.app.service.audioplayer.AudioPlayerServiceConnection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class AudioPlayerActivityViewModel @ViewModelInject constructor(
     private val audioRepository: AudioRepository,
-    private val subjectRepository: SubjectRepository
+    private val subjectRepository: SubjectRepository,
+    private val audioPlayerServiceConnection: AudioPlayerServiceConnection
 ) : ViewModel() {
     private val _audio: MutableLiveData<Audio> = MutableLiveData<Audio>().apply {
         value = null
