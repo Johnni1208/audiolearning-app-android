@@ -1,5 +1,7 @@
 package com.audiolearning.app.ui.activity.audiosofsubject
 
+import android.os.Bundle
+import androidx.core.net.toUri
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,13 +11,16 @@ import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.data.repositories.AudioRepository
 import com.audiolearning.app.data.repositories.SubjectRepository
 import com.audiolearning.app.data.store.SelectedEntityStore
+import com.audiolearning.app.extension.from
+import com.audiolearning.app.service.audioplayer.AudioPlayerServiceConnection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class AudiosOfSubjectActivityViewModel @ViewModelInject constructor(
     private val subjectRepository: SubjectRepository,
     private val audioRepository: AudioRepository,
-    private val selectedAudiosStore: SelectedEntityStore<Audio>
+    private val selectedAudiosStore: SelectedEntityStore<Audio>,
+    private val audioPlayerServiceConnection: AudioPlayerServiceConnection
 ) : ViewModel() {
     val selectedAudiosList: LiveData<ArrayList<Audio>> = selectedAudiosStore.selectedEntityList
 
@@ -53,6 +58,13 @@ class AudiosOfSubjectActivityViewModel @ViewModelInject constructor(
     private suspend fun deleteSelectedAudiosFromRepository() = withContext(Dispatchers.IO) {
         selectedAudiosStore.selectedEntityList.value?.forEach { selectedAudio ->
             audioRepository.delete(selectedAudio)
+        }
+    }
+
+    fun playAudio(audio: Audio) {
+        subject.value?.let {
+            val transportControls = audioPlayerServiceConnection.transportControls
+            transportControls.playFromUri(audio.fileUriString.toUri(), Bundle().from(audio, it))
         }
     }
 }

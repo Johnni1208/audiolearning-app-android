@@ -5,7 +5,7 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.text.TextUtils
 import android.widget.Toast
@@ -13,19 +13,20 @@ import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
 import com.audiolearning.app.R
 import com.audiolearning.app.notification.AudioNotificationManager
+import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerActivity
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.Timeline
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
+import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import timber.log.Timber
-
-private const val TAG = "AudioPlayerService"
 
 class AudioPlayerService : MediaBrowserServiceCompat() {
     private lateinit var notificationManager: AudioNotificationManager
@@ -52,16 +53,21 @@ class AudioPlayerService : MediaBrowserServiceCompat() {
 
         // Build a PendingIntent that can be used to launch the UI.
         val sessionActivityPendingIntent =
-            packageManager?.getLaunchIntentForPackage(packageName)?.let { sessionIntent ->
-                PendingIntent.getActivity(this, 0, sessionIntent, 0)
-            }
+            PendingIntent.getActivity(
+                this,
+                0,
+                Intent(this, AudioPlayerActivity::class.java),
+                0
+            )
 
         // Create a new MediaSession.
-        mediaSession = MediaSessionCompat(this, TAG)
+        mediaSession = MediaSessionCompat(this, this.javaClass.simpleName)
             .apply {
                 setSessionActivity(sessionActivityPendingIntent)
                 isActive = true
             }
+
+        sessionToken = mediaSession.sessionToken
 
         notificationManager = AudioNotificationManager(
             this,
@@ -75,20 +81,11 @@ class AudioPlayerService : MediaBrowserServiceCompat() {
                 this, Util.getUserAgent(this, getString(R.string.app_name)), null
             )
 
-            val playBackPreparer =
-                AudioPlaybackPreparer(
-                    exoPlayer,
-                    dataSourceFactory
-                )
+            val playBackPreparer = AudioPlaybackPreparer(exoPlayer, dataSourceFactory)
 
             connector.setPlayer(exoPlayer)
             connector.setPlaybackPreparer(playBackPreparer)
-        }
-
-        with(MediaMetadataCompat.Builder()) {
-            putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, "Test title")
-            putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, "Test subtitle")
-            mediaSession.setMetadata(build())
+            connector.setQueueNavigator(SingleItemQueueNavigator(mediaSession))
         }
     }
 
@@ -196,5 +193,12 @@ class AudioPlayerService : MediaBrowserServiceCompat() {
             isForegroundService = false
             stopSelf()
         }
+    }
+
+    private inner class SingleItemQueueNavigator(mediaSession: MediaSessionCompat) :
+        TimelineQueueNavigator(mediaSession) {
+        override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat =
+            player.currentTimeline
+                .getWindow(windowIndex, Timeline.Window()).tag as MediaDescriptionCompat
     }
 }

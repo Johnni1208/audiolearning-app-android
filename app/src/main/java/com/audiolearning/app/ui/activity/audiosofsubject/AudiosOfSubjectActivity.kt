@@ -135,6 +135,7 @@ class AudiosOfSubjectActivity : AppCompatActivity(),
     }
 
     override fun onItemClick(item: Audio) {
+        viewModel.playAudio(item)
         Intent(applicationContext, AudioPlayerActivity::class.java).apply {
             putExtra(AudioPlayerActivity.EXTRA_AUDIO_ID, item.id)
             startActivity(this)

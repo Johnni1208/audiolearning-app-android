@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.audiolearning.app.R
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
@@ -34,10 +36,14 @@ class AudioNotificationManager(
             notificationListener
         ).apply {
             setMediaSessionToken(sessionToken)
-            setSmallIcon(R.drawable.ic_launcher_background)
+            setPriority(NotificationCompat.PRIORITY_MAX)
+            setSmallIcon(R.drawable.ic_launcher_foreground)
             // TODO: 02.07.2020 Implement notification icon
             setRewindIncrementMs(REWIND_MS)
             setFastForwardIncrementMs(FAST_FORWARD_MS)
+            setUseChronometer(false)
+            setUseNavigationActions(false)
+            setColor(ContextCompat.getColor(context, R.color.colorPrimary))
         }
     }
 
@@ -54,11 +60,11 @@ class AudioNotificationManager(
         override fun createCurrentContentIntent(player: Player): PendingIntent? =
             controller.sessionActivity
 
-        override fun getCurrentContentText(player: Player): CharSequence? =
-            controller.metadata.description.subtitle
-
-        override fun getCurrentContentTitle(player: Player): CharSequence =
+        override fun getCurrentContentTitle(player: Player) =
             controller.metadata.description.title.toString()
+
+        override fun getCurrentContentText(player: Player) =
+            controller.metadata.description.subtitle.toString()
 
         override fun getCurrentLargeIcon(
             player: Player,

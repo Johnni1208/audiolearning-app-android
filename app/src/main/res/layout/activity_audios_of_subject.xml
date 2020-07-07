@@ -21,7 +21,7 @@
             android:layout_height="200dp"
             android:fitsSystemWindows="true"
             app:liftOnScroll="true"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/ctb"

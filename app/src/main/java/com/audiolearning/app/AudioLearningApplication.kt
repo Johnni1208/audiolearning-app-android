@@ -10,7 +10,8 @@ open class AudioLearningApplication : Application() {
     companion object {
         private lateinit var instance: AudioLearningApplication
 
-        val appContext: Context = instance.applicationContext
+        val appContext: Context
+            get() = instance.applicationContext
     }
 
     override fun onCreate() {
