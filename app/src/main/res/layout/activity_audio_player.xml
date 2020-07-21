@@ -18,9 +18,9 @@
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
+            app:elevation="0dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:elevation="0dp">
+            app:layout_constraintTop_toTopOf="parent">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -50,9 +50,9 @@
 
                     <TextView
                         android:id="@+id/tv_subject_title"
-                        android:text="@{viewModel.mediaMetaData.subtitle}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@{viewModel.mediaMetaData.subtitle}"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
                         android:textColor="@color/colorPrimary"
                         android:textStyle="bold"
@@ -62,6 +62,20 @@
             </RelativeLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
+
+        <ImageButton
+            android:id="@+id/btn_play_pause_audio"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/play_pause_background"
+            android:padding="12dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/ic_play_arrow_24dp"
+            android:contentDescription="@string/desc_play_pause_audio" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

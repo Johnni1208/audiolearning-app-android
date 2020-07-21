@@ -8,12 +8,9 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.audiolearning.app.R
-import com.audiolearning.app.data.db.entities.Audio
-import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.extension.currentPlayBackPosition
 import com.audiolearning.app.extension.date
 import com.audiolearning.app.extension.displaySubtitle
@@ -107,18 +104,6 @@ class AudioPlayerActivityViewModel @ViewModelInject constructor(
 
         updatePosition = false
     }
-
-    private val _audio: MutableLiveData<Audio> = MutableLiveData<Audio>().apply {
-        value = null
-    }
-    val audio: LiveData<Audio>
-        get() = _audio
-
-    private val _subject: MutableLiveData<Subject> = MutableLiveData<Subject>().apply {
-        value = null
-    }
-    val subject: LiveData<Subject>
-        get() = _subject
 }
 
 private const val POSITION_UPDATE_INTERVAL_MILLIS = 100L

@@ -12,9 +12,14 @@ import com.audiolearning.app.data.repositories.AudioRepository
 import com.audiolearning.app.data.repositories.SubjectRepository
 import com.audiolearning.app.data.store.SelectedEntityStore
 import com.audiolearning.app.extension.from
+import com.audiolearning.app.extension.id
+import com.audiolearning.app.extension.isPlayEnabled
+import com.audiolearning.app.extension.isPlaying
+import com.audiolearning.app.extension.isPrepared
 import com.audiolearning.app.service.audioplayer.AudioPlayerServiceConnection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class AudiosOfSubjectActivityViewModel @ViewModelInject constructor(
     private val subjectRepository: SubjectRepository,
@@ -61,9 +66,59 @@ class AudiosOfSubjectActivityViewModel @ViewModelInject constructor(
     }
 
     fun playAudio(audio: Audio) {
-        subject.value?.let {
-            val transportControls = audioPlayerServiceConnection.transportControls
-            transportControls.playFromUri(audio.fileUriString.toUri(), Bundle().from(audio, it))
+        val nowPlaying = audioPlayerServiceConnection.nowPlaying.value
+        val transportControls = audioPlayerServiceConnection.transportControls
+
+        val isPrepared = audioPlayerServiceConnection.playBackState.value?.isPrepared ?: false
+        if (isPrepared && audio.id!! == nowPlaying?.id?.toInt()) {
+            audioPlayerServiceConnection.playBackState.value?.let { playbackState ->
+                when {
+                    playbackState.isPlaying -> transportControls.pause()
+                    playbackState.isPlayEnabled -> transportControls.play()
+                    else -> {
+                        Timber.w(
+                            """Playable item clicked but neither play nor pause are enabled! (mediaId=${audio.id})"""
+                        )
+                    }
+                }
+            }
+        } else {
+            subject.value?.let {
+                transportControls.playFromUri(audio.fileUriString.toUri(), Bundle().from(audio, it))
+            }
         }
+    }
+
+    suspend fun playAudioId(audioId: String) {
+        val nowPlaying = audioPlayerServiceConnection.nowPlaying.value
+        val transportControls = audioPlayerServiceConnection.transportControls
+
+        val isPrepared = audioPlayerServiceConnection.playBackState.value?.isPrepared ?: false
+        if (isPrepared && audioId == nowPlaying?.id) {
+            audioPlayerServiceConnection.playBackState.value?.let { playbackState ->
+                when {
+                    playbackState.isPlaying -> transportControls.pause()
+                    playbackState.isPlayEnabled -> transportControls.play()
+                    else -> {
+                        Timber.w(
+                            """Playable item clicked but neither play nor pause are enabled! (mediaId=$audioId)"""
+                        )
+                    }
+                }
+            }
+        } else {
+            val audio = getAudioById(audioId.toInt())
+            val subject = getSubjectById(audio.subjectId)
+
+            transportControls.playFromUri(
+                audio.fileUriString.toUri(),
+                Bundle().from(audio, subject)
+            )
+        }
+    }
+
+    private suspend fun getAudioById(id: Int) = withContext(Dispatchers.IO) {
+        return@withContext audioRepository.getAudioById(id)
+            ?: throw IllegalArgumentException("No audio with id: $id")
     }
 }

@@ -4,10 +4,13 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.audiolearning.app.R
 import com.audiolearning.app.databinding.ActivityAudioPlayerBinding
 import com.audiolearning.app.ui.activity.audiosofsubject.AudiosOfSubjectActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AudioPlayerActivity : AppCompatActivity() {
@@ -22,6 +25,16 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_audio_player)
         binding.lifecycleOwner = this
         binding.viewModel = audioPlayerActivityViewModel
+
+        audioPlayerActivityViewModel.mediaButtonRes.observe(this, Observer { res ->
+            binding.btnPlayPauseAudio.setImageResource(res)
+        })
+
+        binding.btnPlayPauseAudio.setOnClickListener {
+            audioPlayerActivityViewModel.mediaMetaData.value?.let {
+                MainScope().launch { audiosOfSubjectActivityViewModel.playAudioId(it.id) }
+            }
+        }
 
         setupToolbar()
     }
