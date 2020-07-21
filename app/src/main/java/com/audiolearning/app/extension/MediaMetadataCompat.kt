@@ -16,8 +16,20 @@ import java.util.concurrent.TimeUnit
 inline val MediaMetadataCompat.id: String?
     get() = getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)
 
+inline val MediaMetadataCompat.title: String?
+    get() = getString(MediaMetadataCompat.METADATA_KEY_TITLE)
+
 inline val MediaMetadataCompat.mediaUri: Uri
     get() = this.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI).toUri()
+
+inline val MediaMetadataCompat.duration
+    get() = getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
+
+inline val MediaMetadataCompat.date: String?
+    get() = getString(MediaMetadataCompat.METADATA_KEY_DATE)
+
+inline val MediaMetadataCompat.displaySubtitle: String?
+    get() = getString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE)
 
 /**
  * Useful extensions for [MediaMetadataCompat.Builder].
@@ -68,6 +80,13 @@ inline var MediaMetadataCompat.Builder.mediaUri: String?
     get() = throw IllegalAccessException(ERROR_CANNOT_GET)
     set(value) {
         putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, value)
+    }
+
+inline var MediaMetadataCompat.Builder.date: String?
+    @Deprecated(NO_GET, level = DeprecationLevel.ERROR)
+    get() = throw IllegalAccessException(ERROR_CANNOT_GET)
+    set(value) {
+        putString(MediaMetadataCompat.METADATA_KEY_DATE, value)
     }
 
 inline var MediaMetadataCompat.Builder.displayTitle: String?
@@ -124,6 +143,7 @@ fun MediaMetadataCompat.Builder.from(bundle: Bundle): MediaMetadataCompat.Builde
     mediaUri = bundle.audioUri
     artist = bundle.subjectName
     album = bundle.subjectName
+    date = bundle.audioDate
 
     displayTitle = bundle.audioName
     displaySubtitle = bundle.subjectName

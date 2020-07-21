@@ -6,18 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.audiolearning.app.R
 import com.audiolearning.app.databinding.ActivityAudioPlayerBinding
-import com.audiolearning.app.exception.MissingArgumentException
+import com.audiolearning.app.ui.activity.audiosofsubject.AudiosOfSubjectActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
 class AudioPlayerActivity : AppCompatActivity() {
-    private val viewModel: AudioPlayerActivityViewModel by viewModels()
+    private val audioPlayerActivityViewModel: AudioPlayerActivityViewModel by viewModels()
+    private val audiosOfSubjectActivityViewModel: AudiosOfSubjectActivityViewModel by viewModels()
     private lateinit var binding: ActivityAudioPlayerBinding
-
-    companion object {
-        const val EXTRA_AUDIO_ID = "extra_audio_id"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,17 +21,9 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_audio_player)
         binding.lifecycleOwner = this
-        binding.viewModel = viewModel
+        binding.viewModel = audioPlayerActivityViewModel
 
-        setupAudio()
         setupToolbar()
-    }
-
-    private fun setupAudio() = runBlocking {
-        viewModel.setAudio(
-            intent.extras?.getInt(EXTRA_AUDIO_ID)
-                ?: throw MissingArgumentException(EXTRA_AUDIO_ID)
-        )
     }
 
     private fun setupToolbar() {

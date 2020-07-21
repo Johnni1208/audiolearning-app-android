@@ -49,9 +49,10 @@
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Overline" />
 
                     <TextView
+                        android:id="@+id/tv_subject_title"
+                        android:text="@{viewModel.mediaMetaData.subtitle}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{viewModel.subject.name}"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
                         android:textColor="@color/colorPrimary"
                         android:textStyle="bold"

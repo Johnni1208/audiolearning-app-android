@@ -37,7 +37,7 @@ class AudioNotificationManager(
         ).apply {
             setMediaSessionToken(sessionToken)
             setPriority(NotificationCompat.PRIORITY_MAX)
-            setSmallIcon(R.drawable.ic_launcher_foreground)
+            setSmallIcon(R.drawable.ic_audio_notification)
             // TODO: 02.07.2020 Implement notification icon
             setRewindIncrementMs(REWIND_MS)
             setFastForwardIncrementMs(FAST_FORWARD_MS)

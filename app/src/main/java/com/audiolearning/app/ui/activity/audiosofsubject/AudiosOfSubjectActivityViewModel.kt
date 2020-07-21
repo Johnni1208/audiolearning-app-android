@@ -30,7 +30,6 @@ class AudiosOfSubjectActivityViewModel @ViewModelInject constructor(
     private val _subject: MutableLiveData<Subject> = MutableLiveData<Subject>().apply {
         value = null
     }
-
     val subject: LiveData<Subject>
         get() = _subject
 
