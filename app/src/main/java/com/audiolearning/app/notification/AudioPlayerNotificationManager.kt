@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.audiolearning.app.R
 import com.google.android.exoplayer2.ExoPlayer
@@ -36,7 +35,6 @@ class AudioNotificationManager(
             notificationListener
         ).apply {
             setMediaSessionToken(sessionToken)
-            setPriority(NotificationCompat.PRIORITY_MAX)
             setSmallIcon(R.drawable.ic_audio_notification)
             // TODO: 02.07.2020 Implement notification icon
             setRewindIncrementMs(REWIND_MS)

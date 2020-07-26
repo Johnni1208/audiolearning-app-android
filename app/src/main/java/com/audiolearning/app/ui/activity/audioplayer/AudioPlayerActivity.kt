@@ -7,15 +7,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.audiolearning.app.R
 import com.audiolearning.app.databinding.ActivityAudioPlayerBinding
-import com.audiolearning.app.ui.activity.audiosofsubject.AudiosOfSubjectActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AudioPlayerActivity : AppCompatActivity() {
-    private val audioPlayerActivityViewModel: AudioPlayerActivityViewModel by viewModels()
-    private val audiosOfSubjectActivityViewModel: AudiosOfSubjectActivityViewModel by viewModels()
+    private val audioPlayerDataViewModel: AudioPlayerDataViewModel by viewModels()
+    private val audioPlayerControlsViewModel: AudioPlayerControlsViewModel by viewModels()
     private lateinit var binding: ActivityAudioPlayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,15 +23,16 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_audio_player)
         binding.lifecycleOwner = this
-        binding.viewModel = audioPlayerActivityViewModel
+        binding.dataViewModel = audioPlayerDataViewModel
+        binding.controlsViewModel = audioPlayerControlsViewModel
 
-        audioPlayerActivityViewModel.mediaButtonRes.observe(this, Observer { res ->
+        audioPlayerDataViewModel.mediaButtonRes.observe(this, Observer { res ->
             binding.btnPlayPauseAudio.setImageResource(res)
         })
 
         binding.btnPlayPauseAudio.setOnClickListener {
-            audioPlayerActivityViewModel.mediaMetaData.value?.let {
-                MainScope().launch { audiosOfSubjectActivityViewModel.playAudioId(it.id) }
+            audioPlayerDataViewModel.mediaMetaData.value?.let {
+                MainScope().launch { audioPlayerControlsViewModel.playAudioId(it.id) }
             }
         }
 

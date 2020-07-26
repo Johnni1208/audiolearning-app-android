@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="com.audiolearning.app.ui.activity.audioplayer.AudioPlayerActivityViewModel" />
+            name="dataViewModel"
+            type="com.audiolearning.app.ui.activity.audioplayer.AudioPlayerDataViewModel" />
+
+        <variable
+            name="controlsViewModel"
+            type="com.audiolearning.app.ui.activity.audioplayer.AudioPlayerControlsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,7 +56,7 @@
                         android:id="@+id/tv_subject_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{viewModel.mediaMetaData.subtitle}"
+                        android:text="@{dataViewModel.mediaMetaData.subtitle}"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
                         android:textColor="@color/colorPrimary"
                         android:textStyle="bold"

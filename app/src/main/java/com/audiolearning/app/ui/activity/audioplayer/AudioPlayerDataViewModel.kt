@@ -24,11 +24,10 @@ import com.audiolearning.app.service.audioplayer.EMPTY_PLAYBACK_STATE
 import com.audiolearning.app.service.audioplayer.NOTHING_PLAYING
 import dagger.hilt.android.qualifiers.ApplicationContext
 
-class AudioPlayerActivityViewModel @ViewModelInject constructor(
+class AudioPlayerDataViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
     audioPlayerServiceConnection: AudioPlayerServiceConnection
 ) : AndroidViewModel(context as Application) {
-
     data class AudioMetaData(
         val id: String,
         val title: String?,
@@ -37,7 +36,6 @@ class AudioPlayerActivityViewModel @ViewModelInject constructor(
         val date: String?
     )
 
-    private var playbackState: PlaybackStateCompat = EMPTY_PLAYBACK_STATE
     val mediaMetaData = MutableLiveData<AudioMetaData>()
     val mediaPosition = MutableLiveData<Long>().apply {
         postValue(0L)
@@ -45,6 +43,8 @@ class AudioPlayerActivityViewModel @ViewModelInject constructor(
     val mediaButtonRes = MutableLiveData<Int>().apply {
         postValue(R.drawable.ic_play_arrow_24dp)
     }
+
+    private var playbackState: PlaybackStateCompat = EMPTY_PLAYBACK_STATE
 
     private var updatePosition = true
     private val handler = Handler(Looper.getMainLooper())
