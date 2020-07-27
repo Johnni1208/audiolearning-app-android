@@ -50,6 +50,10 @@ android {
             systemProperty 'robolectric.dependency.repo.url', 'https://repo1.maven.org/maven2'
         }
     }
+
+    lintOptions {
+        disable "NullSafeMutableLiveData"
+    }
 }
 
 dependencies {

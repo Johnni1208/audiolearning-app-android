@@ -7,7 +7,6 @@ import android.support.v4.media.MediaMetadataCompat
 import androidx.core.net.toUri
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DataSource
-import java.util.concurrent.TimeUnit
 
 /**
  * Useful extensions for [MediaMetadataCompat]
@@ -135,11 +134,9 @@ fun MediaMetadataCompat.toMediaSource(dataSourceFactory: DataSource.Factory): Pr
  * We chose the Builder since you can then make other actions on it.
  */
 fun MediaMetadataCompat.Builder.from(bundle: Bundle): MediaMetadataCompat.Builder {
-    val durationMs = TimeUnit.SECONDS.toMillis(bundle.audioDuration)
-
     id = bundle.audioId
     title = bundle.audioName
-    duration = durationMs
+    duration = bundle.audioDuration
     mediaUri = bundle.audioUri
     artist = bundle.subjectName
     album = bundle.subjectName

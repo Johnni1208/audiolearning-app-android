@@ -18,7 +18,6 @@ import com.audiolearning.app.extension.duration
 import com.audiolearning.app.extension.id
 import com.audiolearning.app.extension.isPlaying
 import com.audiolearning.app.extension.title
-import com.audiolearning.app.extension.toTimeString
 import com.audiolearning.app.service.audioplayer.AudioPlayerServiceConnection
 import com.audiolearning.app.service.audioplayer.EMPTY_PLAYBACK_STATE
 import com.audiolearning.app.service.audioplayer.NOTHING_PLAYING
@@ -32,7 +31,7 @@ class AudioPlayerDataViewModel @ViewModelInject constructor(
         val id: String,
         val title: String?,
         val subtitle: String?,
-        val duration: String,
+        val duration: Long,
         val date: String?
     )
 
@@ -74,7 +73,7 @@ class AudioPlayerDataViewModel @ViewModelInject constructor(
                 mediaMetadata.id!!,
                 mediaMetadata.title?.trim(),
                 mediaMetadata.displaySubtitle?.trim(),
-                mediaMetadata.duration.toTimeString(),
+                mediaMetadata.duration,
                 mediaMetadata.date?.trim()
             )
 

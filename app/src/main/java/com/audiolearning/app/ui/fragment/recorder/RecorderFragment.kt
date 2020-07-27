@@ -13,6 +13,7 @@ import com.audiolearning.app.R
 import com.audiolearning.app.audio.recorder.AudioRecorderState
 import com.audiolearning.app.databinding.FragmentRecorderBinding
 import com.audiolearning.app.extension.hide
+import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerControlsViewModel
 import com.audiolearning.app.ui.dialog.newrecording.NewRecordingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
@@ -23,6 +24,7 @@ import java.io.File
 @AndroidEntryPoint
 class RecorderFragment : Fragment() {
     private val viewModel: RecorderFragmentViewModel by viewModels()
+    private val audioPlayerControlsViewModel: AudioPlayerControlsViewModel by viewModels()
     private lateinit var binding: FragmentRecorderBinding
 
     override fun onCreateView(
@@ -101,6 +103,7 @@ class RecorderFragment : Fragment() {
                             btnPauseAndResume.isEnabled = true
                             btnPauseAndResume.isClickable = true
                             btnRecordAndStop.text = getString(R.string.stop_text)
+                            audioPlayerControlsViewModel.stop()
                         }
                     }
 

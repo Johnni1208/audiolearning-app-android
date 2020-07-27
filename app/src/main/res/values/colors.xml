@@ -3,6 +3,8 @@
     <color name="colorPrimary">#FFD60A</color>
     <color name="colorPrimaryDark">#FFCC00</color>
     <color name="colorPrimary50">#FFFDE5</color>
+    <color name="colorPrimary700">#FEBD00</color>
+    <color name="colorPrimary700Lighter">#CCFFBF00</color>
     <color name="colorAccent">#FF0053</color>
     <color name="colorText">#333333</color>
     <color name="colorDivider">#ECECEC</color>

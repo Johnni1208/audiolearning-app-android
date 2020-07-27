@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import com.audiolearning.app.data.db.entities.Audio
 import com.audiolearning.app.data.repositories.AudioRepository
 import com.audiolearning.app.data.repositories.SubjectRepository
+import com.audiolearning.app.extension.currentPlayBackPosition
+import com.audiolearning.app.extension.duration
 import com.audiolearning.app.extension.from
 import com.audiolearning.app.extension.id
 import com.audiolearning.app.extension.isPausing
@@ -78,6 +80,35 @@ class AudioPlayerControlsViewModel @ViewModelInject constructor(
         }
     }
 
+    fun stop() {
+        audioPlayerServiceConnection.transportControls.stop()
+    }
+
+    fun fastForward() {
+        var seekTime = audioPlayerServiceConnection.playBackState.value
+            ?.currentPlayBackPosition?.plus(SEEK_TIME) ?: 0
+
+        val audioDuration = audioPlayerServiceConnection.nowPlaying.value?.duration ?: 0
+
+        if (seekTime > audioDuration) {
+            seekTime = audioDuration - 1000
+        }
+
+        audioPlayerServiceConnection.transportControls.seekTo(seekTime)
+    }
+
+    fun rewind() {
+        var seekTime = audioPlayerServiceConnection.playBackState.value
+            ?.currentPlayBackPosition?.minus(SEEK_TIME) ?: 0
+
+        if (seekTime < 0) seekTime = 0
+
+        audioPlayerServiceConnection.transportControls.seekTo(seekTime)
+    }
+
+    fun seekTo(seekTime: Long) = audioPlayerServiceConnection.transportControls.seekTo(seekTime)
+
+
     private suspend fun getAudioById(id: Int) = withContext(Dispatchers.IO) {
         return@withContext audioRepository.getAudioById(id)
             ?: throw IllegalArgumentException("No audio with id: $id")
@@ -88,3 +119,5 @@ class AudioPlayerControlsViewModel @ViewModelInject constructor(
             ?: throw IllegalArgumentException("No subject with id: $id")
     }
 }
+
+private const val SEEK_TIME = 10000
