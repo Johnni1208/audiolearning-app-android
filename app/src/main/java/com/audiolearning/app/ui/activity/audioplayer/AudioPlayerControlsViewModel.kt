@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.audiolearning.app.data.db.entities.Audio
 import com.audiolearning.app.data.repositories.AudioRepository
 import com.audiolearning.app.data.repositories.SubjectRepository
-import com.audiolearning.app.extension.currentPlayBackPosition
+import com.audiolearning.app.extension.currentPlaybackPosition
 import com.audiolearning.app.extension.duration
 import com.audiolearning.app.extension.from
 import com.audiolearning.app.extension.id
@@ -86,7 +86,7 @@ class AudioPlayerControlsViewModel @ViewModelInject constructor(
 
     fun fastForward() {
         var seekTime = audioPlayerServiceConnection.playBackState.value
-            ?.currentPlayBackPosition?.plus(SEEK_TIME) ?: 0
+            ?.currentPlaybackPosition?.plus(SEEK_TIME) ?: 0
 
         val audioDuration = audioPlayerServiceConnection.nowPlaying.value?.duration ?: 0
 
@@ -99,7 +99,7 @@ class AudioPlayerControlsViewModel @ViewModelInject constructor(
 
     fun rewind() {
         var seekTime = audioPlayerServiceConnection.playBackState.value
-            ?.currentPlayBackPosition?.minus(SEEK_TIME) ?: 0
+            ?.currentPlaybackPosition?.minus(SEEK_TIME) ?: 0
 
         if (seekTime < 0) seekTime = 0
 

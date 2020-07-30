@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.audiolearning.app.data.db.AudioDao
 import com.audiolearning.app.data.db.AudioLearningDatabase
 import com.audiolearning.app.data.db.SubjectDao
@@ -21,11 +20,12 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import java.io.File
 import java.io.IOException
 
 @Suppress("BlockingMethodInNonBlockingContext")
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class SubjectRepositoryTest {
     @get:Rule
     val instantExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
@@ -81,9 +81,14 @@ class SubjectRepositoryTest {
 
         subjectRepository.insert(testSubjectName)
 
-        assertEquals(expectedSubject, subjectDao.getAllSubjects().getTestValue()[0])
+        val actualSubject = subjectDao.getAllSubjects().getTestValue()[0]
+
+        assertEquals(expectedSubject, actualSubject)
     }
 
+    /**
+     * Only runs on non-windows-machines, because the file uri gets not set correctly.
+     */
     @Test
     fun delete_ShouldDeleteFolderOnDevice() = runBlocking {
         subjectRepository.insert(testSubjectName)

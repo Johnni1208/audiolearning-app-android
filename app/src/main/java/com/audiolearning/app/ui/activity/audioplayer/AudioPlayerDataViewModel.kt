@@ -11,7 +11,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.audiolearning.app.R
-import com.audiolearning.app.extension.currentPlayBackPosition
+import com.audiolearning.app.extension.currentPlaybackPosition
 import com.audiolearning.app.extension.date
 import com.audiolearning.app.extension.displaySubtitle
 import com.audiolearning.app.extension.duration
@@ -89,7 +89,7 @@ class AudioPlayerDataViewModel @ViewModelInject constructor(
     }
 
     private fun checkPlaybackPosition(): Boolean = handler.postDelayed({
-        val currPosition = playbackState.currentPlayBackPosition
+        val currPosition = playbackState.currentPlaybackPosition
         if (mediaPosition.value != currPosition) mediaPosition.postValue(currPosition)
 
         if (updatePosition) checkPlaybackPosition()

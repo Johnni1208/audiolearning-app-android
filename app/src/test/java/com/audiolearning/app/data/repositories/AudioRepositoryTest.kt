@@ -4,23 +4,26 @@ import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.audiolearning.app.data.db.AudioDao
 import com.audiolearning.app.data.db.AudioLearningDatabase
+import com.audiolearning.app.data.db.entities.Audio
 import com.audiolearning.app.data.db.entities.Subject
+import com.audiolearning.app.getTestValue
 import kotlinx.coroutines.runBlocking
 import org.junit.After
-import org.junit.Assert.assertTrue
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import java.io.File
 import java.io.IOException
 
 @Suppress("BlockingMethodInNonBlockingContext")
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class AudioRepositoryTest {
     @get:Rule
     val instantExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
@@ -32,7 +35,7 @@ class AudioRepositoryTest {
     private lateinit var audioDao: AudioDao
     private lateinit var db: AudioLearningDatabase
 
-    private val testAudioName = "testAudio"
+    private lateinit var testAudio: Audio
     private lateinit var testAudioFile: File
 
     private lateinit var testSubject: Subject
@@ -58,6 +61,8 @@ class AudioRepositoryTest {
             File(tempFolder.root.path + File.separatorChar + "subjects" + File.separatorChar + testSubjectName)
 
         testAudioFile = File.createTempFile("testTempFile", ".m4a")
+
+        testAudio = Audio("testAudio", testAudioFile.toURI().toString(), 0, testSubject.id!!)
     }
 
     @After
@@ -67,16 +72,37 @@ class AudioRepositoryTest {
     }
 
     @Test
-    fun insert_ShouldMoveAudioFileToSubjectDirectory() = runBlocking {
-        audioRepository.insert(testAudioFile, testAudioName, testSubject)
+    fun delete_ShouldDeleteAudioFromDb() = runBlocking {
+        audioDao.insert(testAudio)
+        val testAudioFromDb = audioDao.getAudioByName(testAudio.name)!!
 
-        assertTrue(testSubjectFolder.listFiles()?.find { it.name == "$testAudioName.m4a" } != null)
+        audioRepository.delete(testAudioFromDb)
+
+        assertEquals(audioDao.getAudioByName(testAudio.name), null)
     }
 
     @Test
-    fun insert_ShouldInsertANewAudioIntoTheDb() = runBlocking {
-        audioRepository.insert(testAudioFile, testAudioName, testSubject)
+    fun delete_ShouldDeleteAudioFromDevice() = runBlocking {
+        audioRepository.delete(testAudio)
 
-        assertTrue(audioDao.getAudioByName(testAudioName) != null)
+        assertFalse(testAudioFile.exists())
+    }
+
+    @Test
+    fun getAudiosOfSubject_ShouldReturnCorrectAudios() = runBlocking {
+        audioDao.insert(testAudio)
+
+        assertEquals(
+            testAudio.name,
+            audioRepository.getAudiosOfSubject(testAudio.subjectId).getTestValue()[0].name
+        )
+    }
+
+    @Test
+    fun getAudioById_ShouldReturnCorrectAudio() = runBlocking {
+        audioDao.insert(testAudio)
+        val dbAudio = audioDao.getAudioByName(testAudio.name)!!
+
+        assertEquals(dbAudio, audioRepository.getAudioById(dbAudio.id!!))
     }
 }
