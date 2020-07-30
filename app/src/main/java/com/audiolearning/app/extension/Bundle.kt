@@ -19,7 +19,7 @@ fun Bundle.from(audio: Audio, subject: Subject): Bundle {
     putString(KEY_AUDIO_NAME, audio.name)
     putString(KEY_AUDIO_URI, audio.fileUriString)
     putLong(KEY_AUDIO_DURATION, audio.durationInMilliseconds)
-    putString(KEY_AUDIO_DATE, audio.createDate.toFormattedDate())
+    putLong(KEY_AUDIO_DATE, audio.createDate)
     putString(KEY_SUBJECT_NAME, subject.name)
     return this
 }
@@ -37,7 +37,7 @@ inline val Bundle.audioDuration
     get() = this.getLong(KEY_AUDIO_DURATION)
 
 inline val Bundle.audioDate
-    get() = this.getString(KEY_AUDIO_DATE)
+    get() = this.getLong(KEY_AUDIO_DATE)
 
 inline val Bundle.subjectName
     get() = this.getString(KEY_SUBJECT_NAME) ?: ""
