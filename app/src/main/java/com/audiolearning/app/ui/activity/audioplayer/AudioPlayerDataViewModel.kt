@@ -13,10 +13,10 @@ import androidx.lifecycle.Observer
 import com.audiolearning.app.R
 import com.audiolearning.app.extension.currentPlaybackPosition
 import com.audiolearning.app.extension.date
-import com.audiolearning.app.extension.displaySubtitle
 import com.audiolearning.app.extension.duration
 import com.audiolearning.app.extension.id
 import com.audiolearning.app.extension.isPlaying
+import com.audiolearning.app.extension.subject
 import com.audiolearning.app.extension.title
 import com.audiolearning.app.service.audioplayer.AudioPlayerServiceConnection
 import com.audiolearning.app.service.audioplayer.EMPTY_PLAYBACK_STATE
@@ -28,7 +28,7 @@ class AudioPlayerDataViewModel @ViewModelInject constructor(
     audioPlayerServiceConnection: AudioPlayerServiceConnection
 ) : AndroidViewModel(context as Application) {
     data class AudioMetaData(
-        val id: String,
+        val id: Int,
         val title: String?,
         val subtitle: String?,
         val duration: Long,
@@ -70,11 +70,11 @@ class AudioPlayerDataViewModel @ViewModelInject constructor(
     ) {
         if (mediaMetadata.duration != 0L && mediaMetadata.id != null) {
             val audioMetaData = AudioMetaData(
-                mediaMetadata.id!!,
-                mediaMetadata.title?.trim(),
-                mediaMetadata.displaySubtitle?.trim(),
+                mediaMetadata.id!!.toInt(),
+                mediaMetadata.title,
+                mediaMetadata.subject,
                 mediaMetadata.duration,
-                mediaMetadata.date?.trim()
+                mediaMetadata.date
             )
 
             this.mediaMetaData.postValue(audioMetaData)

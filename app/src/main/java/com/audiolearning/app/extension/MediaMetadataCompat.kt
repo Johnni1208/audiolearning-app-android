@@ -19,7 +19,7 @@ inline val MediaMetadataCompat.title: String?
     get() = getString(MediaMetadataCompat.METADATA_KEY_TITLE)
 
 inline val MediaMetadataCompat.mediaUri: Uri
-    get() = this.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI).toUri()
+    get() = getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI).toUri()
 
 inline val MediaMetadataCompat.duration
     get() = getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
@@ -27,7 +27,7 @@ inline val MediaMetadataCompat.duration
 inline val MediaMetadataCompat.date: String?
     get() = getString(MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION)
 
-inline val MediaMetadataCompat.displaySubtitle: String?
+inline val MediaMetadataCompat.subject: String?
     get() = getString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE)
 
 /**
@@ -88,18 +88,18 @@ inline var MediaMetadataCompat.Builder.displayTitle: String?
         putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, value)
     }
 
-inline var MediaMetadataCompat.Builder.displaySubtitle: String?
+inline var MediaMetadataCompat.Builder.subject: String?
     @Deprecated(NO_GET, level = DeprecationLevel.ERROR)
     get() = throw IllegalAccessException(ERROR_CANNOT_GET)
     set(value) {
         putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, value)
     }
 
-inline var MediaMetadataCompat.Builder.date: String?
+inline var MediaMetadataCompat.Builder.date: String
     @Deprecated(NO_GET, level = DeprecationLevel.ERROR)
     get() = throw IllegalAccessException(ERROR_CANNOT_GET)
     set(value) {
-        // We need to put it into the description, since MediaMetadataCompat.METADATA_KEY_DATE cannot be get afterwards
+        // We need to put the date into the description, since MediaMetadataCompat.METADATA_KEY_DATE cannot be get afterwards
         putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION, value)
     }
 
@@ -137,7 +137,7 @@ fun MediaMetadataCompat.Builder.from(bundle: Bundle): MediaMetadataCompat.Builde
     date = bundle.audioDate.toFormattedDate()
 
     displayTitle = bundle.audioName
-    displaySubtitle = bundle.subjectName
+    subject = bundle.subjectName
 
     // Return this Builder instance, to further work with it
     return this

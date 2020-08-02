@@ -15,6 +15,7 @@ import com.audiolearning.app.extension.isPausing
 import com.audiolearning.app.extension.isPlayEnabled
 import com.audiolearning.app.extension.isPlaying
 import com.audiolearning.app.extension.isPrepared
+import com.audiolearning.app.notification.SKIP_TIME
 import com.audiolearning.app.service.audioplayer.AudioPlayerServiceConnection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -27,14 +28,13 @@ class AudioPlayerControlsViewModel @ViewModelInject constructor(
 ) : ViewModel() {
     suspend fun playAudio(audio: Audio) {
         val nowPlaying = audioPlayerServiceConnection.nowPlaying.value
-        val transportControls = audioPlayerServiceConnection.transportControls
 
         val isPrepared = audioPlayerServiceConnection.playBackState.value?.isPrepared ?: false
-        if (isPrepared && audio.id!! == nowPlaying?.id?.toInt()) {
+        if (isPrepared && audio.id == nowPlaying?.id?.toInt()) {
             audioPlayerServiceConnection.playBackState.value?.let { playbackState ->
                 when {
-                    playbackState.isPausing -> transportControls.pause()
-                    playbackState.isPlayEnabled -> transportControls.play()
+                    playbackState.isPausing -> audioPlayerServiceConnection.transportControls.pause()
+                    playbackState.isPlayEnabled -> audioPlayerServiceConnection.transportControls.play()
                     else -> {
                         Timber.w(
                             """Playable item clicked but neither play nor pause are enabled! (mediaId=${audio.id})"""
@@ -45,23 +45,22 @@ class AudioPlayerControlsViewModel @ViewModelInject constructor(
         } else {
             val subject = getSubjectById(audio.subjectId)
 
-            transportControls.playFromUri(
+            audioPlayerServiceConnection.transportControls.playFromUri(
                 audio.fileUriString.toUri(),
                 Bundle().from(audio, subject)
             )
         }
     }
 
-    suspend fun playAudioId(audioId: String) {
+    suspend fun playAudioId(audioId: Int) {
         val nowPlaying = audioPlayerServiceConnection.nowPlaying.value
-        val transportControls = audioPlayerServiceConnection.transportControls
 
         val isPrepared = audioPlayerServiceConnection.playBackState.value?.isPrepared ?: false
-        if (isPrepared && audioId == nowPlaying?.id) {
+        if (isPrepared && audioId == nowPlaying?.id?.toInt()) {
             audioPlayerServiceConnection.playBackState.value?.let { playbackState ->
                 when {
-                    playbackState.isPlaying -> transportControls.pause()
-                    playbackState.isPlayEnabled -> transportControls.play()
+                    playbackState.isPlaying -> audioPlayerServiceConnection.transportControls.pause()
+                    playbackState.isPlayEnabled -> audioPlayerServiceConnection.transportControls.play()
                     else -> {
                         Timber.w(
                             "Playable item clicked but neither play nor pause are enabled! (mediaId=$audioId)"
@@ -70,28 +69,26 @@ class AudioPlayerControlsViewModel @ViewModelInject constructor(
                 }
             }
         } else {
-            val audio = getAudioById(audioId.toInt())
+            val audio = getAudioById(audioId)
             val subject = getSubjectById(audio.subjectId)
 
-            transportControls.playFromUri(
+            audioPlayerServiceConnection.transportControls.playFromUri(
                 audio.fileUriString.toUri(),
                 Bundle().from(audio, subject)
             )
         }
     }
 
-    fun stop() {
-        audioPlayerServiceConnection.transportControls.stop()
-    }
+    fun stop() = audioPlayerServiceConnection.transportControls.stop()
 
     fun fastForward() {
         var seekTime = audioPlayerServiceConnection.playBackState.value
-            ?.currentPlaybackPosition?.plus(SEEK_TIME) ?: 0
+            ?.currentPlaybackPosition?.plus(SKIP_TIME) ?: 0
 
         val audioDuration = audioPlayerServiceConnection.nowPlaying.value?.duration ?: 0
 
         if (seekTime > audioDuration) {
-            seekTime = audioDuration - 1000
+            seekTime = audioDuration - ONE_SECOND
         }
 
         audioPlayerServiceConnection.transportControls.seekTo(seekTime)
@@ -99,7 +96,7 @@ class AudioPlayerControlsViewModel @ViewModelInject constructor(
 
     fun rewind() {
         var seekTime = audioPlayerServiceConnection.playBackState.value
-            ?.currentPlaybackPosition?.minus(SEEK_TIME) ?: 0
+            ?.currentPlaybackPosition?.minus(SKIP_TIME) ?: 0
 
         if (seekTime < 0) seekTime = 0
 
@@ -120,4 +117,4 @@ class AudioPlayerControlsViewModel @ViewModelInject constructor(
     }
 }
 
-private const val SEEK_TIME = 10000
+private const val ONE_SECOND = 1000

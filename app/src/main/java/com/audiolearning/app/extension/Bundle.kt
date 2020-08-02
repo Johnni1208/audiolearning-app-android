@@ -12,7 +12,7 @@ const val KEY_AUDIO_DATE = "bundleKeyAudioDate"
 const val KEY_SUBJECT_NAME = "bundleKeySubjectName"
 
 /**
- * Create a bundle from an [Audio] and a [Subject].
+ * Create a bundle from an [Audio] and a [Subject] (not all properties of subject, only name).
  */
 fun Bundle.from(audio: Audio, subject: Subject): Bundle {
     putString(KEY_AUDIO_ID, audio.id.toString())

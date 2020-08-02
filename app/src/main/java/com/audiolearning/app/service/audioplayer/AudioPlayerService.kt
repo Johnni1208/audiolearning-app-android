@@ -34,7 +34,7 @@ class AudioPlayerService : MediaBrowserServiceCompat() {
     private lateinit var mediaSessionConnector: MediaSessionConnector
 
     private val audioPlayerAttributes = AudioAttributes.Builder()
-        .setContentType(C.CONTENT_TYPE_MUSIC)
+        .setContentType(C.CONTENT_TYPE_SPEECH)
         .setUsage(C.USAGE_MEDIA)
         .build()
     private val playerListener = ExoPlayerEventListener()
@@ -162,6 +162,7 @@ class AudioPlayerService : MediaBrowserServiceCompat() {
                     Timber.e("TYPE_SOURCE: ${error.sourceException.message}")
                 }
             }
+
             Toast.makeText(
                 applicationContext,
                 R.string.generic_error,
@@ -195,6 +196,10 @@ class AudioPlayerService : MediaBrowserServiceCompat() {
         }
     }
 
+    /**
+     * Only used to attach MediaDescription to the session, so it can by handled
+     * by per example the notification.
+     */
     private inner class SingleItemQueueNavigator(mediaSession: MediaSessionCompat) :
         TimelineQueueNavigator(mediaSession) {
         override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat =

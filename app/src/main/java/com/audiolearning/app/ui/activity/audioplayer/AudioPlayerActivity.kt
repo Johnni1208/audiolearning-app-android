@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AudioPlayerActivity : AppCompatActivity() {
-    private val audioPlayerDataViewModel: AudioPlayerDataViewModel by viewModels()
-    private val audioPlayerControlsViewModel: AudioPlayerControlsViewModel by viewModels()
+    private val dataViewModel: AudioPlayerDataViewModel by viewModels()
+    private val controlsViewModel: AudioPlayerControlsViewModel by viewModels()
     private lateinit var binding: ActivityAudioPlayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,31 +25,31 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_audio_player)
         binding.lifecycleOwner = this
-        binding.dataViewModel = audioPlayerDataViewModel
-        binding.controlsViewModel = audioPlayerControlsViewModel
+        binding.dataViewModel = dataViewModel
+        binding.controlsViewModel = controlsViewModel
 
-        audioPlayerDataViewModel.mediaButtonRes.observe(this, Observer { res ->
+        dataViewModel.mediaButtonRes.observe(this, Observer { res ->
             binding.btnPlayPauseAudio.setImageResource(res)
         })
 
         binding.btnPlayPauseAudio.setOnClickListener {
-            audioPlayerDataViewModel.mediaMetaData.value?.let {
-                MainScope().launch { audioPlayerControlsViewModel.playAudioId(it.id) }
+            dataViewModel.mediaMetaData.value?.let {
+                MainScope().launch { controlsViewModel.playAudioId(it.id) }
             }
         }
 
-        audioPlayerDataViewModel.mediaPosition.observe(this, Observer { pos ->
+        dataViewModel.mediaPosition.observe(this, Observer { pos ->
             binding.tvCurrentAudioPosition.text = pos.toTimeString()
             binding.seekBar.progress = pos.toInt()
         })
 
-        audioPlayerDataViewModel.mediaMetaData.observe(this, Observer { data ->
+        dataViewModel.mediaMetaData.observe(this, Observer { data ->
             binding.seekBar.max = data.duration.toInt()
             binding.tvDuration.text = data.duration.toTimeString()
         })
 
-        setupSeekBar()
         setupToolbar()
+        setupSeekBar()
     }
 
     private fun setupToolbar() {
@@ -63,8 +63,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     private fun setupSeekBar() {
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) audioPlayerControlsViewModel.seekTo(progress.toLong())
-
+                if (fromUser) controlsViewModel.seekTo(progress.toLong())
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {

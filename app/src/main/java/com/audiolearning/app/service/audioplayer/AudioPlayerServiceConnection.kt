@@ -7,6 +7,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.MutableLiveData
+import com.audiolearning.app.extension.id
 
 class AudioPlayerServiceConnection(context: Context, serviceComponent: ComponentName) {
     val playBackState = MutableLiveData<PlaybackStateCompat>().apply {
@@ -44,7 +45,7 @@ class AudioPlayerServiceConnection(context: Context, serviceComponent: Component
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
             nowPlaying.postValue(
-                if (metadata?.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID) == null) {
+                if (metadata?.id.isNullOrBlank()) {
                     NOTHING_PLAYING
                 } else {
                     metadata

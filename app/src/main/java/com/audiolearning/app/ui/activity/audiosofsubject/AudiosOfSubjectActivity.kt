@@ -137,7 +137,7 @@ class AudiosOfSubjectActivity : AppCompatActivity(),
     }
 
     override fun onItemClick(item: Audio) {
-        runBlocking {
+        MainScope().launch {
             audioPlayerControlsViewModel.playAudio(item)
         }
 
