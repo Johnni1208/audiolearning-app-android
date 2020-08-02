@@ -105,7 +105,6 @@ class AudioPlayerControlsViewModel @ViewModelInject constructor(
 
     fun seekTo(seekTime: Long) = audioPlayerServiceConnection.transportControls.seekTo(seekTime)
 
-
     private suspend fun getAudioById(id: Int) = withContext(Dispatchers.IO) {
         return@withContext audioRepository.getAudioById(id)
             ?: throw IllegalArgumentException("No audio with id: $id")
