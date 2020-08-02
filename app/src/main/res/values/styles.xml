@@ -37,4 +37,10 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">20sp</item>
     </style>
+
+    <style name="seekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressBackgroundTint">@color/colorPrimary700Lighter</item>
+        <item name="android:progressTint">@color/colorPrimary700</item>
+        <item name="android:thumbTint">@color/colorPrimary700</item>
+    </style>
 </resources>

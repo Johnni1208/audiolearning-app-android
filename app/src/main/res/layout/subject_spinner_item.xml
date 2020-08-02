@@ -9,5 +9,5 @@
     android:padding="16dp"
     android:singleLine="true"
     android:textAlignment="inherit"
-    android:textColor="@color/colorText"
+    android:textColor="@color/colorTextPrimary"
     android:textSize="18sp" />

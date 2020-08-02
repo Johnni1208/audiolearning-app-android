@@ -1,8 +1,8 @@
 package com.audiolearning.app.util.file
 
 import android.net.Uri
-import android.util.Log
 import com.audiolearning.app.data.db.entities.Audio
+import timber.log.Timber
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -56,9 +56,9 @@ object AudioFileUtils {
             // delete old file
             sourceFile.delete()
         } catch (fileNotFoundException: FileNotFoundException) {
-            Log.e("tag", fileNotFoundException.message!!)
+            Timber.e(fileNotFoundException.message!!)
         } catch (e: Exception) {
-            Log.e("tag", e.message!!)
+            Timber.e(e.message!!)
         }
     }
 

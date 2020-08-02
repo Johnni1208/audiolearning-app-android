@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="request_code_nrDialog_discard_recording">1</integer>
-    <integer name="request_code_subjectFragment_delete_subject">2</integer>
-    <integer name="request_code_audiosOfSubjectsActivity_delete_audios">3</integer>
+    <integer name="request_code_nrDialog_discard_recording">0xE002</integer>
+    <integer name="request_code_subjectFragment_delete_subject">0x169F0</integer>
+    <integer name="request_code_audiosOfSubjectsActivity_delete_audios">0x135F1</integer>
 </resources>

@@ -1,11 +1,14 @@
 package com.audiolearning.app.di
 
+import android.content.ComponentName
 import android.content.Context
 import com.audiolearning.app.audio.recorder.AudioRecorder
 import com.audiolearning.app.data.db.AudioLearningDatabase
 import com.audiolearning.app.data.db.entities.Audio
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.data.store.SelectedEntityStore
+import com.audiolearning.app.service.audioplayer.AudioPlayerService
+import com.audiolearning.app.service.audioplayer.AudioPlayerServiceConnection
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,4 +39,12 @@ object AppModule {
     @Singleton
     @Provides
     fun provideFilesDir(@ApplicationContext context: Context): File = context.filesDir
+
+    @Singleton
+    @Provides
+    fun provideAudioPlayerServiceConnection(@ApplicationContext context: Context) =
+        AudioPlayerServiceConnection(
+            context,
+            ComponentName(context, AudioPlayerService::class.java)
+        )
 }

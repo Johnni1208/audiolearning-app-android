@@ -8,18 +8,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val ERROR_TIMER_NOT_BEEN_STARTED = "Timer has not been started."
+private const val ERROR_TIMER_ALREADY_STARTED = "Timer already started."
+private const val ERROR_TIMER_ALREADY_PAUSED = "Timer already paused."
+private const val ERROR_TIMER_NOT_BEEN_PAUSED = "Timer has not been paused."
+
 /**
  * This class provides a Timer which counts up.
  * Only usable with Android LiveData.
  */
 class Timer @Inject constructor() {
-    companion object {
-        private const val ERROR_TIMER_NOT_BEEN_STARTED = "Timer has not been started."
-        private const val ERROR_TIMER_ALREADY_STARTED = "Timer already started."
-        private const val ERROR_TIMER_ALREADY_PAUSED = "Timer already paused."
-        private const val ERROR_TIMER_NOT_BEEN_PAUSED = "Timer has not been paused."
-    }
-
     private val _time =
         TimeMutableLiveData()
     val time: LiveData<String>

@@ -14,6 +14,17 @@
     <string name="error_missing_info">Cannot be left blank</string>
     <string name="error_contains_not_allowed_character">Cannot contain |\u005c?*&lt;\u0022:>/\'.</string>
     <string name="error_subject_already_exists">Subject already exists</string>
+    <string name="generic_error">The application has encountered an error</string>
+
+    <!-- Content Descriptions -->
+    <string name="desc_play_pause_audio">Play or pause the audio</string>
+    <string name="desc_fast_forward">Fast-Forward 10 seconds</string>
+    <string name="desc_rewind">Rewind 10 seconds</string>
+
+    <!-- AudioNotification Constants -->
+    <string name="audio_notification_channel_id">com.audiolearning.app.audio.notification.LEARNING</string>
+    <string name="audio_notification_name">Now playing</string>
+    <string name="audio_notification_description">Shows what Learning is currently played by AudioLearning</string>
 
     <!-- Texts for recording buttons -->
     <string name="record_text">Record</string>

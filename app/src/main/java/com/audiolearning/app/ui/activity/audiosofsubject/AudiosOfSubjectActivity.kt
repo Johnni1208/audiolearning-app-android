@@ -20,6 +20,7 @@ import com.audiolearning.app.exception.MissingArgumentException
 import com.audiolearning.app.extension.hide
 import com.audiolearning.app.extension.show
 import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerActivity
+import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerControlsViewModel
 import com.audiolearning.app.ui.dialog.genericyesno.DialogDataReceiver
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialog
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialogTexts
@@ -36,6 +37,7 @@ class AudiosOfSubjectActivity : AppCompatActivity(),
     private var dialogRequestCode: Int = 0 // lateinit
 
     private val viewModel: AudiosOfSubjectActivityViewModel by viewModels()
+    private val audioPlayerControlsViewModel: AudioPlayerControlsViewModel by viewModels()
     private lateinit var binding: ActivityAudiosOfSubjectBinding
 
     companion object {
@@ -135,8 +137,11 @@ class AudiosOfSubjectActivity : AppCompatActivity(),
     }
 
     override fun onItemClick(item: Audio) {
+        MainScope().launch {
+            audioPlayerControlsViewModel.playAudio(item)
+        }
+
         Intent(applicationContext, AudioPlayerActivity::class.java).apply {
-            putExtra(AudioPlayerActivity.EXTRA_AUDIO_ID, item.id)
             startActivity(this)
         }
     }
