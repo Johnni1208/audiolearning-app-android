@@ -6,7 +6,7 @@ import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.data.repositories.AudioRepository
 import com.audiolearning.app.data.repositories.SubjectRepository
 import com.audiolearning.app.data.store.SelectedEntityStore
-import com.audiolearning.app.ui.activity.audiosofsubject.AudiosOfSubjectActivityViewModel
+import com.audiolearning.app.ui.fragment.audiosofsubject.AudiosOfSubjectActivityViewModel
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -17,7 +17,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class AudiosOfSubjectActivityViewModelTest {
+class AudiosOfSubjectFragmentViewModelTest {
     @get:Rule
     val instantExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
@@ -32,11 +32,12 @@ class AudiosOfSubjectActivityViewModelTest {
     @Before
     fun setup() {
         selectedRecordingStore = SelectedEntityStore()
-        viewModel = AudiosOfSubjectActivityViewModel(
-            mockSubjectsRepository,
-            mockAudioRepository,
-            selectedRecordingStore
-        )
+        viewModel =
+            AudiosOfSubjectActivityViewModel(
+                mockSubjectsRepository,
+                mockAudioRepository,
+                selectedRecordingStore
+            )
     }
 
     @Test

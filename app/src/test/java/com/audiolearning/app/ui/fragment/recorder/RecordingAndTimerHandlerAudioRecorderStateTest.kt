@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.audiolearning.app.audio.recorder.AudioRecorder
 import com.audiolearning.app.audio.recorder.AudioRecorderState
 import com.audiolearning.app.timer.Timer
+import com.audiolearning.app.ui.fragment.pager.recorder.RecordingAndTimerHandler
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert.assertEquals

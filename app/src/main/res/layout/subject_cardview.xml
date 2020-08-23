@@ -23,6 +23,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:contentDescription="Check icon"
-        android:src="@drawable/ic_check_circle_24dp"
+        android:src="@drawable/ic_check_circle"
         tools:ignore="HardcodedText" />
 </com.google.android.material.card.MaterialCardView>

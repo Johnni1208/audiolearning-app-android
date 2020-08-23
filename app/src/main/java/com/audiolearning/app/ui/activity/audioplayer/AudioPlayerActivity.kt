@@ -5,7 +5,6 @@ import android.widget.SeekBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import com.audiolearning.app.R
 import com.audiolearning.app.databinding.ActivityAudioPlayerBinding
 import com.audiolearning.app.extension.toTimeString
@@ -28,7 +27,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding.dataViewModel = dataViewModel
         binding.controlsViewModel = controlsViewModel
 
-        dataViewModel.mediaButtonRes.observe(this, Observer { res ->
+        dataViewModel.mediaButtonRes.observe(this, { res ->
             binding.btnPlayPauseAudio.setImageResource(res)
         })
 
@@ -38,12 +37,12 @@ class AudioPlayerActivity : AppCompatActivity() {
             }
         }
 
-        dataViewModel.mediaPosition.observe(this, Observer { pos ->
+        dataViewModel.mediaPosition.observe(this, { pos ->
             binding.tvCurrentAudioPosition.text = pos.toTimeString()
             binding.seekBar.progress = pos.toInt()
         })
 
-        dataViewModel.mediaMetaData.observe(this, Observer { data ->
+        dataViewModel.mediaMetaData.observe(this, { data ->
             binding.seekBar.max = data.duration.toInt()
             binding.tvDuration.text = data.duration.toTimeString()
         })
@@ -56,7 +55,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         setSupportActionBar(binding.tbAudioPlayer)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.tbAudioPlayer.setNavigationIcon(R.drawable.ic_baseline_keyboard_arrow_down_24dp)
+        binding.tbAudioPlayer.setNavigationIcon(R.drawable.ic_arrow_down)
         binding.tbAudioPlayer.setNavigationOnClickListener { onBackPressed() }
     }
 

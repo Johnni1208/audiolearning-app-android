@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.audiolearning.app.ui.fragment.home.HomeFragment"
+        android:label="HomeFragment">
+        <action
+            android:id="@+id/action_homeFragment_to_audiosOfSubjectActivity"
+            app:destination="@id/audiosOfSubjectFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/bit_slide_to_left"
+            app:popEnterAnim="@anim/bit_slide_from_left"
+            app:popExitAnim="@anim/exit_to_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/audiosOfSubjectFragment"
+        android:name="com.audiolearning.app.ui.fragment.audiosofsubject.AudiosOfSubjectFragment"
+        android:label="fragment_audios_of_subject"
+        tools:layout="@layout/fragment_audios_of_subject">
+        <argument
+            android:name="SUBJECT_ID"
+            app:argType="integer" />
+    </fragment>
+
+</navigation>

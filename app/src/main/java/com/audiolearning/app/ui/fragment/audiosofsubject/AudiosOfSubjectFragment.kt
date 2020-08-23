@@ -1,22 +1,24 @@
-package com.audiolearning.app.ui.activity.audiosofsubject
+package com.audiolearning.app.ui.fragment.audiosofsubject
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiolearning.app.R
 import com.audiolearning.app.adapter.AdapterDataEvent
 import com.audiolearning.app.adapter.recycler.selectable.AudiosRecyclerViewAdapter
 import com.audiolearning.app.adapter.recycler.selectable.base.ItemSelectListener
 import com.audiolearning.app.data.db.entities.Audio
-import com.audiolearning.app.databinding.ActivityAudiosOfSubjectBinding
-import com.audiolearning.app.exception.MissingArgumentException
+import com.audiolearning.app.databinding.FragmentAudiosOfSubjectBinding
 import com.audiolearning.app.extension.hide
 import com.audiolearning.app.extension.show
 import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerActivity
@@ -31,24 +33,28 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
-class AudiosOfSubjectActivity : AppCompatActivity(),
+class AudiosOfSubjectFragment : Fragment(),
     ItemSelectListener<Audio>,
     DialogDataReceiver {
     private var dialogRequestCode: Int = 0 // lateinit
 
+    private val args: AudiosOfSubjectFragmentArgs by navArgs()
+
     private val viewModel: AudiosOfSubjectActivityViewModel by viewModels()
     private val audioPlayerControlsViewModel: AudioPlayerControlsViewModel by viewModels()
-    private lateinit var binding: ActivityAudiosOfSubjectBinding
+    private lateinit var binding: FragmentAudiosOfSubjectBinding
 
-    companion object {
-        const val EXTRA_SUBJECT_ID = "extra_subject_id"
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left)
-
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_audios_of_subject)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_audios_of_subject,
+            container,
+            false
+        )
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
@@ -59,28 +65,82 @@ class AudiosOfSubjectActivity : AppCompatActivity(),
         setupToolbar()
         setupEmptyStateMessage()
         setupRecyclerView()
+
+        return binding.root
     }
 
-    private fun setupSubject() = runBlocking {
-        viewModel.setSubject(
-            intent.extras?.getInt(EXTRA_SUBJECT_ID)
-                ?: throw MissingArgumentException(EXTRA_SUBJECT_ID)
+    private fun setupSubject() = runBlocking { viewModel.setSubject(args.SUBJECTID) }
+
+    private fun setupToolbar() {
+        binding.tbAudiosOfSubject.title = ""
+        binding.ctb.title = viewModel.subject.value?.name
+
+        // Change title if items are selected
+        viewModel.selectedAudiosList.observe(viewLifecycleOwner, { list ->
+            if (list.isNotEmpty()) {
+                binding.tbAudiosOfSubject.setNavigationIcon(R.drawable.ic_cross)
+                binding.ctb.title = list.size.toString()
+            } else {
+                binding.tbAudiosOfSubject.setNavigationIcon(R.drawable.ic_arrow_back)
+                binding.ctb.title = viewModel.subject.value?.name
+            }
+        })
+
+        // Change visibility of menu
+        binding.tbAudiosOfSubject.inflateMenu(R.menu.delete_menu)
+        val deleteItem = binding.tbAudiosOfSubject.menu.findItem(R.id.menu_item_delete)
+        viewModel.selectedAudiosList.observe(viewLifecycleOwner, { list ->
+            deleteItem?.isVisible = list.isNotEmpty()
+        })
+
+        // Handle Nav Icon click
+        binding.tbAudiosOfSubject.setNavigationOnClickListener {
+            if (viewModel.selectedAudiosList.value!!.isNotEmpty()) {
+                deselectAllAudios()
+            } else findNavController().navigateUp()
+        }
+
+        // Handle Menu Item clicks
+        binding.tbAudiosOfSubject.setOnMenuItemClickListener { item ->
+            if (item.itemId == R.id.menu_item_delete) {
+                requestDeletionOfSelectedAudios()
+                return@setOnMenuItemClickListener true
+            }
+
+            return@setOnMenuItemClickListener false
+        }
+    }
+
+    private fun deselectAllAudios() {
+        if (viewModel.selectedAudiosList.value?.size!! == 0) return
+
+        viewModel.deselectAllAudios()
+
+        // Update RecyclerView items
+        (binding.rvAudios.adapter as AudiosRecyclerViewAdapter).apply {
+            notifyItemRangeChanged(0, this.itemCount)
+        }
+    }
+
+    private fun requestDeletionOfSelectedAudios() {
+        val deleteAudiosDialogText =
+            GenericYesNoDialogTexts(
+                getString(R.string.daDialog_title),
+                getString(R.string.daDialog_message),
+                getString(R.string.delete),
+                getString(R.string.cancel)
+            )
+
+        GenericYesNoDialog.display(
+            parentFragmentManager,
+            deleteAudiosDialogText,
+            this,
+            dialogRequestCode
         )
     }
 
-    private fun setupToolbar() {
-        setSupportActionBar(binding.tbAudiosOfSubject)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        viewModel.selectedAudiosList.observe(this, Observer { list ->
-            if (list.isNotEmpty()) binding.tbAudiosOfSubject.setNavigationIcon(R.drawable.ic_cross_24dp)
-            else binding.tbAudiosOfSubject.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24dp)
-        })
-    }
-
     private fun setupEmptyStateMessage() {
-        viewModel.audios.observe(this, Observer { audios: List<Audio> ->
+        viewModel.audios.observe(viewLifecycleOwner, Observer { audios: List<Audio> ->
             if (audios.isEmpty()) {
                 binding.tvNoAudios.show()
 
@@ -101,7 +161,7 @@ class AudiosOfSubjectActivity : AppCompatActivity(),
             )
 
         // Update adapters data
-        viewModel.audios.observe(this, Observer { audios: List<Audio> ->
+        viewModel.audios.observe(viewLifecycleOwner, { audios: List<Audio> ->
             if (audioAdapter.isDataInitialized) {
                 when (audioAdapter.updateData(audios)) {
                     AdapterDataEvent.ITEMS_ADDED ->
@@ -115,8 +175,8 @@ class AudiosOfSubjectActivity : AppCompatActivity(),
 
         // Update selecting state
         viewModel.selectedAudiosList.observe(
-            this,
-            Observer { selectedAudiosList: ArrayList<Audio> ->
+            viewLifecycleOwner,
+            { selectedAudiosList: ArrayList<Audio> ->
                 audioAdapter.isSelecting = selectedAudiosList.isNotEmpty()
             }
         )
@@ -141,61 +201,9 @@ class AudiosOfSubjectActivity : AppCompatActivity(),
             audioPlayerControlsViewModel.playAudio(item)
         }
 
-        Intent(applicationContext, AudioPlayerActivity::class.java).apply {
+        Intent(context, AudioPlayerActivity::class.java).apply {
             startActivity(this)
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.delete_menu, menu)
-
-        // Show / Hide deleteIcon, whether there are selected items or not
-        val deleteItem = menu?.findItem(R.id.menu_item_delete)
-        viewModel.selectedAudiosList.observe(this, Observer { list ->
-            deleteItem?.isVisible = list.isNotEmpty()
-        })
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                if (viewModel.selectedAudiosList.value!!.isNotEmpty()) {
-                    deselectAllAudios()
-                } else onBackPressed()
-            }
-
-            R.id.menu_item_delete -> requestDeletionOfSelectedAudios()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun deselectAllAudios() {
-        if (viewModel.selectedAudiosList.value?.size!! == 0) return
-
-        viewModel.deselectAllAudios()
-
-        // Update RecyclerView items
-        (binding.rvAudios.adapter as AudiosRecyclerViewAdapter).apply {
-            notifyItemRangeChanged(0, this.itemCount)
-        }
-    }
-
-    private fun requestDeletionOfSelectedAudios() {
-        val deleteAudiosDialogText =
-            GenericYesNoDialogTexts(
-                getString(R.string.daDialog_title),
-                getString(R.string.daDialog_message),
-                getString(R.string.delete),
-                getString(R.string.cancel)
-            )
-
-        GenericYesNoDialog.display(
-            supportFragmentManager,
-            deleteAudiosDialogText,
-            this,
-            dialogRequestCode
-        )
     }
 
     override fun onDialogResult(requestCode: Int, resultCode: Int) {
@@ -206,10 +214,5 @@ class AudiosOfSubjectActivity : AppCompatActivity(),
                 viewModel.deleteAllSelectedAudios()
             }
         }
-    }
-
-    override fun finish() {
-        super.finish()
-        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right)
     }
 }

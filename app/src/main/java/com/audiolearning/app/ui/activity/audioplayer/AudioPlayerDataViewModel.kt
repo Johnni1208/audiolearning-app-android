@@ -40,7 +40,7 @@ class AudioPlayerDataViewModel @ViewModelInject constructor(
         postValue(0L)
     }
     val mediaButtonRes = MutableLiveData<Int>().apply {
-        postValue(R.drawable.ic_play_arrow_24dp)
+        postValue(R.drawable.ic_play)
     }
 
     private var playbackState: PlaybackStateCompat = EMPTY_PLAYBACK_STATE
@@ -69,31 +69,35 @@ class AudioPlayerDataViewModel @ViewModelInject constructor(
         mediaMetadata: MediaMetadataCompat
     ) {
         if (mediaMetadata.duration != 0L && mediaMetadata.id != null) {
-            val audioMetaData = AudioMetaData(
-                mediaMetadata.id!!.toInt(),
-                mediaMetadata.title,
-                mediaMetadata.subject,
-                mediaMetadata.duration,
-                mediaMetadata.date
-            )
+            val audioMetaData =
+                AudioMetaData(
+                    mediaMetadata.id!!.toInt(),
+                    mediaMetadata.title,
+                    mediaMetadata.subject,
+                    mediaMetadata.duration,
+                    mediaMetadata.date
+                )
 
             this.mediaMetaData.postValue(audioMetaData)
         }
 
         mediaButtonRes.postValue(
             when (playbackState.isPlaying) {
-                true -> R.drawable.ic_pause_24dp
-                else -> R.drawable.ic_play_arrow_24dp
+                true -> R.drawable.ic_pause
+                else -> R.drawable.ic_play
             }
         )
     }
 
-    private fun checkPlaybackPosition(): Boolean = handler.postDelayed({
-        val currPosition = playbackState.currentPlaybackPosition
-        if (mediaPosition.value != currPosition) mediaPosition.postValue(currPosition)
+    private fun checkPlaybackPosition(): Boolean = handler.postDelayed(
+        {
+            val currPosition = playbackState.currentPlaybackPosition
+            if (mediaPosition.value != currPosition) mediaPosition.postValue(currPosition)
 
-        if (updatePosition) checkPlaybackPosition()
-    }, POSITION_UPDATE_INTERVAL_MILLIS)
+            if (updatePosition) checkPlaybackPosition()
+        },
+        POSITION_UPDATE_INTERVAL_MILLIS
+    )
 
     override fun onCleared() {
         super.onCleared()

@@ -1,7 +1,6 @@
-package com.audiolearning.app.ui.fragment.subjects
+package com.audiolearning.app.ui.fragment.pager.subjects
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,35 +8,35 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.audiolearning.app.R
 import com.audiolearning.app.adapter.AdapterDataEvent
 import com.audiolearning.app.adapter.recycler.selectable.SubjectsRecyclerViewAdapter
 import com.audiolearning.app.adapter.recycler.selectable.base.ItemSelectListener
 import com.audiolearning.app.data.db.entities.Subject
-import com.audiolearning.app.databinding.FragmentSubjectsBinding
+import com.audiolearning.app.databinding.PagerFragmentSubjectsBinding
 import com.audiolearning.app.extension.hide
 import com.audiolearning.app.extension.show
-import com.audiolearning.app.ui.activity.MainActivityToolBarChangeListener
-import com.audiolearning.app.ui.activity.audiosofsubject.AudiosOfSubjectActivity
 import com.audiolearning.app.ui.dialog.createnewsubject.CreateNewSubjectDialog
 import com.audiolearning.app.ui.dialog.genericyesno.DialogDataReceiver
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialog
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialogTexts
+import com.audiolearning.app.ui.fragment.home.HomeFragmentDirections
+import com.audiolearning.app.ui.fragment.home.HomeToolBarChangeListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarChangeListener) :
+class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChangeListener) :
     Fragment(),
     ItemSelectListener<Subject>,
     DialogDataReceiver {
     private var dialogRequestCode: Int = 0 // lateinit
 
-    private val viewModel: SubjectsFragmentViewModel by viewModels()
-    private lateinit var binding: FragmentSubjectsBinding
+    private val viewModelPager: SubjectsPagerFragmentViewModel by viewModels()
+    private lateinit var binding: PagerFragmentSubjectsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,7 +45,7 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
     ): View? {
         binding = DataBindingUtil.inflate(
             inflater,
-            R.layout.fragment_subjects,
+            R.layout.pager_fragment_subjects,
             container,
             false
         )
@@ -66,7 +65,7 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
 
     private fun setupEmptyStateMessage() {
         // Updates the empty state message
-        viewModel.subjects.observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
+        viewModelPager.subjects.observe(viewLifecycleOwner, { subjects: List<Subject> ->
             if (subjects.isEmpty()) binding.tvNoSubjects.show()
             else binding.tvNoSubjects.hide()
         })
@@ -79,7 +78,7 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
             )
 
         // Update adapters data
-        viewModel.subjects.observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
+        viewModelPager.subjects.observe(viewLifecycleOwner, { subjects: List<Subject> ->
             if (subjectsAdapter.isDataInitialized) {
                 when (subjectsAdapter.updateData(subjects)) {
                     AdapterDataEvent.ITEMS_ADDED ->
@@ -92,9 +91,9 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
         })
 
         // Update selecting state
-        viewModel.selectedSubjectsList.observe(
+        viewModelPager.selectedSubjectsList.observe(
             viewLifecycleOwner,
-            Observer { selectedSubjectsList: ArrayList<Subject> ->
+            { selectedSubjectsList: ArrayList<Subject> ->
                 subjectsAdapter.isSelecting = selectedSubjectsList.isNotEmpty()
             }
         )
@@ -116,9 +115,9 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
     }
 
     private fun setupSelectedSubjectsToolbar() {
-        viewModel.selectedSubjectsList.observe(
+        viewModelPager.selectedSubjectsList.observe(
             viewLifecycleOwner,
-            Observer { selectedSubjectsList: ArrayList<Subject> ->
+            { selectedSubjectsList: ArrayList<Subject> ->
                 toolBarChangeListener.onSelectedSubjectsChange(
                     selectedSubjectsList
                 )
@@ -126,18 +125,16 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
     }
 
     override fun onItemSelect(item: Subject) {
-        viewModel.selectSubject(item)
+        viewModelPager.selectSubject(item)
     }
 
     override fun onItemDeselect(item: Subject) {
-        viewModel.deselectSubject(item)
+        viewModelPager.deselectSubject(item)
     }
 
     override fun onItemClick(item: Subject) {
-        Intent(context, AudiosOfSubjectActivity::class.java).apply {
-            putExtra(AudiosOfSubjectActivity.EXTRA_SUBJECT_ID, item.id)
-            startActivity(this)
-        }
+        val action = HomeFragmentDirections.actionHomeFragmentToAudiosOfSubjectActivity(item.id!!)
+        findNavController().navigate(action)
     }
 
     override fun onDialogResult(requestCode: Int, resultCode: Int) {
@@ -145,7 +142,7 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
 
         if (resultCode == Activity.RESULT_OK) {
             MainScope().launch {
-                viewModel.deleteAllSelectedSubjects()
+                viewModelPager.deleteAllSelectedSubjects()
             }
         }
     }
@@ -175,15 +172,15 @@ class SubjectsFragment(private val toolBarChangeListener: MainActivityToolBarCha
         GenericYesNoDialog.display(
             parentFragmentManager,
             deleteSubjectsDialogTexts,
-            this@SubjectsFragment,
+            this@SubjectsPagerFragment,
             dialogRequestCode
         )
     }
 
     fun deselectAllSubjects() {
-        if (viewModel.selectedSubjectsList.value?.size!! == 0) return
+        if (viewModelPager.selectedSubjectsList.value?.size!! == 0) return
 
-        viewModel.deselectAllSubjects()
+        viewModelPager.deselectAllSubjects()
 
         // Update RecyclerView items
         (binding.rvSubjects.adapter as SubjectsRecyclerViewAdapter).apply {

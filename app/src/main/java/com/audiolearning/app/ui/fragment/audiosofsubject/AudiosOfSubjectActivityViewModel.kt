@@ -1,4 +1,4 @@
-package com.audiolearning.app.ui.activity.audiosofsubject
+package com.audiolearning.app.ui.fragment.audiosofsubject
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
