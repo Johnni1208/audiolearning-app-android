@@ -20,6 +20,7 @@
     <string name="desc_play_pause_audio">Play or pause the audio</string>
     <string name="desc_fast_forward">Fast-Forward 10 seconds</string>
     <string name="desc_rewind">Rewind 10 seconds</string>
+    <string name="desc_open_audio_player">Open the audio player</string>
 
     <!-- AudioNotification Constants -->
     <string name="audio_notification_channel_id">com.audiolearning.app.audio.notification.LEARNING</string>

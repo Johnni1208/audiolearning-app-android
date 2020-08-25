@@ -18,6 +18,8 @@ import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.databinding.PagerFragmentSubjectsBinding
 import com.audiolearning.app.extension.hide
 import com.audiolearning.app.extension.show
+import com.audiolearning.app.extension.toDp
+import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerDataViewModel
 import com.audiolearning.app.ui.dialog.createnewsubject.CreateNewSubjectDialog
 import com.audiolearning.app.ui.dialog.genericyesno.DialogDataReceiver
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialog
@@ -36,6 +38,7 @@ class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChange
     private var dialogRequestCode: Int = 0 // lateinit
 
     private val viewModelPager: SubjectsPagerFragmentViewModel by viewModels()
+    private val audioPlayerDataViewModel: AudioPlayerDataViewModel by viewModels()
     private lateinit var binding: PagerFragmentSubjectsBinding
 
     override fun onCreateView(
@@ -112,6 +115,11 @@ class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChange
                 "SubjectsFragment"
             )
         }
+
+        // Higher when bottom-audio-bar is active
+        audioPlayerDataViewModel.mediaMetaData.observe(viewLifecycleOwner, {
+            binding.fabAddSubject.animate().translationY((-48f).toDp())
+        })
     }
 
     private fun setupSelectedSubjectsToolbar() {
