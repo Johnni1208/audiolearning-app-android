@@ -145,7 +145,6 @@ class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChange
     override fun onItemClick(item: Subject) {
         val action = HomeFragmentDirections.actionHomeFragmentToAudiosOfSubjectActivity(item.id!!)
         findNavController().navigate(action)
-
     }
 
     override fun onDialogResult(requestCode: Int, resultCode: Int) {

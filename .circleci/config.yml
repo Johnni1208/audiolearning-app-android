@@ -7,13 +7,13 @@ jobs:
   build:
     working_directory: ~/audiolearning
     executor: android/android
-        
+
     steps:
       - checkout
       - run:
           command: chmod +x ./gradlew
       - run:
-          command: ./gradlew build
+          command: ./gradlew testAndLintDebug
       - store_artifacts:
           path: app/build/reports
           destination: reports

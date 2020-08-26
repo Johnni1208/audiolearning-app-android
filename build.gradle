@@ -75,3 +75,10 @@ wrapper {
     gradleVersion = "6.1.1"
     distributionType = "all"
 }
+
+task testAndLintDebug {
+    dependsOn ':app:testDebugUnitTest'
+    dependsOn ':app:lintDebug'
+    dependsOn ':app:ktlintDebugCheck'
+    dependsOn ':app:detekt'
+}

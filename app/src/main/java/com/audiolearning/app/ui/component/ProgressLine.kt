@@ -28,7 +28,6 @@ class ProgressLine(context: Context, attrs: AttributeSet) : View(context, attrs)
         paint.color = lineColor
     }
 
-
     override fun onDraw(canvas: Canvas?) {
         canvas?.drawRect(rect, paint)
     }

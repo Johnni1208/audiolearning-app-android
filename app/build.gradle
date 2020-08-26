@@ -16,17 +16,26 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        kapt {
-            arguments {
-                arg("room.schemaLocation", "$projectDir/schemas".toString())
-                arg("room.incremental", "true")
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
+        }
+    }
+
+    signingConfigs {
+        debug {
+            storeFile = rootProject.file('debug.keystore')
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storePassword 'android'
         }
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -54,6 +63,14 @@ android {
 
     lintOptions {
         disable "NullSafeMutableLiveData"
+    }
+
+    kapt {
+        useBuildCache true
+        includeCompileClasspath = false
+    }
+    dexOptions {
+        preDexLibraries true
     }
 }
 

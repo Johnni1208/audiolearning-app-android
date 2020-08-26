@@ -31,7 +31,6 @@ class CenteredToolbar(context: Context, attrs: AttributeSet) : MaterialToolbar(c
                 addView(tv)
             }
 
-
             return tv!!
         }
 
