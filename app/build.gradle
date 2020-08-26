@@ -112,7 +112,7 @@ dependencies {
 
     // Mockito
     testImplementation "androidx.test:core-ktx:$androidx_test_version"
-    testImplementation 'org.mockito:mockito-core:2.23.0'
+    testImplementation 'org.mockito:mockito-core:3.3.3'
     androidTestImplementation 'org.mockito:mockito-android:2.7.22'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"

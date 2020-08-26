@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.lifecycleOwner = this
 
         setupBottomAudioBar()
     }
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         dataViewModel.mediaMetaData.observe(this, { metadata ->
             binding.bottomAudioBar.root.show()
             binding.bottomAudioBar.metadata = metadata
-            binding.bottomAudioBar.vDuration.max = metadata.duration.toInt()
+            binding.bottomAudioBar.plDuration.max = metadata.duration.toInt()
         })
 
         // Play-Pause-Button
@@ -53,12 +54,12 @@ class MainActivity : AppCompatActivity() {
         binding.bottomAudioBar.apply {
             val audioPlayerActivity = Intent(applicationContext, AudioPlayerActivity::class.java)
             btnOpenAudioPlayer.setOnClickListener { startActivity(audioPlayerActivity) }
-            llAudioInfo.setOnClickListener { startActivity(audioPlayerActivity) }
+            containerAudioInfo.setOnClickListener { startActivity(audioPlayerActivity) }
         }
 
         // Update progress
         dataViewModel.mediaPosition.observe(this, { pos ->
-            binding.bottomAudioBar.vDuration.progress = pos.toInt()
+            binding.bottomAudioBar.plDuration.progress = pos.toInt()
         })
     }
 
@@ -69,10 +70,10 @@ class MainActivity : AppCompatActivity() {
         binding.navHostFragment.findNavController()
             .addOnDestinationChangedListener { _, destination, _ ->
                 when (destination.id) {
-                    R.id.audiosOfSubjectFragment -> binding.bottomAudioBar.root.animate()
-                        .translationY(0f)
-                    else -> binding.bottomAudioBar.root.animate()
+                    R.id.homeFragment -> binding.bottomAudioBar.root.animate()
                         .translationY(bottomNavigationBarHeight)
+                    else -> binding.bottomAudioBar.root.animate()
+                        .translationY(0f)
                 }
             }
     }

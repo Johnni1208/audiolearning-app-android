@@ -16,7 +16,7 @@
         android:background="@color/colorGrey100">
 
         <com.audiolearning.app.ui.component.ProgressLine
-            android:id="@+id/v_duration"
+            android:id="@+id/pl_duration"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +35,7 @@
             app:srcCompat="@drawable/ic_arrow_up" />
 
         <LinearLayout
-            android:id="@+id/ll_audio_info"
+            android:id="@+id/container_audio_info"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -49,14 +49,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{metadata.subtitle}"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
                 tools:text="Deutsch" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{metadata.title}"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 tools:text="Mitschnitt1289389128" />
         </LinearLayout>
 

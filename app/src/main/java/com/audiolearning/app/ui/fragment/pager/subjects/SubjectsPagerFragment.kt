@@ -37,9 +37,11 @@ class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChange
     DialogDataReceiver {
     private var dialogRequestCode: Int = 0 // lateinit
 
-    private val viewModelPager: SubjectsPagerFragmentViewModel by viewModels()
+    private val viewModel: SubjectsPagerFragmentViewModel by viewModels()
     private val audioPlayerDataViewModel: AudioPlayerDataViewModel by viewModels()
     private lateinit var binding: PagerFragmentSubjectsBinding
+
+    private val bottomAudioBarHeight = (-48f).toDp()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,7 +70,7 @@ class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChange
 
     private fun setupEmptyStateMessage() {
         // Updates the empty state message
-        viewModelPager.subjects.observe(viewLifecycleOwner, { subjects: List<Subject> ->
+        viewModel.subjects.observe(viewLifecycleOwner, { subjects: List<Subject> ->
             if (subjects.isEmpty()) binding.tvNoSubjects.show()
             else binding.tvNoSubjects.hide()
         })
@@ -81,7 +83,7 @@ class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChange
             )
 
         // Update adapters data
-        viewModelPager.subjects.observe(viewLifecycleOwner, { subjects: List<Subject> ->
+        viewModel.subjects.observe(viewLifecycleOwner, { subjects: List<Subject> ->
             if (subjectsAdapter.isDataInitialized) {
                 when (subjectsAdapter.updateData(subjects)) {
                     AdapterDataEvent.ITEMS_ADDED ->
@@ -94,7 +96,7 @@ class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChange
         })
 
         // Update selecting state
-        viewModelPager.selectedSubjectsList.observe(
+        viewModel.selectedSubjectsList.observe(
             viewLifecycleOwner,
             { selectedSubjectsList: ArrayList<Subject> ->
                 subjectsAdapter.isSelecting = selectedSubjectsList.isNotEmpty()
@@ -118,12 +120,12 @@ class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChange
 
         // Higher when bottom-audio-bar is active
         audioPlayerDataViewModel.mediaMetaData.observe(viewLifecycleOwner, {
-            binding.fabAddSubject.animate().translationY((-48f).toDp())
+            binding.fabAddSubject.animate().translationY(bottomAudioBarHeight)
         })
     }
 
     private fun setupSelectedSubjectsToolbar() {
-        viewModelPager.selectedSubjectsList.observe(
+        viewModel.selectedSubjectsList.observe(
             viewLifecycleOwner,
             { selectedSubjectsList: ArrayList<Subject> ->
                 toolBarChangeListener.onSelectedSubjectsChange(
@@ -133,16 +135,17 @@ class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChange
     }
 
     override fun onItemSelect(item: Subject) {
-        viewModelPager.selectSubject(item)
+        viewModel.selectSubject(item)
     }
 
     override fun onItemDeselect(item: Subject) {
-        viewModelPager.deselectSubject(item)
+        viewModel.deselectSubject(item)
     }
 
     override fun onItemClick(item: Subject) {
         val action = HomeFragmentDirections.actionHomeFragmentToAudiosOfSubjectActivity(item.id!!)
         findNavController().navigate(action)
+
     }
 
     override fun onDialogResult(requestCode: Int, resultCode: Int) {
@@ -150,7 +153,7 @@ class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChange
 
         if (resultCode == Activity.RESULT_OK) {
             MainScope().launch {
-                viewModelPager.deleteAllSelectedSubjects()
+                viewModel.deleteAllSelectedSubjects()
             }
         }
     }
@@ -186,9 +189,9 @@ class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChange
     }
 
     fun deselectAllSubjects() {
-        if (viewModelPager.selectedSubjectsList.value?.size!! == 0) return
+        if (viewModel.selectedSubjectsList.value?.size!! == 0) return
 
-        viewModelPager.deselectAllSubjects()
+        viewModel.deselectAllSubjects()
 
         // Update RecyclerView items
         (binding.rvSubjects.adapter as SubjectsRecyclerViewAdapter).apply {

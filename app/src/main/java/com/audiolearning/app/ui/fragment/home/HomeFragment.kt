@@ -23,6 +23,10 @@ import com.audiolearning.app.ui.fragment.pager.subjects.SubjectsPagerFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
+private const val POSITION_ABOUT_US_FRAGMENT = 0
+private const val POSITION_RECORDER_FRAGMENT = 1
+private const val POSITION_SUBJECT_FRAGMENT = 2
+
 @AndroidEntryPoint
 class HomeFragment : BackPressableFragment(), HomeToolBarChangeListener {
     val viewModel: HomeFragmentViewModel by viewModels()
@@ -48,14 +52,13 @@ class HomeFragment : BackPressableFragment(), HomeToolBarChangeListener {
         )
 
         binding.lifecycleOwner = this
-        binding.viewModel = viewModel
 
         binding.navView.setOnNavigationItemSelectedListener(OnNavigationItemSelectedListener())
 
         binding.pager.apply {
             adapter = ScreenSlidePagerAdapter(childFragmentManager)
             registerOnPageChangeCallback(OnPageChangeCallback())
-            setCurrentItem(viewModel.previousFragmentPosition, false)
+            setCurrentItem(viewModel.previousFragmentPosition ?: POSITION_RECORDER_FRAGMENT, false)
         }
 
         setupToolbars()
@@ -108,16 +111,14 @@ class HomeFragment : BackPressableFragment(), HomeToolBarChangeListener {
 
     private fun changeTitleOfToolBar(position: Int) {
         when (position) {
-            POSITION_ABOUT_US_FRAGMENT -> viewModel.title.value = getString(R.string.title_about_us)
-            POSITION_RECORDER_FRAGMENT -> viewModel.title.value = getString(R.string.title_recorder)
-            POSITION_SUBJECT_FRAGMENT -> viewModel.title.value = getString(R.string.title_subjects)
+            POSITION_ABOUT_US_FRAGMENT -> binding.tbMain.setTitle(R.string.title_about_us)
+            POSITION_RECORDER_FRAGMENT -> binding.tbMain.setTitle(R.string.title_recorder)
+            POSITION_SUBJECT_FRAGMENT -> binding.tbMain.setTitle(R.string.title_subjects)
             else -> throw IllegalStateException("No title for position: $position")
         }
     }
 
     private fun setupToolbars() {
-        binding.tbMain.title = ""
-
         binding.tbMainSelectedSubjects.setNavigationOnClickListener {
             subjectsFragment.deselectAllSubjects()
             binding.tbMainSelectedSubjects.hide()

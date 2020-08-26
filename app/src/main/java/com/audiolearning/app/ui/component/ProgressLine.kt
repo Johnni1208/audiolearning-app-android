@@ -10,8 +10,8 @@ import com.audiolearning.app.R
 import kotlin.math.roundToInt
 
 class ProgressLine(context: Context, attrs: AttributeSet) : View(context, attrs) {
-    var lineColor: Int = 0
     var max: Int = 1
+    private var lineColor: Int = 0
     private var paint = Paint()
     private var rect = Rect(0, 0, 100, height)
 
@@ -26,7 +26,6 @@ class ProgressLine(context: Context, attrs: AttributeSet) : View(context, attrs)
         paint.style = Paint.Style.FILL
         paint.isAntiAlias = true
         paint.color = lineColor
-
     }
 
 

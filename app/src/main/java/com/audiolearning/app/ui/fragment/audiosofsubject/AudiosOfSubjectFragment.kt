@@ -56,7 +56,6 @@ class AudiosOfSubjectFragment : Fragment(),
             false
         )
         binding.lifecycleOwner = this
-        binding.viewModel = viewModel
 
         dialogRequestCode =
             resources.getInteger(R.integer.request_code_audiosOfSubjectsActivity_delete_audios)

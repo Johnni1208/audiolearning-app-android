@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <data>
-
-        <variable
-            name="viewModel"
-            type="com.audiolearning.app.ui.fragment.home.HomeFragmentViewModel" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <com.audiolearning.app.ui.component.CenteredToolbar
             android:id="@+id/tb_main"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -22,20 +14,10 @@
             android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark">
+            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark"
+            app:titleTextColor="@android:color/white" />
 
-            <TextView
-                android:id="@+id/tv_main_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-                android:text="@{viewModel.title}"
-                android:textColor="@android:color/white" />
-
-        </com.google.android.material.appbar.MaterialToolbar>
-
-        <com.google.android.material.appbar.MaterialToolbar
+        <com.audiolearning.app.ui.component.CenteredToolbar
             android:id="@+id/tb_main_selected_subjects"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"

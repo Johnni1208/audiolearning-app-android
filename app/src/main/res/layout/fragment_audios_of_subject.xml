@@ -4,13 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.fragment.audiosofsubject.AudiosOfSubjectFragment">
 
-    <data>
-
-        <variable
-            name="viewModel"
-            type="com.audiolearning.app.ui.fragment.audiosofsubject.AudiosOfSubjectActivityViewModel" />
-    </data>
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

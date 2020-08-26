@@ -22,7 +22,7 @@ import java.io.File
 
 @AndroidEntryPoint
 class RecorderPagerFragment : Fragment() {
-    private val viewModelPager: RecorderPagerFragmentViewModel by viewModels()
+    private val viewModel: RecorderPagerFragmentViewModel by viewModels()
     private val audioPlayerControlsViewModel: AudioPlayerControlsViewModel by viewModels()
     private lateinit var binding: PagerFragmentRecorderBinding
 
@@ -39,7 +39,7 @@ class RecorderPagerFragment : Fragment() {
         )
 
         binding.lifecycleOwner = this
-        binding.viewModel = viewModelPager
+        binding.viewModel = viewModel
 
         /* Hide btnPauseAndResume since pausing and resuming MediaRecorders
         * is only available on API > 24 */
@@ -54,7 +54,7 @@ class RecorderPagerFragment : Fragment() {
     }
 
     private fun observeIfNewAudioRecording() {
-        viewModelPager.recordingAndTimerHandler.recordedFile.observe(
+        viewModel.recordingAndTimerHandler.recordedFile.observe(
             viewLifecycleOwner,
             { newFile: File? ->
                 newFile?.let {
@@ -68,7 +68,7 @@ class RecorderPagerFragment : Fragment() {
 
     private fun switchButtonAppearancesOnAudioRecorderChange() {
         var stateBefore: AudioRecorderState = AudioRecorderState.IDLING
-        viewModelPager.recordingAndTimerHandler.audioRecorderState.observe(
+        viewModel.recordingAndTimerHandler.audioRecorderState.observe(
             viewLifecycleOwner,
             { newState: AudioRecorderState ->
                 when (newState) {
@@ -117,6 +117,6 @@ class RecorderPagerFragment : Fragment() {
 
     override fun onDetach() {
         super.onDetach()
-        viewModelPager.onDestroy()
+        viewModel.onDestroy()
     }
 }
