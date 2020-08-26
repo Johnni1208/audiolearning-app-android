@@ -1,4 +1,4 @@
-package com.audiolearning.app.ui.fragment.recorder
+package com.audiolearning.app.ui.fragment.pager.recorder
 
 import android.os.Build
 import android.os.Bundle
@@ -8,10 +8,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.audiolearning.app.R
 import com.audiolearning.app.audio.recorder.AudioRecorderState
-import com.audiolearning.app.databinding.FragmentRecorderBinding
+import com.audiolearning.app.databinding.PagerFragmentRecorderBinding
 import com.audiolearning.app.extension.hide
 import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerControlsViewModel
 import com.audiolearning.app.ui.dialog.newrecording.NewRecordingDialog
@@ -22,10 +21,10 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 @AndroidEntryPoint
-class RecorderFragment : Fragment() {
-    private val viewModel: RecorderFragmentViewModel by viewModels()
+class RecorderPagerFragment : Fragment() {
+    private val viewModel: RecorderPagerFragmentViewModel by viewModels()
     private val audioPlayerControlsViewModel: AudioPlayerControlsViewModel by viewModels()
-    private lateinit var binding: FragmentRecorderBinding
+    private lateinit var binding: PagerFragmentRecorderBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,7 +33,7 @@ class RecorderFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(
             inflater,
-            R.layout.fragment_recorder,
+            R.layout.pager_fragment_recorder,
             container,
             false
         )
@@ -57,7 +56,7 @@ class RecorderFragment : Fragment() {
     private fun observeIfNewAudioRecording() {
         viewModel.recordingAndTimerHandler.recordedFile.observe(
             viewLifecycleOwner,
-            Observer { newFile: File? ->
+            { newFile: File? ->
                 newFile?.let {
                     NewRecordingDialog.display(
                         newFile.path,
@@ -71,7 +70,7 @@ class RecorderFragment : Fragment() {
         var stateBefore: AudioRecorderState = AudioRecorderState.IDLING
         viewModel.recordingAndTimerHandler.audioRecorderState.observe(
             viewLifecycleOwner,
-            Observer { newState: AudioRecorderState ->
+            { newState: AudioRecorderState ->
                 when (newState) {
                     AudioRecorderState.IDLING -> {
                         binding.apply {

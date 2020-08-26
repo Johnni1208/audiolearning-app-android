@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.data.repositories.SubjectRepository
 import com.audiolearning.app.data.store.SelectedEntityStore
-import com.audiolearning.app.ui.fragment.subjects.SubjectsFragmentViewModel
+import com.audiolearning.app.ui.fragment.pager.subjects.SubjectsPagerFragmentViewModel
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -14,24 +14,24 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class SubjectsFragmentViewModelTest {
+class SubjectsPagerFragmentViewModelTest {
     @get:Rule
     val instantExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val testSubject = Subject("testSubject", "testDir")
     private val mockRepository: SubjectRepository = mock()
     private lateinit var selectedEntityStore: SelectedEntityStore<Subject>
-    private lateinit var fragmentViewModel: SubjectsFragmentViewModel
+    private lateinit var pagerFragmentViewModel: SubjectsPagerFragmentViewModel
 
     @Before
     fun setup() {
         selectedEntityStore = SelectedEntityStore()
-        fragmentViewModel = SubjectsFragmentViewModel(mockRepository, selectedEntityStore)
+        pagerFragmentViewModel = SubjectsPagerFragmentViewModel(mockRepository, selectedEntityStore)
     }
 
     @Test
     fun getSubjects_ShouldCallRepository() {
-        fragmentViewModel.subjects
+        pagerFragmentViewModel.subjects
 
         verify(mockRepository).getAllSubjects()
     }
@@ -43,31 +43,31 @@ class SubjectsFragmentViewModelTest {
         val testSubject = Subject(subjectName, "testDir").apply { id = 0 }
         whenever(mockRepository.getSubjectById(subjectId)).thenReturn(testSubject)
 
-        val returnedSubject: Subject = fragmentViewModel.getSubjectById(subjectId)
+        val returnedSubject: Subject = pagerFragmentViewModel.getSubjectById(subjectId)
         assertTrue(testSubject == returnedSubject)
     }
 
     @Suppress("UNUSED_VARIABLE")
     @Test(expected = IllegalArgumentException::class)
     fun getSubjectById_ShouldThrowError_IfSubjectIsNotFound() = runBlocking {
-        val returnedSubject = fragmentViewModel.getSubjectById(1)
+        val returnedSubject = pagerFragmentViewModel.getSubjectById(1)
     }
 
     @Test
     fun deleteAllSelectedSubjects_ShouldCallRepositoryDelete() = runBlocking {
-        fragmentViewModel.selectSubject(testSubject)
+        pagerFragmentViewModel.selectSubject(testSubject)
 
-        fragmentViewModel.deleteAllSelectedSubjects()
+        pagerFragmentViewModel.deleteAllSelectedSubjects()
 
         verify(mockRepository).delete(testSubject)
     }
 
     @Test
     fun deleteAllSelectedSubjects_ShouldClearSelectedSubjectsList() = runBlocking {
-        fragmentViewModel.selectSubject(testSubject)
+        pagerFragmentViewModel.selectSubject(testSubject)
 
-        fragmentViewModel.deleteAllSelectedSubjects()
+        pagerFragmentViewModel.deleteAllSelectedSubjects()
 
-        assertTrue(fragmentViewModel.selectedSubjectsList.value?.isEmpty()!!)
+        assertTrue(pagerFragmentViewModel.selectedSubjectsList.value?.isEmpty()!!)
     }
 }

@@ -12,7 +12,6 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.audiolearning.app.R
 import com.audiolearning.app.adapter.SubjectSpinnerAdapter
 import com.audiolearning.app.data.db.entities.Subject
@@ -121,7 +120,7 @@ class NewRecordingDialog : DialogFragment(),
          * If so, it creates a new array adapter with the items
          * and then loads it into the spinner.
          */
-        viewModel.getSubjects().observe(viewLifecycleOwner, Observer { subjects: List<Subject> ->
+        viewModel.getSubjects().observe(viewLifecycleOwner, { subjects: List<Subject> ->
             val spinnerAdapter = SubjectSpinnerAdapter.createWithAddHint(
                 dialogContext,
                 subjects,

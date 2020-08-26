@@ -1,4 +1,4 @@
-package com.audiolearning.app.ui.fragment.recorder
+package com.audiolearning.app.ui.fragment.pager.recorder
 
 import android.annotation.TargetApi
 import android.os.Build

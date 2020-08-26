@@ -1,157 +1,80 @@
 package com.audiolearning.app.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
+import androidx.navigation.findNavController
 import com.audiolearning.app.R
-import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.databinding.ActivityMainBinding
-import com.audiolearning.app.extension.hide
 import com.audiolearning.app.extension.show
-import com.audiolearning.app.ui.fragment.aboutus.AboutUsFragment
-import com.audiolearning.app.ui.fragment.recorder.RecorderFragment
-import com.audiolearning.app.ui.fragment.subjects.SubjectsFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.audiolearning.app.extension.toDp
+import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerActivity
+import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerControlsViewModel
+import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerDataViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
-private const val POSITION_ABOUT_US_FRAGMENT = 0
-private const val POSITION_RECORDER_FRAGMENT = 1
-private const val POSITION_SUBJECT_FRAGMENT = 2
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), MainActivityToolBarChangeListener {
-    private val subjectsFragment = SubjectsFragment(this)
-    private val fragments: Array<Fragment> = arrayOf(
-        AboutUsFragment(),
-        RecorderFragment(),
-        subjectsFragment
-    )
-
+class MainActivity : AppCompatActivity() {
+    private val dataViewModel: AudioPlayerDataViewModel by viewModels()
+    private val controlsViewModel: AudioPlayerControlsViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
+    private val bottomNavigationBarHeight = (-56f).toDp()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(
-            this,
-            R.layout.activity_main
-        )
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
 
-        binding.navView.setOnNavigationItemSelectedListener(OnNavigationItemSelectedListener())
-
-        binding.pager.apply {
-            adapter = ScreenSlidePagerAdapter(supportFragmentManager)
-            registerOnPageChangeCallback(OnPageChangeCallback())
-            setCurrentItem(POSITION_RECORDER_FRAGMENT, false)
-        }
-
-        setupToolbars()
+        setupBottomAudioBar()
     }
 
-    private inner class OnNavigationItemSelectedListener :
-        BottomNavigationView.OnNavigationItemSelectedListener {
-        override fun onNavigationItemSelected(selectedItem: MenuItem): Boolean {
-            when (selectedItem.itemId) {
-                R.id.navigation_about_us -> binding.pager.currentItem = POSITION_ABOUT_US_FRAGMENT
-                R.id.navigation_recorder -> binding.pager.currentItem = POSITION_RECORDER_FRAGMENT
-                R.id.navigation_subjects -> binding.pager.currentItem = POSITION_SUBJECT_FRAGMENT
-                else -> return false
+    private fun setupBottomAudioBar() {
+        // Texts and max. progress
+        dataViewModel.mediaMetaData.observe(this, { metadata ->
+            binding.bottomAudioBar.root.show()
+            binding.bottomAudioBar.metadata = metadata
+            binding.bottomAudioBar.plDuration.max = metadata.duration.toInt()
+        })
+
+        // Play-Pause-Button
+        dataViewModel.mediaButtonRes.observe(this, { res ->
+            binding.bottomAudioBar.btnPlayPauseAudio.setImageResource(res)
+        })
+        binding.bottomAudioBar.btnPlayPauseAudio.setOnClickListener {
+            dataViewModel.mediaMetaData.value?.let {
+                MainScope().launch { controlsViewModel.playAudioId(it.id) }
             }
-
-            return true
         }
+
+        // Open AudioPlayer
+        binding.bottomAudioBar.apply {
+            val audioPlayerActivity = Intent(applicationContext, AudioPlayerActivity::class.java)
+            btnOpenAudioPlayer.setOnClickListener { startActivity(audioPlayerActivity) }
+            containerAudioInfo.setOnClickListener { startActivity(audioPlayerActivity) }
+        }
+
+        // Update progress
+        dataViewModel.mediaPosition.observe(this, { pos ->
+            binding.bottomAudioBar.plDuration.progress = pos.toInt()
+        })
     }
 
-    private inner class ScreenSlidePagerAdapter(fm: FragmentManager) :
-        FragmentStateAdapter(fm, lifecycle) {
-        override fun getItemCount(): Int = fragments.size
+    override fun onStart() {
+        super.onStart()
 
-        override fun createFragment(position: Int): Fragment {
-            return fragments[position]
-        }
-    }
-
-    private inner class OnPageChangeCallback :
-        ViewPager2.OnPageChangeCallback() {
-        private lateinit var previousMenuItem: MenuItem
-        private var previousPosition: Int = -1
-
-        override fun onPageSelected(position: Int) {
-            if (::previousMenuItem.isInitialized) {
-                previousMenuItem.isChecked = false
-            } else {
-                binding.navView.menu.getItem(0).isChecked = false
-            }
-
-            binding.navView.menu.getItem(position).isChecked = true
-            previousMenuItem = binding.navView.menu.getItem(position)
-
-            previousPosition = position
-
-            changeTitleOfToolBar(position)
-        }
-    }
-
-    private fun changeTitleOfToolBar(position: Int) {
-        when (position) {
-            POSITION_ABOUT_US_FRAGMENT -> binding.tvMainTitle.setText(R.string.title_about_us)
-            POSITION_RECORDER_FRAGMENT -> binding.tvMainTitle.setText(R.string.title_recorder)
-            POSITION_SUBJECT_FRAGMENT -> binding.tvMainTitle.setText(R.string.title_subjects)
-            else -> throw IllegalStateException("No title for position: $position")
-        }
-    }
-
-    private fun setupToolbars() {
-        setSupportActionBar(binding.tbMain)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-
-        binding.tbMainSelectedSubjects.setNavigationOnClickListener {
-            subjectsFragment.deselectAllSubjects()
-            binding.tbMainSelectedSubjects.hide()
-            binding.tbMain.show()
-        }
-
-        binding.tbMainSelectedSubjects.inflateMenu(R.menu.delete_menu)
-        binding.tbMainSelectedSubjects.setOnMenuItemClickListener { item: MenuItem ->
-            when (item.itemId) {
-                R.id.menu_item_delete -> {
-                    subjectsFragment.requestDeletionOfSelectedSubjects()
-                    return@setOnMenuItemClickListener true
+        // Make bottom-audio-bar higher if there is the bottom-nav-bar
+        binding.navHostFragment.findNavController()
+            .addOnDestinationChangedListener { _, destination, _ ->
+                when (destination.id) {
+                    R.id.homeFragment -> binding.bottomAudioBar.root.animate()
+                        .translationY(bottomNavigationBarHeight)
+                    else -> binding.bottomAudioBar.root.animate()
+                        .translationY(0f)
                 }
             }
-
-            return@setOnMenuItemClickListener false
-        }
     }
-
-    override fun onSelectedSubjectsChange(selectedSubjectsList: ArrayList<Subject>) {
-        if (selectedSubjectsList.isEmpty()) {
-            binding.tbMain.show()
-            binding.tbMainSelectedSubjects.hide()
-            return
-        }
-
-        binding.tbMain.hide()
-        binding.tbMainSelectedSubjects.show()
-
-        binding.tbMainSelectedSubjects.title = selectedSubjectsList.size.toString()
-    }
-
-    override fun onBackPressed() {
-        if (binding.pager.currentItem != POSITION_RECORDER_FRAGMENT)
-            binding.pager.currentItem = POSITION_RECORDER_FRAGMENT
-    }
-}
-
-/**
- * Interface for children of Activities to implement. They then can call the listener to change
- * ToolBar of the parent
- */
-interface MainActivityToolBarChangeListener {
-    fun onSelectedSubjectsChange(selectedSubjectsList: ArrayList<Subject>)
 }

@@ -1,4 +1,4 @@
-package com.audiolearning.app.ui.fragment.subjects
+package com.audiolearning.app.ui.fragment.pager.subjects
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
@@ -9,7 +9,7 @@ import com.audiolearning.app.data.store.SelectedEntityStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class SubjectsFragmentViewModel @ViewModelInject constructor(
+class SubjectsPagerFragmentViewModel @ViewModelInject constructor(
     private val subjectRepository: SubjectRepository,
     private val selectedSubjectStore: SelectedEntityStore<Subject>
 ) : ViewModel() {

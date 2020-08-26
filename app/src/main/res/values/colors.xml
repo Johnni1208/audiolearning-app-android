@@ -6,7 +6,12 @@
     <color name="colorPrimary700">#FEBD00</color>
     <color name="colorPrimary700Lighter">#E6FFBF00</color>
     <color name="colorAccent">#FF0053</color>
+
+    <!-- Text -->
     <color name="colorTextPrimary">#DE000000</color>
     <color name="colorTextSecondary">#99000000</color>
-    <color name="colorDivider">#ECECEC</color>
+
+    <!-- Greys -->
+    <color name="colorGrey100">#F7F7F7</color>
+    <color name="colorGrey300">#E8E8E8</color>
 </resources>

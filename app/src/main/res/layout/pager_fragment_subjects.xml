@@ -36,7 +36,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/rv_subjects"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_add_subject_white_24dp"
+            android:src="@drawable/ic_add_subject"
             app:backgroundTint="@color/colorAccent"
             app:tint="@android:color/white" />
     </androidx.constraintlayout.widget.ConstraintLayout>

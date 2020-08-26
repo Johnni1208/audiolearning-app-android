@@ -2,14 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.activity.audiosofsubject.AudiosOfSubjectActivity">
-
-    <data>
-
-        <variable
-            name="viewModel"
-            type="com.audiolearning.app.ui.activity.audiosofsubject.AudiosOfSubjectActivityViewModel" />
-    </data>
+    tools:context=".ui.fragment.audiosofsubject.AudiosOfSubjectFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -30,8 +23,7 @@
                 android:fitsSystemWindows="true"
                 app:contentScrim="@color/colorPrimary"
                 app:expandedTitleGravity="center"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:title="@{ viewModel.subject.name }">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/tb_audios_of_subject"
