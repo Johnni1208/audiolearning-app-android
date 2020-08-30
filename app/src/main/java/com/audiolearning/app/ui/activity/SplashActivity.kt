@@ -10,7 +10,6 @@ import androidx.core.app.ActivityCompat
 import com.audiolearning.app.R
 
 private const val REQUEST_CODE = 10
-private const val TIME_SPLASH_SCREEN = 1000L
 
 class SplashActivity : AppCompatActivity() {
 
@@ -36,7 +35,7 @@ class SplashActivity : AppCompatActivity() {
             startActivity(mainActivityIntent)
             overridePendingTransition(0, R.anim.fragment_fade_exit)
             finish()
-        }, TIME_SPLASH_SCREEN)
+        }, resources.getInteger(R.integer.splash_screen_time).toLong())
     }
 
     override fun onRequestPermissionsResult(
