@@ -4,36 +4,39 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.audiolearning.app.R
 
-@Suppress("MagicNumber")
+private const val REQUEST_CODE = 10
+private const val TIME_SPLASH_SCREEN = 1000L
+
 class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
-
         requestNecessaryPermissions()
     }
 
     private fun requestNecessaryPermissions() {
-        if ((ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.RECORD_AUDIO
-            ) != PackageManager.PERMISSION_GRANTED)
+        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                    != PackageManager.PERMISSION_GRANTED)
         ) {
             ActivityCompat.requestPermissions(
                 this, arrayOf(Manifest.permission.RECORD_AUDIO),
-                10
+                REQUEST_CODE
             )
 
             return
         }
 
-        val mainActivityIntent = Intent(this, MainActivity::class.java)
-        startActivity(mainActivityIntent)
+        Handler().postDelayed({
+            val mainActivityIntent = Intent(this, MainActivity::class.java)
+            startActivity(mainActivityIntent)
+            overridePendingTransition(0, R.anim.fragment_fade_exit)
+            finish()
+        }, TIME_SPLASH_SCREEN)
     }
 
     override fun onRequestPermissionsResult(
@@ -42,9 +45,12 @@ class SplashActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         if (grantResults.all { x -> x == PackageManager.PERMISSION_GRANTED }) {
-            val mainActivityIntent = Intent(this, MainActivity::class.java)
-            startActivity(mainActivityIntent)
+            Handler().postDelayed({
+                val mainActivityIntent = Intent(this, MainActivity::class.java)
+                startActivity(mainActivityIntent)
+            }, 3000)
         }
+
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }
