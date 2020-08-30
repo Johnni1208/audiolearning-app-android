@@ -3,4 +3,5 @@
     <integer name="request_code_nrDialog_discard_recording">0xE002</integer>
     <integer name="request_code_subjectFragment_delete_subject">0x169F0</integer>
     <integer name="request_code_audiosOfSubjectsActivity_delete_audios">0x135F1</integer>
+    <integer name="request_code_permissions">0x1507F</integer>
 </resources>

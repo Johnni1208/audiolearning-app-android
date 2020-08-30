@@ -13,15 +13,16 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:fitsSystemWindows="true"
-            app:liftOnScroll="true"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:theme="@style/ThemeOverlay.ActionBar"
+            app:liftOnScroll="true">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/ctb"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
-                app:contentScrim="@color/colorPrimary"
+                android:background="@android:color/white"
+                app:contentScrim="@android:color/white"
                 app:expandedTitleGravity="center"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -29,8 +30,7 @@
                     android:id="@+id/tb_audios_of_subject"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    app:layout_collapseMode="pin"
-                    app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark" />
+                    app:layout_collapseMode="pin" />
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -43,7 +43,7 @@
 
         <TextView
             android:id="@+id/tv_no_audios"
-            style="@style/EmptyStateText"
+            style="@style/Widget.EmptyStateText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"

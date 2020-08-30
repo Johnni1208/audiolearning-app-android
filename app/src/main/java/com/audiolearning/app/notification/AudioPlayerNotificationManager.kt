@@ -35,12 +35,11 @@ class AudioNotificationManager(
         ).apply {
             setMediaSessionToken(sessionToken)
             setSmallIcon(R.drawable.ic_audio_notification)
-            // TODO: 02.07.2020 Implement notification icon
             setRewindIncrementMs(SKIP_TIME)
             setFastForwardIncrementMs(SKIP_TIME)
             setUseChronometer(false)
             setUseNavigationActions(false)
-            setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+            setColor(ContextCompat.getColor(context, R.color.yellow_600))
         }
     }
 

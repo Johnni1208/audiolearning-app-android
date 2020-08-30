@@ -9,12 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.audiolearning.app.R
 
-private const val REQUEST_CODE = 10
-
 class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_splash)
         requestNecessaryPermissions()
     }
 
@@ -24,7 +23,7 @@ class SplashActivity : AppCompatActivity() {
         ) {
             ActivityCompat.requestPermissions(
                 this, arrayOf(Manifest.permission.RECORD_AUDIO),
-                REQUEST_CODE
+                resources.getInteger(R.integer.request_code_permissions)
             )
 
             return

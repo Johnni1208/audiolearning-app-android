@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorGrey100">
+        android:background="@color/grey_100">
 
         <com.audiolearning.app.ui.component.ProgressLine
             android:id="@+id/pl_duration"
@@ -21,7 +21,7 @@
             android:layout_height="1dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:lineColor="@color/colorPrimary" />
+            app:lineColor="@color/yellow_600" />
 
         <ImageButton
             android:id="@+id/btn_open_audio_player"

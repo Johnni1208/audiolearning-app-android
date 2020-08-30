@@ -4,11 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_margin="16dp"
-    android:backgroundTint="@color/colorPrimary">
+    android:backgroundTint="@color/yellow_600">
 
     <TextView
         android:id="@+id/tv_subject_name"
-        style="@style/SubjectCardView.TextView"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

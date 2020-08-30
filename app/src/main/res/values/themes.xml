@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Base.AppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+
+    <style name="Base.AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/yellow_600</item>
+        <item name="colorSecondary">@color/red_accent</item>
+
+        <item name="android:colorBackground">@android:color/white</item>
+        <item name="colorSurface">@android:color/white</item>
+        <item name="colorOnSurface">@color/colorOnSurface</item>
+        <item name="colorOnBackground">@color/colorOnSurface</item>
+    </style>
+</resources>

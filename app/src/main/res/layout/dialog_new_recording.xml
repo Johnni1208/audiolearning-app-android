@@ -9,7 +9,7 @@
         android:id="@+id/nr_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
+        android:background="@color/yellow_600"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
@@ -67,7 +67,7 @@
             android:layout_marginEnd="16dp"
             android:layout_weight="1"
             android:text="@string/discard"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/red_accent" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save_recording"
@@ -75,6 +75,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/nrDialog_positive_button_text"
-            app:backgroundTint="@color/colorAccent" />
+            app:backgroundTint="@color/red_accent" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

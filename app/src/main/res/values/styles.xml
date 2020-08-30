@@ -1,52 +1,37 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:fitsSystemWindows">true</item>
+
+    <style name="Widget.EmptyStateText" parent="">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="AppTheme.SplashScreen" parent="AppTheme">
-        <item name="android:windowBackground">@drawable/splash_screen</item>
+    <style name="ThemeOverlay.ActionBar" parent="ThemeOverlay.MaterialComponents.ActionBar">
+        <item name="elevation">0dp</item>
+        <item name="android:textColorPrimary">@color/yellow_600</item>
+        <item name="android:colorBackground">@android:color/white</item>
     </style>
 
-    <style name="AppTheme.FullScreenDialog" parent="Theme.MaterialComponents.Light.Dialog">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="ThemeOverlay.SeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressBackgroundTint">@color/yellow_700_variant</item>
+        <item name="android:progressTint">@color/yellow_700</item>
+        <item name="android:thumbTint">@color/yellow_700</item>
+    </style>
+
+    <style name="ThemeOverlay.FullScreenDialog" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorPrimary">@color/yellow_600</item>
+        <item name="colorAccent">@color/red_accent</item>
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowBackground">@android:color/white</item>
     </style>
 
     <style name="AppTheme.DialogWithTitle" parent="Theme.MaterialComponents.Light.Dialog">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/yellow_600</item>
+        <item name="colorAccent">@color/red_accent</item>
         <item name="android:windowNoTitle">false</item>
     </style>
 
     <style name="AppTheme.SlideAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_in_up</item>
         <item name="android:windowExitAnimation">@anim/slide_out_down</item>
-    </style>
-
-    <style name="EmptyStateText" parent="">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="SubjectCardView.TextView" parent="">
-        <item name="android:maxLines">2</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">20sp</item>
-    </style>
-
-    <style name="seekBar" parent="Widget.AppCompat.SeekBar">
-        <item name="android:progressBackgroundTint">@color/colorPrimary700Lighter</item>
-        <item name="android:progressTint">@color/colorPrimary700</item>
-        <item name="android:thumbTint">@color/colorPrimary700</item>
     </style>
 </resources>
