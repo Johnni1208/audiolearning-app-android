@@ -13,37 +13,75 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tv_record_time"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{ viewModel.recordingAndTimerHandler.recordedTime }"
-            android:textSize="50sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_record_and_stop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="@{ () -> viewModel.recordingAndTimerHandler.onRecordOrStop() }"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.80" />
+            app:layout_constraintVertical_bias="0.4">
 
-        <com.google.android.material.button.MaterialButton
+            <com.audiolearning.app.ui.component.AudioRecordView
+                android:visibility="invisible"
+                android:id="@+id/arv"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                app:chunkAlignTo="center"
+                app:chunkColor="@color/yellow_600"
+                app:chunkMaxHeight="48dp"
+                app:chunkMinHeight="2dp"
+                app:chunkRoundedCorners="true"
+                app:chunkSpace="2dp"
+                app:chunkWidth="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_record_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@{ viewModel.recordingAndTimerHandler.recordedTime }"
+                android:fontFamily="sans-serif"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
+                android:textColor="@color/colorTextPrimary"
+                android:translationY="-64dp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:visibility="visible"
             android:id="@+id/btn_pause_and_resume"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/recording_buttons_background"
+            android:contentDescription="@string/desc_pause_resume_recording"
             android:onClick="@{ () -> viewModel.recordingAndTimerHandler.onPauseOrResume() }"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:padding="8dp"
+            android:scaleType="centerCrop"
+            android:tint="@color/grey_600"
+            android:translationX="-60dp"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_record_and_stop"
+            app:layout_constraintStart_toEndOf="@+id/btn_record_and_stop"
+            app:layout_constraintTop_toTopOf="@+id/btn_record_and_stop" />
+
+        <ImageButton
+            android:id="@+id/btn_record_and_stop"
+            android:layout_width="132dp"
+            android:layout_height="132dp"
+            android:background="@drawable/recording_buttons_background"
+            android:contentDescription="@string/desc_start_stop_recording"
+            android:onClick="@{ () -> viewModel.recordingAndTimerHandler.onRecordOrStop() }"
+            android:padding="16dp"
+            android:layout_marginTop="64dp"
+            android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_record_and_stop"
-            app:layout_constraintVertical_bias="0.126" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

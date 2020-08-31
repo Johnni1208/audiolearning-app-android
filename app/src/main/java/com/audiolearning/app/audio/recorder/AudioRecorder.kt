@@ -19,6 +19,9 @@ import javax.inject.Inject
  */
 class AudioRecorder @Inject constructor(private var recorder: MediaRecorder?) {
     var isActive: Boolean = false
+    val maxAmplitude: Int
+        get() = recorder!!.maxAmplitude
+
     private val audioSamplingRate = 16000
     private val audioEncodingBitRate = 64000
     private val timeBeforeStop = 500L

@@ -8,8 +8,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import com.audiolearning.app.R
 import com.audiolearning.app.databinding.ActivityMainBinding
+import com.audiolearning.app.extension.dp
 import com.audiolearning.app.extension.show
-import com.audiolearning.app.extension.toDp
 import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerActivity
 import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerControlsViewModel
 import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerDataViewModel
@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private val dataViewModel: AudioPlayerDataViewModel by viewModels()
     private val controlsViewModel: AudioPlayerControlsViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
-    private val bottomNavigationBarHeight = (-56f).toDp()
+    private val bottomNavigationBarHeight = (-56f).dp()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

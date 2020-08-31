@@ -21,6 +21,8 @@
     <string name="desc_fast_forward">Fast-Forward 10 seconds</string>
     <string name="desc_rewind">Rewind 10 seconds</string>
     <string name="desc_open_audio_player">Open the audio player</string>
+    <string name="desc_start_stop_recording">Start or stop the recording.</string>
+    <string name="desc_pause_resume_recording">Pause or resume the recording.</string>
 
     <!-- AudioNotification Constants -->
     <string name="audio_notification_channel_id">com.audiolearning.app.audio.notification.LEARNING</string>

@@ -22,6 +22,9 @@ class RecordingAndTimerHandler(
     val audioRecorderState: LiveData<AudioRecorderState>
         get() = _audioRecorderState
 
+    val audioRecorderMaxAmplitude: Int
+        get() = audioRecorder.maxAmplitude
+
     private val _recordedFile = MutableLiveData<File>().apply {
         value = null
     }

@@ -16,9 +16,9 @@ import com.audiolearning.app.adapter.recycler.selectable.SubjectsRecyclerViewAda
 import com.audiolearning.app.adapter.recycler.selectable.base.ItemSelectListener
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.databinding.PagerFragmentSubjectsBinding
+import com.audiolearning.app.extension.dp
 import com.audiolearning.app.extension.hide
 import com.audiolearning.app.extension.show
-import com.audiolearning.app.extension.toDp
 import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerDataViewModel
 import com.audiolearning.app.ui.dialog.createnewsubject.CreateNewSubjectDialog
 import com.audiolearning.app.ui.dialog.genericyesno.DialogDataReceiver
@@ -41,7 +41,7 @@ class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChange
     private val audioPlayerDataViewModel: AudioPlayerDataViewModel by viewModels()
     private lateinit var binding: PagerFragmentSubjectsBinding
 
-    private val bottomAudioBarHeight = (-48f).toDp()
+    private val bottomAudioBarHeight = (-48f).dp()
 
     override fun onCreateView(
         inflater: LayoutInflater,
