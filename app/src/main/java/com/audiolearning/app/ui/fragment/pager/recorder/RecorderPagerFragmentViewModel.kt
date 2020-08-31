@@ -21,8 +21,4 @@ class RecorderPagerFragmentViewModel @ViewModelInject constructor(
             audioRecorder,
             timer
         )
-
-    fun onDestroy() {
-        recordingAndTimerHandler.onDestroy()
-    }
 }

@@ -17,7 +17,7 @@ class RecordingAndTimerHandler(
     timer: Timer
 ) {
     private val _audioRecorderState = MutableLiveData<AudioRecorderState>().apply {
-        value = AudioRecorderState.IDLING
+        value = audioRecorder.state
     }
     val audioRecorderState: LiveData<AudioRecorderState>
         get() = _audioRecorderState
@@ -36,62 +36,51 @@ class RecordingAndTimerHandler(
     val recordedTime: LiveData<String>
         get() = recordTimer.time
 
-    private val isRecording: Boolean
-        get() = _audioRecorderState.value == AudioRecorderState.RECORDING
-    private val isPausing: Boolean
-        get() = _audioRecorderState.value == AudioRecorderState.PAUSING
-
     fun onRecordOrStop() {
-        if (!isRecording && !isPausing) {
-            startRecording()
-            _audioRecorderState.value = AudioRecorderState.RECORDING
-            return
-        }
+        if (audioRecorder.state == AudioRecorderState.IDLING) startRecording()
+        else stopRecording()
+    }
 
-        stopRecording()
-        _audioRecorderState.value = AudioRecorderState.IDLING
+    private fun startRecording() {
+        recordTimer.start()
+        audioRecorder.record()
+        _audioRecorderState.postValue(audioRecorder.state)
     }
 
     private fun stopRecording() {
         recordTimer.stop()
+        // We have to do it earlier to prevent bugs audioRecorder.stop() changes the state to Idling, too.
+        _audioRecorderState.postValue(AudioRecorderState.IDLING)
+
         CoroutineScope(Dispatchers.Unconfined).launch {
             val file = audioRecorder.stop()
             _recordedFile.postValue(file)
         }
     }
 
-    private fun startRecording() {
-        recordTimer.start()
-        audioRecorder.record()
-    }
-
     fun onPauseOrResume() {
-        if (isPausing) {
-            resumeRecording()
-            _audioRecorderState.value = AudioRecorderState.RECORDING
-            return
-        }
-
-        pauseRecording()
-        _audioRecorderState.value = AudioRecorderState.PAUSING
-    }
-
-    @TargetApi(Build.VERSION_CODES.N)
-    private fun pauseRecording() {
-        recordTimer.pause()
-        audioRecorder.pause()
+        if (audioRecorder.state == AudioRecorderState.PAUSING) resumeRecording()
+        else pauseRecording()
     }
 
     @TargetApi(Build.VERSION_CODES.N)
     private fun resumeRecording() {
         recordTimer.resume()
         audioRecorder.resume()
+        _audioRecorderState.postValue(audioRecorder.state)
+    }
+
+    @TargetApi(Build.VERSION_CODES.N)
+    private fun pauseRecording() {
+        recordTimer.pause()
+        audioRecorder.pause()
+        _audioRecorderState.postValue(audioRecorder.state)
     }
 
     fun onDestroy() {
-        if (audioRecorder.isActive) {
+        if (audioRecorder.state != AudioRecorderState.IDLING) {
             audioRecorder.onDestroy()
-            _audioRecorderState.value = AudioRecorderState.IDLING
+            _audioRecorderState.postValue(audioRecorder.state)
             recordTimer.stop()
         }
     }

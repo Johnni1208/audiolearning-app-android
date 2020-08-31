@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.audiolearning.app.R
 import com.audiolearning.app.audio.recorder.AudioRecorderState
 import com.audiolearning.app.databinding.PagerFragmentRecorderBinding
@@ -51,7 +52,15 @@ class RecorderPagerFragment : Fragment() {
         binding.viewModel = viewModel
 
         observeIfNewAudioRecording()
-        switchButtonAppearancesOnAudioRecorderChange()
+        updateUiAppearancesOnAudioRecorderChange()
+
+        findNavController().addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.homeFragment -> {
+                }
+                else -> viewModel.recordingAndTimerHandler.onDestroy()
+            }
+        }
 
         return binding.root
     }
@@ -69,7 +78,7 @@ class RecorderPagerFragment : Fragment() {
             })
     }
 
-    private fun switchButtonAppearancesOnAudioRecorderChange() {
+    private fun updateUiAppearancesOnAudioRecorderChange() {
         var stateBefore: AudioRecorderState = AudioRecorderState.IDLING
         viewModel.recordingAndTimerHandler.audioRecorderState.observe(
             viewLifecycleOwner,
@@ -158,8 +167,8 @@ class RecorderPagerFragment : Fragment() {
         }, 0, 100)
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        viewModel.onDestroy()
+    override fun onDestroy() {
+        viewModel.recordingAndTimerHandler.onDestroy()
+        super.onDestroy()
     }
 }

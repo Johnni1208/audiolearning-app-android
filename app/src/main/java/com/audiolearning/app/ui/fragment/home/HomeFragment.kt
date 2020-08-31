@@ -54,6 +54,13 @@ class HomeFragment : BackPressableFragment(), HomeToolBarChangeListener {
 
         binding.lifecycleOwner = this
 
+        setupViewPager()
+        setupToolbars()
+
+        return binding.root
+    }
+
+    private fun setupViewPager() {
         binding.navView.setOnNavigationItemSelectedListener(OnNavigationItemSelectedListener())
 
         binding.pager.apply {
@@ -61,10 +68,6 @@ class HomeFragment : BackPressableFragment(), HomeToolBarChangeListener {
             registerOnPageChangeCallback(OnPageChangeCallback())
             setCurrentItem(viewModel.previousFragmentPosition ?: POSITION_RECORDER_FRAGMENT, false)
         }
-
-        setupToolbars()
-
-        return binding.root
     }
 
     private inner class OnNavigationItemSelectedListener :
