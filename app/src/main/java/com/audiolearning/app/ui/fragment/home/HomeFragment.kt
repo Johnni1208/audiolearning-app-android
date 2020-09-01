@@ -115,7 +115,7 @@ class HomeFragment : BackPressableFragment(), HomeToolBarChangeListener {
 
     private fun changeTitleOfToolBar(position: Int) {
         when (position) {
-            POSITION_ABOUT_US_FRAGMENT -> binding.tbMain.setTitle(R.string.title_about_us)
+            POSITION_ABOUT_US_FRAGMENT -> binding.tbMain.setTitle(R.string.title_academy)
             POSITION_RECORDER_FRAGMENT -> binding.tbMain.setTitle(R.string.title_recorder)
             POSITION_SUBJECT_FRAGMENT -> binding.tbMain.setTitle(R.string.title_subjects)
             else -> throw IllegalStateException("No title for position: $position")

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">AudioLearning</string>
     <string name="title_recorder">Recorder</string>
-    <string name="title_about_us">About us</string>
+    <string name="title_academy">AudioLearning Academy</string>
     <string name="title_subjects">Subjects</string>
 
     <!-- Generic strings -->
