@@ -70,6 +70,8 @@ class RecorderPagerFragment : Fragment() {
             viewLifecycleOwner,
             { newFile: File? ->
                 newFile?.let {
+                    if (!newFile.exists()) return@observe
+
                     NewRecordingDialog.display(
                         newFile.path,
                         parentFragmentManager

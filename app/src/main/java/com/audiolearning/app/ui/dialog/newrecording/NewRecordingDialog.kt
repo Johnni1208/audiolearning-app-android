@@ -3,13 +3,13 @@ package com.audiolearning.app.ui.dialog.newrecording
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import com.audiolearning.app.R
@@ -18,14 +18,15 @@ import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.exception.MissingArgumentException
 import com.audiolearning.app.extension.hideKeyboard
 import com.audiolearning.app.extension.showKeyboard
+import com.audiolearning.app.ui.component.RoundedBottomSheetDialogFragment
 import com.audiolearning.app.ui.dialog.genericyesno.DialogDataReceiver
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialog
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialogTexts
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.dialog_new_recording.btn_discard_recording
+import kotlinx.android.synthetic.main.dialog_new_recording.btn_play_pause_audio
 import kotlinx.android.synthetic.main.dialog_new_recording.btn_save_recording
 import kotlinx.android.synthetic.main.dialog_new_recording.et_audio_name
-import kotlinx.android.synthetic.main.dialog_new_recording.nr_toolbar
 import kotlinx.android.synthetic.main.dialog_new_recording.sp_select_subject
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -35,9 +36,10 @@ import java.io.File
  * Shown after the user has finished recording an audio.
  */
 @AndroidEntryPoint
-class NewRecordingDialog : DialogFragment(),
+class NewRecordingDialog : RoundedBottomSheetDialogFragment(),
     DialogDataReceiver {
     private lateinit var newRecording: File
+    private val simpleMediaPlayer = MediaPlayer()
     private lateinit var dialogContext: Context
     private lateinit var discardRecordingDialogTexts: GenericYesNoDialogTexts
     private var dialogRequestCode: Int = 0 // lateinit
@@ -146,13 +148,11 @@ class NewRecordingDialog : DialogFragment(),
             return@OnKeyListener true
         })
 
-        nr_toolbar.setNavigationOnClickListener { showDiscardRecordingDialog() }
-
         btn_discard_recording.setOnClickListener { showDiscardRecordingDialog() }
 
         // Save recording
         btn_save_recording.setOnClickListener {
-            val name = et_audio_name.text.toString()
+            val name = et_audio_name.editText?.text.toString()
             val subject = sp_select_subject.selectedItem as Subject
 
             val inputValidation = viewModel.validateInput(name, subject)
@@ -164,6 +164,25 @@ class NewRecordingDialog : DialogFragment(),
             MainScope().launch {
                 viewModel.saveAudio(newRecording, name, subject)
                 dismiss()
+            }
+        }
+
+        simpleMediaPlayer.apply {
+            setDataSource(newRecording.path)
+            prepare()
+
+            setOnCompletionListener {
+                btn_play_pause_audio.setImageResource(R.drawable.ic_play)
+            }
+        }
+
+        btn_play_pause_audio.setOnClickListener {
+            if (!simpleMediaPlayer.isPlaying) {
+                simpleMediaPlayer.start()
+                btn_play_pause_audio.setImageResource(R.drawable.ic_pause)
+            } else {
+                simpleMediaPlayer.pause()
+                btn_play_pause_audio.setImageResource(R.drawable.ic_play)
             }
         }
     }
@@ -194,20 +213,13 @@ class NewRecordingDialog : DialogFragment(),
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        val width: Int = ViewGroup.LayoutParams.MATCH_PARENT
-        val height: Int = ViewGroup.LayoutParams.MATCH_PARENT
-
-        dialog?.window?.let {
-            it.setLayout(width, height)
-            it.setWindowAnimations(R.style.AppTheme_SlideAnimation)
-        }
-    }
-
     override fun onDismiss(dialog: DialogInterface) {
         et_audio_name.hideKeyboard()
         newRecording.delete()
+        simpleMediaPlayer.apply {
+            stop()
+            release()
+        }
         super.onDismiss(dialog)
     }
 
