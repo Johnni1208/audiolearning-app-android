@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.audio_item.view.tv_audio_create_date
 import kotlinx.android.synthetic.main.audio_item.view.tv_audio_duration
 import kotlinx.android.synthetic.main.audio_item.view.tv_audio_name
 
-
 class AudiosRecyclerViewAdapter(private var listener: ItemSelectListener<Audio>) :
     BaseSelectableRecyclerViewAdapter<Audio>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseSelectableViewHolder {

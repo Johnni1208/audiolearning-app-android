@@ -2,5 +2,5 @@
 <resources>
     <integer name="exit_time_in_ms">150</integer>
     <integer name="enter_time_in_ms">200</integer>
-    <integer name="splash_screen_time">1000</integer>
+    <integer name="splash_screen_time">3000</integer>
 </resources>

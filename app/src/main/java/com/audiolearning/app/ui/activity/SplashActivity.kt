@@ -29,12 +29,7 @@ class SplashActivity : AppCompatActivity() {
             return
         }
 
-        Handler().postDelayed({
-            val mainActivityIntent = Intent(this, MainActivity::class.java)
-            startActivity(mainActivityIntent)
-            overridePendingTransition(0, R.anim.fragment_fade_exit)
-            finish()
-        }, resources.getInteger(R.integer.splash_screen_time).toLong())
+        startMainActivity()
     }
 
     override fun onRequestPermissionsResult(
@@ -42,13 +37,17 @@ class SplashActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (grantResults.all { x -> x == PackageManager.PERMISSION_GRANTED }) {
-            Handler().postDelayed({
-                val mainActivityIntent = Intent(this, MainActivity::class.java)
-                startActivity(mainActivityIntent)
-            }, 3000)
-        }
+        if (grantResults.all { x -> x == PackageManager.PERMISSION_GRANTED }) startMainActivity()
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun startMainActivity() {
+        Handler().postDelayed({
+            val mainActivityIntent = Intent(this, MainActivity::class.java)
+            startActivity(mainActivityIntent)
+            overridePendingTransition(0, R.anim.fragment_fade_exit)
+            finish()
+        }, resources.getInteger(R.integer.splash_screen_time).toLong())
     }
 }

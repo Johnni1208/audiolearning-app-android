@@ -10,7 +10,7 @@ import com.audiolearning.app.R
 import com.audiolearning.app.extension.dp
 import java.util.ArrayList
 
-
+@Suppress("MagicNumber", "ReturnCount")
 class AudioRecordView : View {
 
     enum class AlignTo(var value: Int) {
@@ -18,7 +18,7 @@ class AudioRecordView : View {
         BOTTOM(2)
     }
 
-    private val maxReportableAmp = 22760f //effective size,  max fft = 32760
+    private val maxReportableAmp = 22760f // effective size,  max fft = 32760
     private val uninitialized = 0f
     var chunkAlignTo = AlignTo.CENTER
 
@@ -43,7 +43,7 @@ class AudioRecordView : View {
         }
     var chunkSpace = 1.dp()
     var chunkMaxHeight = uninitialized
-    var chunkMinHeight = 3.dp()  // recommended size > 10 dp
+    var chunkMinHeight = 3.dp() // recommended size > 10 dp
     var chunkRoundedCorners = false
         set(value) {
             if (value) {
@@ -191,7 +191,7 @@ class AudioRecordView : View {
         allowedDiff: Float,
         scaleFactor: Float
     ): Float {
-        if (scaleFactor == 0f) return this //avoid from ArithmeticException (divide by zero)
+        if (scaleFactor == 0f) return this // avoid from ArithmeticException (divide by zero)
 
         var result = this
         if (compareWith > this) {

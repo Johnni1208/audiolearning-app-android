@@ -28,6 +28,7 @@ import java.util.Timer
 import java.util.TimerTask
 
 private const val RECORD_BUTTON_UNAVAILABLE_TIME = 2000L
+private const val AUDIO_RECORD_VIEW_UPDATE_TIME = 100L
 
 @AndroidEntryPoint
 class RecorderPagerFragment : Fragment() {
@@ -86,72 +87,68 @@ class RecorderPagerFragment : Fragment() {
             viewLifecycleOwner,
             { newState: AudioRecorderState ->
                 when (newState) {
-                    AudioRecorderState.IDLING -> {
-                        audioRecordViewTimer?.cancel()
-
-                        binding.apply {
-                            btnPauseAndResume.setImageResource(R.drawable.ic_pause)
-                            btnRecordAndStop.setImageResource(R.drawable.ic_record)
-                        }
-
-                        if (stateBefore == AudioRecorderState.RECORDING || stateBefore == AudioRecorderState.PAUSING) {
-                            binding.apply {
-                                tvRecordTime.animate().translationY((-64).dp())
-                                tvRecordTime.animateAlphaTo(1f)
-
-                                btnPauseAndResume.animate().translationX((-60).dp())
-
-                                arv.fadeOut(View.INVISIBLE)
-                                arv.recreate()
-
-                                // Disable recording button so it is not clickable when the NewRecordingDialog opens
-                                MainScope().launch {
-                                    btnRecordAndStop.isEnabled = false
-                                    btnRecordAndStop.isClickable = false
-                                    delay(RECORD_BUTTON_UNAVAILABLE_TIME)
-                                    btnRecordAndStop.isEnabled = true
-                                    btnRecordAndStop.isClickable = true
-                                }
-                            }
-                        }
-                    }
-
-                    AudioRecorderState.RECORDING -> {
-                        updateAudioRecordView()
-                        audioPlayerControlsViewModel.stop()
-
-                        binding.apply {
-                            btnPauseAndResume.setImageResource(R.drawable.ic_pause)
-                            btnRecordAndStop.setImageResource(R.drawable.ic_stop)
-
-                            /* Only show pause-and-resume-button if API >= 24 since pausing and resuming MediaRecorders
-                             * is only available on API >= 24 */
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                btnPauseAndResume.animate().translationX(0.dp())
-                            }
-
-                            tvRecordTime.animate().translationY(0.dp())
-                            tvRecordTime.animateAlphaTo(1f)
-
-                            arv.fadeIn()
-                            arv.animateAlphaTo(1f)
-                        }
-                    }
-
-                    AudioRecorderState.PAUSING -> {
-                        audioRecordViewTimer?.cancel()
-
-                        binding.apply {
-                            btnPauseAndResume.setImageResource(R.drawable.ic_play)
-                            tvRecordTime.animateAlphaTo(0.5f)
-                            arv.animateAlphaTo(0.5f)
-                        }
-                    }
+                    AudioRecorderState.IDLING -> displayIdlingUiState(stateBefore)
+                    AudioRecorderState.RECORDING -> displayRecordingUiState()
+                    AudioRecorderState.PAUSING -> displayPausingUiState()
                 }
 
                 stateBefore = newState
             }
         )
+    }
+
+    private fun displayIdlingUiState(stateBefore: AudioRecorderState) {
+        audioRecordViewTimer?.cancel()
+
+        binding.apply {
+            btnPauseAndResume.setImageResource(R.drawable.ic_pause)
+            btnRecordAndStop.setImageResource(R.drawable.ic_record)
+        }
+
+        if (stateBefore == AudioRecorderState.RECORDING || stateBefore == AudioRecorderState.PAUSING) {
+            binding.apply {
+                val overAudioRecordView = -64
+                tvRecordTime.animate().translationY(overAudioRecordView.dp())
+                tvRecordTime.animateAlphaTo(1f)
+
+                val underRecordAndPauseButton = -60
+                btnPauseAndResume.animate().translationX((underRecordAndPauseButton).dp())
+
+                arv.fadeOut(View.INVISIBLE)
+                arv.recreate()
+
+                // Disable recording button so it is not clickable when the NewRecordingDialog opens
+                MainScope().launch {
+                    btnRecordAndStop.isEnabled = false
+                    btnRecordAndStop.isClickable = false
+                    delay(RECORD_BUTTON_UNAVAILABLE_TIME)
+                    btnRecordAndStop.isEnabled = true
+                    btnRecordAndStop.isClickable = true
+                }
+            }
+        }
+    }
+
+    private fun displayRecordingUiState() {
+        updateAudioRecordView()
+        audioPlayerControlsViewModel.stop()
+
+        binding.apply {
+            btnPauseAndResume.setImageResource(R.drawable.ic_pause)
+            btnRecordAndStop.setImageResource(R.drawable.ic_stop)
+
+            /* Only show pause-and-resume-button if API >= 24 since pausing and resuming MediaRecorders
+             * is only available on API >= 24 */
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                btnPauseAndResume.animate().translationX(0.dp())
+            }
+
+            tvRecordTime.animate().translationY(0.dp())
+            tvRecordTime.animateAlphaTo(1f)
+
+            arv.fadeIn()
+            arv.animateAlphaTo(1f)
+        }
     }
 
     private fun updateAudioRecordView() {
@@ -166,7 +163,19 @@ class RecorderPagerFragment : Fragment() {
                     binding.arv.update(currentMaxAmplitude)
                 }
             }
-        }, 0, 100)
+        }, 0, AUDIO_RECORD_VIEW_UPDATE_TIME)
+    }
+
+    private fun displayPausingUiState() {
+        audioRecordViewTimer?.cancel()
+
+        binding.apply {
+            val halfAlpha = 0.5f
+
+            btnPauseAndResume.setImageResource(R.drawable.ic_play)
+            tvRecordTime.animateAlphaTo(halfAlpha)
+            arv.animateAlphaTo(halfAlpha)
+        }
     }
 
     override fun onDestroy() {
