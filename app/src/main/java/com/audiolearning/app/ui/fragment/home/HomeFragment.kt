@@ -17,7 +17,7 @@ import com.audiolearning.app.databinding.FragmentHomeBinding
 import com.audiolearning.app.extension.hide
 import com.audiolearning.app.extension.show
 import com.audiolearning.app.ui.fragment.BackPressableFragment
-import com.audiolearning.app.ui.fragment.pager.aboutus.AboutUsFragment
+import com.audiolearning.app.ui.fragment.pager.academy.AcademyPagerFragment
 import com.audiolearning.app.ui.fragment.pager.recorder.RecorderPagerFragment
 import com.audiolearning.app.ui.fragment.pager.subjects.SubjectsPagerFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -33,7 +33,7 @@ class HomeFragment : BackPressableFragment(), HomeToolBarChangeListener {
 
     private val subjectsFragment = SubjectsPagerFragment(this)
     private val fragments: Array<Fragment> = arrayOf(
-        AboutUsFragment(),
+        AcademyPagerFragment(),
         RecorderPagerFragment(),
         subjectsFragment
     )
@@ -156,6 +156,11 @@ class HomeFragment : BackPressableFragment(), HomeToolBarChangeListener {
     }
 
     override fun onBackPressed() {
+        if (binding.pager.currentItem == POSITION_SUBJECT_FRAGMENT && subjectsFragment.isSelecting) {
+            subjectsFragment.deselectAllSubjects()
+            return
+        }
+
         if (binding.pager.currentItem != POSITION_RECORDER_FRAGMENT)
             binding.pager.currentItem = POSITION_RECORDER_FRAGMENT
     }

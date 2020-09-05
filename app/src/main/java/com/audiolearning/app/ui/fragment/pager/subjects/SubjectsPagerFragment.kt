@@ -35,10 +35,14 @@ class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChange
     Fragment(),
     ItemSelectListener<Subject>,
     DialogDataReceiver {
+    val isSelecting: Boolean
+        get() = subjectsAdapter.isSelecting
+
     private var dialogRequestCode: Int = 0 // lateinit
 
     private val viewModel: SubjectsPagerFragmentViewModel by viewModels()
     private val audioPlayerDataViewModel: AudioPlayerDataViewModel by viewModels()
+    private val subjectsAdapter = SubjectsRecyclerViewAdapter(this)
     private lateinit var binding: PagerFragmentSubjectsBinding
 
     private val bottomAudioBarHeight = (-48f).dp()

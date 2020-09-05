@@ -17,7 +17,6 @@ import com.audiolearning.app.adapter.SubjectSpinnerAdapter
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.exception.MissingArgumentException
 import com.audiolearning.app.extension.hideKeyboard
-import com.audiolearning.app.extension.showKeyboard
 import com.audiolearning.app.ui.component.RoundedBottomSheetDialogFragment
 import com.audiolearning.app.ui.dialog.genericyesno.DialogDataReceiver
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialog
@@ -107,7 +106,6 @@ class NewRecordingDialog : RoundedBottomSheetDialogFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        et_audio_name.showKeyboard()
         setupSpinner()
         setupOnClickListeners()
     }
@@ -142,10 +140,14 @@ class NewRecordingDialog : RoundedBottomSheetDialogFragment(),
 
     private fun setupOnClickListeners() {
         dialog?.setOnKeyListener(DialogInterface.OnKeyListener { _, keyCode, event ->
-            if (event.action != KeyEvent.ACTION_DOWN) return@OnKeyListener true
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                if (event.action != KeyEvent.ACTION_DOWN) return@OnKeyListener true
 
-            if (keyCode == KeyEvent.KEYCODE_BACK) showDiscardRecordingDialog()
-            return@OnKeyListener true
+                showDiscardRecordingDialog()
+                return@OnKeyListener true
+            }
+
+            return@OnKeyListener false
         })
 
         btn_discard_recording.setOnClickListener { showDiscardRecordingDialog() }
@@ -223,6 +225,9 @@ class NewRecordingDialog : RoundedBottomSheetDialogFragment(),
         super.onDismiss(dialog)
     }
 
+    /**
+     * Received from the DiscardDialog.
+     */
     override fun onDialogResult(requestCode: Int, resultCode: Int) {
         if (requestCode != this.dialogRequestCode) return
 

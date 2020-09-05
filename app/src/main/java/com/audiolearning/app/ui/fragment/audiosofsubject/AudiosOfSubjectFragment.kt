@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -26,6 +25,7 @@ import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerControlsViewMode
 import com.audiolearning.app.ui.dialog.genericyesno.DialogDataReceiver
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialog
 import com.audiolearning.app.ui.dialog.genericyesno.GenericYesNoDialogTexts
+import com.audiolearning.app.ui.fragment.BackPressableFragment
 import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
@@ -33,15 +33,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
-class AudiosOfSubjectFragment : Fragment(),
+class AudiosOfSubjectFragment : BackPressableFragment(),
     ItemSelectListener<Audio>,
     DialogDataReceiver {
     private var dialogRequestCode: Int = 0 // lateinit
 
     private val args: AudiosOfSubjectFragmentArgs by navArgs()
 
-    private val viewModel: AudiosOfSubjectActivityViewModel by viewModels()
+    private val viewModel: AudiosOfSubjectFragmentViewModel by viewModels()
     private val audioPlayerControlsViewModel: AudioPlayerControlsViewModel by viewModels()
+    private val audioAdapter = AudiosRecyclerViewAdapter(this)
     private lateinit var binding: FragmentAudiosOfSubjectBinding
 
     override fun onCreateView(
@@ -154,11 +155,6 @@ class AudiosOfSubjectFragment : Fragment(),
     }
 
     private fun setupRecyclerView() {
-        val audioAdapter =
-            AudiosRecyclerViewAdapter(
-                this
-            )
-
         // Update adapters data
         viewModel.audios.observe(viewLifecycleOwner, { audios: List<Audio> ->
             if (audioAdapter.isDataInitialized) {
@@ -213,5 +209,10 @@ class AudiosOfSubjectFragment : Fragment(),
                 viewModel.deleteAllSelectedAudios()
             }
         }
+    }
+
+    override fun onBackPressed() {
+        if (audioAdapter.isSelecting) deselectAllAudios()
+        else findNavController().navigateUp()
     }
 }
