@@ -30,7 +30,7 @@ class AudiosRecyclerViewAdapter(private var listener: ItemSelectListener<Audio>)
         holder.itemView.tv_audio_duration.text =
             (data[position]).durationInMilliseconds.toTimeString()
 
-        holder.setViewDeselectUi()
+        holder.setViewDeselectedUi()
     }
 
     inner class AudioViewHolder(
@@ -46,7 +46,7 @@ class AudiosRecyclerViewAdapter(private var listener: ItemSelectListener<Audio>)
             this.audioItemView.tv_audio_duration.setTextColor(colorHelper.yellow700)
         }
 
-        override fun setViewDeselectUi() {
+        override fun setViewDeselectedUi() {
             this.audioItemView.setBackgroundResource(colorHelper.ripple)
             this.audioItemView.tv_audio_name.setTextColor(colorHelper.colorTextPrimary)
             this.audioItemView.tv_audio_create_date.setTextColor(colorHelper.colorTextSecondary)

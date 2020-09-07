@@ -21,7 +21,7 @@ class SubjectsRecyclerViewAdapter(private var listener: ItemSelectListener<Subje
 
     override fun onBindViewHolder(holder: BaseSelectableViewHolder, position: Int) {
         holder.itemView.tv_subject_name.text = (data[position]).name
-        holder.setViewDeselectUi()
+        holder.setViewDeselectedUi()
     }
 
     @Suppress("MagicNumber")
@@ -38,7 +38,7 @@ class SubjectsRecyclerViewAdapter(private var listener: ItemSelectListener<Subje
             this.subjectCardView.tv_subject_name.setTextColor(colorHelper.yellow700)
         }
 
-        override fun setViewDeselectUi() {
+        override fun setViewDeselectedUi() {
             this.subjectCardView.setCardBackgroundColor(colorHelper.white)
             this.subjectCardView.strokeColor = colorHelper.colorDivider
 

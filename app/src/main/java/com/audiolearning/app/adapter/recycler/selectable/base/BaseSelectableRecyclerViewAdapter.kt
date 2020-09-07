@@ -113,7 +113,7 @@ abstract class BaseSelectableRecyclerViewAdapter<T : BaseEntity> :
             data[adapterPosition].let {
                 if (this.view.isSelected) {
                     this.view.isSelected = false
-                    setViewDeselectUi()
+                    setViewDeselectedUi()
                     listener.onItemDeselect(it)
                 } else {
                     this.view.isSelected = true
@@ -132,6 +132,6 @@ abstract class BaseSelectableRecyclerViewAdapter<T : BaseEntity> :
         /**
          * Change the UI to the state where it is deselected.
          */
-        abstract fun setViewDeselectUi()
+        abstract fun setViewDeselectedUi()
     }
 }
