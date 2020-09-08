@@ -5,8 +5,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
-import androidx.core.content.ContextCompat
 import com.audiolearning.app.R
+import com.audiolearning.app.util.ColorHelper
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
@@ -35,12 +35,11 @@ class AudioNotificationManager(
         ).apply {
             setMediaSessionToken(sessionToken)
             setSmallIcon(R.drawable.ic_audio_notification)
-            // TODO: 02.07.2020 Implement notification icon
             setRewindIncrementMs(SKIP_TIME)
             setFastForwardIncrementMs(SKIP_TIME)
             setUseChronometer(false)
             setUseNavigationActions(false)
-            setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+            setColor(ColorHelper(context).yellow700)
         }
     }
 

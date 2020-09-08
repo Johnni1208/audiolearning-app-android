@@ -12,7 +12,7 @@ import com.audiolearning.app.data.store.SelectedEntityStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class AudiosOfSubjectActivityViewModel @ViewModelInject constructor(
+class AudiosOfSubjectFragmentViewModel @ViewModelInject constructor(
     private val subjectRepository: SubjectRepository,
     private val audioRepository: AudioRepository,
     private val selectedAudiosStore: SelectedEntityStore<Audio>

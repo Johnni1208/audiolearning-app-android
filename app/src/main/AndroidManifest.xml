@@ -28,8 +28,8 @@
 
         <activity
             android:name=".ui.activity.audioplayer.AudioPlayerActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".service.audioplayer.AudioPlayerService"

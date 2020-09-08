@@ -1,5 +1,6 @@
 package com.audiolearning.app.ui.fragment.recorder
 
+import android.media.MediaRecorder
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.audiolearning.app.audio.recorder.AudioRecorder
 import com.audiolearning.app.timer.Timer
@@ -7,7 +8,6 @@ import com.audiolearning.app.ui.fragment.pager.recorder.RecordingAndTimerHandler
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -18,17 +18,19 @@ class RecordingAndTimerHandlerTimerTest {
     val instantExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var handler: RecordingAndTimerHandler
-    private lateinit var mockAudioRecorder: AudioRecorder
+    private lateinit var recorder: AudioRecorder
     private lateinit var mockTimer: Timer
 
     @Before
     fun setUpViewModel() {
-        mockAudioRecorder = mock()
+        val mockMediaRecorder: MediaRecorder = mock()
+
+        recorder = AudioRecorder(mockMediaRecorder)
         mockTimer = mock()
 
         handler =
             RecordingAndTimerHandler(
-                mockAudioRecorder,
+                recorder,
                 mockTimer
             )
     }
@@ -73,16 +75,15 @@ class RecordingAndTimerHandlerTimerTest {
     }
 
     @Test
-    fun whenRecorderIsActive_onDestroy_ShouldCallStopOfTimer() {
-        whenever(mockAudioRecorder.isActive).thenReturn(true)
+    fun whenRecorderIsRECORDING_onDestroy_ShouldCallStopOfTimer() {
+        recorder.record()
         handler.onDestroy()
 
         verify(mockTimer).stop()
     }
 
     @Test
-    fun whenRecorderIsNotActive_onDestroy_ShouldCallNothing() {
-        whenever(mockAudioRecorder.isActive).thenReturn(false)
+    fun whenRecorderIsIDLING_onDestroy_ShouldCallNothing() {
         handler.onDestroy()
 
         verify(mockTimer, never()).stop()

@@ -1,57 +1,102 @@
 package com.audiolearning.app.adapter
 
-import android.widget.ImageView
+import android.content.Context
 import android.widget.TextView
-import androidx.cardview.widget.CardView
+import androidx.test.core.app.ApplicationProvider
 import com.audiolearning.app.adapter.recycler.selectable.SubjectsRecyclerViewAdapter
 import com.audiolearning.app.adapter.recycler.selectable.base.ItemSelectListener
 import com.audiolearning.app.data.db.entities.Subject
-import com.audiolearning.app.extension.hide
+import com.audiolearning.app.util.ColorHelper
+import com.google.android.material.card.MaterialCardView
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.android.synthetic.main.subject_cardview.view.iv_check_circle
-import kotlinx.android.synthetic.main.subject_cardview.view.tv_subject_name
+import kotlinx.android.synthetic.main.subject_item.view.tv_subject_name
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.spy
 import org.mockito.Mockito.times
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class SubjectsRecyclerViewAdapterTest {
+    private val context = ApplicationProvider.getApplicationContext<Context>()
     private val realData = ArrayList<Subject>().apply {
         add(Subject("test1", ""))
         add(Subject("test2", ""))
         add(Subject("test3", ""))
         add(Subject("test4", ""))
     }
+    private val colorHelper = ColorHelper(context)
     private val mockSubjectEventListener: ItemSelectListener<Subject> = mock()
+    private val mockCardView: MaterialCardView = mock()
 
-    @Test
-    fun onBindViewHolder_ShouldApplyNormalStyleToViewHolder() {
-        val position = 0
-        val subjectsRecyclerViewAdapterWithRealData =
+    private lateinit var subjectsRecyclerViewAdapterWithRealData: SubjectsRecyclerViewAdapter
+
+    private lateinit var subjectViewHolder: SubjectsRecyclerViewAdapter.SubjectViewHolder
+
+    @Before
+    fun setup() {
+        whenever(mockCardView.context).thenReturn(context)
+
+        subjectsRecyclerViewAdapterWithRealData =
             SubjectsRecyclerViewAdapter(
                 mockSubjectEventListener
             ).apply {
                 initializeData(realData)
             }
 
-        val mockCardView: CardView = mock()
-        val subjectViewHolder: SubjectsRecyclerViewAdapter.SubjectViewHolder =
+        subjectViewHolder = subjectsRecyclerViewAdapterWithRealData.SubjectViewHolder(
+            mockCardView,
+            mockSubjectEventListener
+        ).apply {
+            whenever(this.itemView.tv_subject_name).thenReturn(mock(TextView::class.java))
+        }
+    }
+
+    @Test
+    fun onBindViewHolder_ShouldApplyDeselectedStyleToViewHolder() {
+        val spyViewHolder = spy(
             subjectsRecyclerViewAdapterWithRealData.SubjectViewHolder(
                 mockCardView,
                 mockSubjectEventListener
             )
-        whenever(subjectViewHolder.itemView.tv_subject_name).thenReturn(mock(TextView::class.java))
-        whenever(subjectViewHolder.itemView.iv_check_circle).thenReturn(mock(ImageView::class.java))
+        )
 
-        subjectsRecyclerViewAdapterWithRealData.onBindViewHolder(subjectViewHolder, position)
+        subjectsRecyclerViewAdapterWithRealData.onBindViewHolder(spyViewHolder, 0)
 
-        verify(subjectViewHolder.itemView.tv_subject_name, times(1)).text =
-            realData[position].name
-        verify(subjectViewHolder.itemView, times(1)).alpha = 1.0f
-        verify(subjectViewHolder.itemView.iv_check_circle, times(1)).hide()
+        verify(spyViewHolder, times(1)).setViewDeselectedUi()
+    }
+
+    @Test
+    fun setViewSelectedUi_ShouldApplyCorrectStyleToCardView() {
+        subjectViewHolder.setViewSelectedUi()
+
+        verify((subjectViewHolder.itemView as MaterialCardView), times(1)).setCardBackgroundColor(
+            colorHelper.yellow50
+        )
+        verify((subjectViewHolder.itemView as MaterialCardView), times(1)).strokeColor =
+            colorHelper.yellow700
+        verify(
+            subjectViewHolder.itemView.tv_subject_name,
+            times(1)
+        ).setTextColor(colorHelper.yellow700)
+    }
+
+    @Test
+    fun setViewDeselectedUi_ShouldApplyCorrectStyleToCardView() {
+        subjectViewHolder.setViewDeselectedUi()
+
+        verify((subjectViewHolder.itemView as MaterialCardView), times(1)).setCardBackgroundColor(
+            colorHelper.white
+        )
+        verify((subjectViewHolder.itemView as MaterialCardView), times(1)).strokeColor =
+            colorHelper.colorDivider
+        verify(
+            subjectViewHolder.itemView.tv_subject_name,
+            times(1)
+        ).setTextColor(colorHelper.colorTextPrimary)
     }
 }

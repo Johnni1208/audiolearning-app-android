@@ -2,46 +2,51 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="wrap_content"
+    android:paddingStart="48dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="32dp"
+    android:paddingEnd="48dp">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/nr_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
+    <ImageButton
+        android:id="@+id/btn_play_pause_audio"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/play_pause_button_background"
+        android:contentDescription="@string/desc_play_pause_audio"
+        android:padding="8dp"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_cross"
-        app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark"
-        app:title="@string/nrDialog_title"
-        app:titleTextColor="@android:color/white" />
+        app:srcCompat="@drawable/ic_play" />
 
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/et_audio_name"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="24dp"
         android:hint="@string/nrDialog_recording_name_hint"
-        android:imeOptions="actionDone"
-        android:importantForAutofill="no"
-        android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nr_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_play_pause_audio">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:textSize="20sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.audiolearning.app.ui.component.DoubleSelectSpinner
         android:id="@+id/sp_select_subject"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         android:layout_marginTop="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_audio_name" />
@@ -50,24 +55,22 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="32dp"
         android:fitsSystemWindows="true"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sp_select_subject">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_discard_recording"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_weight="1"
             android:text="@string/discard"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/red_accent" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save_recording"
@@ -75,6 +78,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/nrDialog_positive_button_text"
-            app:backgroundTint="@color/colorAccent" />
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/yellow_600"
+            app:rippleColor="@color/yellow_700" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -35,7 +35,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/white"
-                    android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
+                    android:theme="@style/ThemeOverlay.ActionBar"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark" />
@@ -58,7 +58,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{dataViewModel.mediaMetaData.subtitle}"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/yellow_600"
                         android:textStyle="bold"
                         tools:text="test" />
                 </LinearLayout>
@@ -78,7 +78,7 @@
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_marginBottom="32dp"
-                android:background="@drawable/play_pause_background"
+                android:background="@drawable/play_pause_button_background"
                 android:contentDescription="@string/desc_play_pause_audio"
                 android:padding="12dp"
                 android:scaleType="centerCrop"
@@ -127,7 +127,7 @@
 
                 <SeekBar
                     android:id="@+id/seekBar"
-                    style="@style/seekBar"
+                    style="@style/ThemeOverlay.SeekBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"

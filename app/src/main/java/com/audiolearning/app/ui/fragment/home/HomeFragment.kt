@@ -17,13 +17,13 @@ import com.audiolearning.app.databinding.FragmentHomeBinding
 import com.audiolearning.app.extension.hide
 import com.audiolearning.app.extension.show
 import com.audiolearning.app.ui.fragment.BackPressableFragment
-import com.audiolearning.app.ui.fragment.pager.aboutus.AboutUsFragment
+import com.audiolearning.app.ui.fragment.pager.academy.AcademyPagerFragment
 import com.audiolearning.app.ui.fragment.pager.recorder.RecorderPagerFragment
 import com.audiolearning.app.ui.fragment.pager.subjects.SubjectsPagerFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
-private const val POSITION_ABOUT_US_FRAGMENT = 0
+private const val POSITION_ACADEMY_FRAGMENT = 0
 private const val POSITION_RECORDER_FRAGMENT = 1
 private const val POSITION_SUBJECT_FRAGMENT = 2
 
@@ -33,7 +33,7 @@ class HomeFragment : BackPressableFragment(), HomeToolBarChangeListener {
 
     private val subjectsFragment = SubjectsPagerFragment(this)
     private val fragments: Array<Fragment> = arrayOf(
-        AboutUsFragment(),
+        AcademyPagerFragment(),
         RecorderPagerFragment(),
         subjectsFragment
     )
@@ -54,6 +54,13 @@ class HomeFragment : BackPressableFragment(), HomeToolBarChangeListener {
 
         binding.lifecycleOwner = this
 
+        setupViewPager()
+        setupToolbars()
+
+        return binding.root
+    }
+
+    private fun setupViewPager() {
         binding.navView.setOnNavigationItemSelectedListener(OnNavigationItemSelectedListener())
 
         binding.pager.apply {
@@ -61,17 +68,13 @@ class HomeFragment : BackPressableFragment(), HomeToolBarChangeListener {
             registerOnPageChangeCallback(OnPageChangeCallback())
             setCurrentItem(viewModel.previousFragmentPosition ?: POSITION_RECORDER_FRAGMENT, false)
         }
-
-        setupToolbars()
-
-        return binding.root
     }
 
     private inner class OnNavigationItemSelectedListener :
         BottomNavigationView.OnNavigationItemSelectedListener {
         override fun onNavigationItemSelected(selectedItem: MenuItem): Boolean {
             when (selectedItem.itemId) {
-                R.id.navigation_about_us -> binding.pager.currentItem = POSITION_ABOUT_US_FRAGMENT
+                R.id.navigation_about_us -> binding.pager.currentItem = POSITION_ACADEMY_FRAGMENT
                 R.id.navigation_recorder -> binding.pager.currentItem = POSITION_RECORDER_FRAGMENT
                 R.id.navigation_subjects -> binding.pager.currentItem = POSITION_SUBJECT_FRAGMENT
                 else -> return false
@@ -112,7 +115,7 @@ class HomeFragment : BackPressableFragment(), HomeToolBarChangeListener {
 
     private fun changeTitleOfToolBar(position: Int) {
         when (position) {
-            POSITION_ABOUT_US_FRAGMENT -> binding.tbMain.setTitle(R.string.title_about_us)
+            POSITION_ACADEMY_FRAGMENT -> binding.tbMain.setTitle(R.string.title_academy)
             POSITION_RECORDER_FRAGMENT -> binding.tbMain.setTitle(R.string.title_recorder)
             POSITION_SUBJECT_FRAGMENT -> binding.tbMain.setTitle(R.string.title_subjects)
             else -> throw IllegalStateException("No title for position: $position")
@@ -153,6 +156,11 @@ class HomeFragment : BackPressableFragment(), HomeToolBarChangeListener {
     }
 
     override fun onBackPressed() {
+        if (binding.pager.currentItem == POSITION_SUBJECT_FRAGMENT && subjectsFragment.isSelecting) {
+            subjectsFragment.deselectAllSubjects()
+            return
+        }
+
         if (binding.pager.currentItem != POSITION_RECORDER_FRAGMENT)
             binding.pager.currentItem = POSITION_RECORDER_FRAGMENT
     }

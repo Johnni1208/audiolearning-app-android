@@ -40,7 +40,7 @@ class BaseSelectableRecyclerViewAdapterTest {
                 ) {
                 override fun setViewSelectedUi() {}
 
-                override fun setViewDeselectUi() {}
+                override fun setViewDeselectedUi() {}
             }
 
         override fun onBindViewHolder(holder: BaseSelectableViewHolder, position: Int) {}

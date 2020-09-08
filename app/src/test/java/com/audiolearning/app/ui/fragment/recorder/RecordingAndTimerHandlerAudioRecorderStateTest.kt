@@ -1,12 +1,12 @@
 package com.audiolearning.app.ui.fragment.recorder
 
+import android.media.MediaRecorder
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.audiolearning.app.audio.recorder.AudioRecorder
 import com.audiolearning.app.audio.recorder.AudioRecorderState
 import com.audiolearning.app.timer.Timer
 import com.audiolearning.app.ui.fragment.pager.recorder.RecordingAndTimerHandler
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -17,17 +17,18 @@ class RecordingAndTimerHandlerAudioRecorderStateTest {
     val instantExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var handler: RecordingAndTimerHandler
-    private lateinit var mockAudioRecorder: AudioRecorder
+    private lateinit var recorder: AudioRecorder
     private lateinit var mockTimer: Timer
 
     @Before
     fun setUpViewModel() {
-        mockAudioRecorder = mock()
+        val mockMediaRecorder: MediaRecorder = mock()
+        recorder = AudioRecorder(mockMediaRecorder)
         mockTimer = mock()
 
         handler =
             RecordingAndTimerHandler(
-                mockAudioRecorder,
+                recorder,
                 mockTimer
             )
     }
@@ -69,7 +70,7 @@ class RecordingAndTimerHandlerAudioRecorderStateTest {
 
     @Test
     fun onDestroy_StateShouldBeIDLING() {
-        whenever(mockAudioRecorder.isActive).thenReturn(true)
+        recorder.record()
         handler.onDestroy()
 
         assertEquals(handler.audioRecorderState.value, AudioRecorderState.IDLING)

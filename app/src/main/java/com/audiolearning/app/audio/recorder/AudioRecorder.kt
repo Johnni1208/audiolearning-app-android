@@ -18,7 +18,10 @@ import javax.inject.Inject
  * else it creates an instance in the [record] method.
  */
 class AudioRecorder @Inject constructor(private var recorder: MediaRecorder?) {
-    var isActive: Boolean = false
+    var state: AudioRecorderState = AudioRecorderState.IDLING
+    val maxAmplitude: Int
+        get() = recorder!!.maxAmplitude
+
     private val audioSamplingRate = 16000
     private val audioEncodingBitRate = 64000
     private val timeBeforeStop = 500L
@@ -35,17 +38,20 @@ class AudioRecorder @Inject constructor(private var recorder: MediaRecorder?) {
             prepare()
             start()
         }
-        isActive = true
+
+        state = AudioRecorderState.RECORDING
     }
 
     @TargetApi(Build.VERSION_CODES.N)
     fun pause() {
         recorder?.pause()
+        state = AudioRecorderState.PAUSING
     }
 
     @TargetApi(Build.VERSION_CODES.N)
     fun resume() {
         recorder?.resume()
+        state = AudioRecorderState.RECORDING
     }
 
     /**
@@ -64,7 +70,7 @@ class AudioRecorder @Inject constructor(private var recorder: MediaRecorder?) {
         }
 
         recorder = null
-        isActive = false
+        state = AudioRecorderState.IDLING
         return tempAudioFile
     }
 
@@ -81,7 +87,7 @@ class AudioRecorder @Inject constructor(private var recorder: MediaRecorder?) {
         }
 
         recorder = null
-        isActive = false
+        state = AudioRecorderState.IDLING
     }
 
     private fun getAudioMediaRecorder(file: File) = MediaRecorder().apply {

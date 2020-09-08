@@ -4,7 +4,6 @@ import android.media.MediaRecorder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -25,10 +24,10 @@ class AudioRecorderTest {
 
     /* record() */
     @Test
-    fun record_ShouldSetIsActiveToTrue() {
+    fun record_ShouldSetStateToRECORDING() {
         recorder.record()
 
-        assertEquals(true, recorder.isActive)
+        assertEquals(AudioRecorderState.RECORDING, recorder.state)
     }
 
     @Test
@@ -41,10 +40,10 @@ class AudioRecorderTest {
 
     /* stop() */
     @Test
-    fun stop_ShouldSetIsActiveToFalse() = runBlockingTest {
+    fun stop_ShouldSetStateToIDLING() = runBlockingTest {
         recorder.stop()
 
-        assertEquals(false, recorder.isActive)
+        assertEquals(AudioRecorderState.IDLING, recorder.state)
     }
 
     @Test
@@ -53,20 +52,6 @@ class AudioRecorderTest {
 
         verify(mockMediaRecorder).stop()
         verify(mockMediaRecorder).release()
-    }
-
-    @Test
-    fun stop_ShouldNeed500msTime() {
-        val startTime: Long = System.currentTimeMillis()
-
-        runBlocking {
-            recorder.stop()
-        }
-
-        val endTime: Long = System.currentTimeMillis()
-
-        // Only check if around 500 - 600ms (execution time must also be considered)
-        assertEquals('5', (endTime - startTime).toString()[0])
     }
 
     @Test
@@ -85,6 +70,13 @@ class AudioRecorderTest {
         verify(mockMediaRecorder).pause()
     }
 
+    @Test
+    fun pause_ShouldSetStateToPAUSING() {
+        recorder.pause()
+
+        assertEquals(AudioRecorderState.PAUSING, recorder.state)
+    }
+
     /* resume() */
     @Test
     fun resume_ShouldResumeTheMediaRecorder() {
@@ -95,10 +87,10 @@ class AudioRecorderTest {
 
     /* onDestroy() */
     @Test
-    fun onDestroy_ShouldSetIsActiveToFalse() {
+    fun onDestroy_ShouldSetStateToIDLING() {
         recorder.onDestroy()
 
-        assertEquals(false, recorder.isActive)
+        assertEquals(AudioRecorderState.IDLING, recorder.state)
     }
 
     @Test

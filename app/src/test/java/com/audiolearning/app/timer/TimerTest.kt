@@ -1,8 +1,6 @@
-package com.audiolearning.app.util.timer
+package com.audiolearning.app.timer
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.audiolearning.app.timer.TimeMutableLiveData
-import com.audiolearning.app.timer.Timer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi

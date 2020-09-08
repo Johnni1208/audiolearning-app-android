@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">AudioLearning</string>
     <string name="title_recorder">Recorder</string>
-    <string name="title_about_us">About us</string>
+    <string name="title_academy">AudioLearning Academy</string>
     <string name="title_subjects">Subjects</string>
 
     <!-- Generic strings -->
@@ -21,6 +21,8 @@
     <string name="desc_fast_forward">Fast-Forward 10 seconds</string>
     <string name="desc_rewind">Rewind 10 seconds</string>
     <string name="desc_open_audio_player">Open the audio player</string>
+    <string name="desc_start_stop_recording">Start or stop the recording.</string>
+    <string name="desc_pause_resume_recording">Pause or resume the recording.</string>
 
     <!-- AudioNotification Constants -->
     <string name="audio_notification_channel_id">com.audiolearning.app.audio.notification.LEARNING</string>
@@ -35,7 +37,7 @@
 
     <!-- Text for NewRecordingDialog -->
     <string name="nrDialog_title">Save new recording?</string>
-    <string name="nrDialog_recording_name_hint">Name of your recording</string>
+    <string name="nrDialog_recording_name_hint">Name</string>
     <string name="nrDialog_add_subject">Add new subject…</string>
     <string name="nrDialog_positive_button_text">Save</string>
 
