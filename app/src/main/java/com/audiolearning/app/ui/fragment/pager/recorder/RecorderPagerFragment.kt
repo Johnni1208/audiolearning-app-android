@@ -28,7 +28,7 @@ import java.util.Timer
 import java.util.TimerTask
 
 private const val RECORD_BUTTON_UNAVAILABLE_TIME = 2000L
-private const val AUDIO_RECORD_VIEW_UPDATE_TIME = 100L
+private const val AUDIO_RECORD_VIEW_UPDATE_INTERVAL = 100L
 
 @AndroidEntryPoint
 class RecorderPagerFragment : Fragment() {
@@ -52,7 +52,7 @@ class RecorderPagerFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        observeIfNewAudioRecording()
+        setupNewRecordingDialog()
         updateUiAppearancesOnAudioRecorderChange()
 
         findNavController().addOnDestinationChangedListener { _, destination, _ ->
@@ -66,7 +66,7 @@ class RecorderPagerFragment : Fragment() {
         return binding.root
     }
 
-    private fun observeIfNewAudioRecording() {
+    private fun setupNewRecordingDialog() {
         viewModel.recordingAndTimerHandler.recordedFile.observe(
             viewLifecycleOwner,
             { newFile: File? ->
@@ -88,7 +88,10 @@ class RecorderPagerFragment : Fragment() {
             { newState: AudioRecorderState ->
                 when (newState) {
                     AudioRecorderState.IDLING -> displayIdlingUiState(stateBefore)
-                    AudioRecorderState.RECORDING -> displayRecordingUiState()
+                    AudioRecorderState.RECORDING -> {
+                        audioPlayerControlsViewModel.stop()
+                        displayRecordingUiState()
+                    }
                     AudioRecorderState.PAUSING -> displayPausingUiState()
                 }
 
@@ -105,6 +108,7 @@ class RecorderPagerFragment : Fragment() {
             btnRecordAndStop.setImageResource(R.drawable.ic_record)
         }
 
+        // Revert the recording Ui
         if (stateBefore == AudioRecorderState.RECORDING || stateBefore == AudioRecorderState.PAUSING) {
             binding.apply {
                 val overAudioRecordView = -64
@@ -130,8 +134,7 @@ class RecorderPagerFragment : Fragment() {
     }
 
     private fun displayRecordingUiState() {
-        updateAudioRecordView()
-        audioPlayerControlsViewModel.stop()
+        startAudioRecordView()
 
         binding.apply {
             btnPauseAndResume.setImageResource(R.drawable.ic_pause)
@@ -151,7 +154,7 @@ class RecorderPagerFragment : Fragment() {
         }
     }
 
-    private fun updateAudioRecordView() {
+    private fun startAudioRecordView() {
         audioRecordViewTimer = Timer()
 
         audioRecordViewTimer?.schedule(object : TimerTask() {
@@ -163,7 +166,7 @@ class RecorderPagerFragment : Fragment() {
                     binding.arv.update(currentMaxAmplitude)
                 }
             }
-        }, 0, AUDIO_RECORD_VIEW_UPDATE_TIME)
+        }, 0, AUDIO_RECORD_VIEW_UPDATE_INTERVAL)
     }
 
     private fun displayPausingUiState() {

@@ -24,7 +24,6 @@ class SubjectsRecyclerViewAdapter(private var listener: ItemSelectListener<Subje
         holder.setViewDeselectedUi()
     }
 
-    @Suppress("MagicNumber")
     inner class SubjectViewHolder(
         private val subjectCardView: MaterialCardView,
         listener: ItemSelectListener<Subject>

@@ -5,7 +5,6 @@
     </declare-styleable>
 
     <declare-styleable name="AudioRecordView">
-
         <attr name="chunkWidth" format="dimension" />
         <attr name="chunkMaxHeight" format="dimension" />
         <attr name="chunkMinHeight" format="dimension" />

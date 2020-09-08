@@ -13,7 +13,9 @@ jobs:
       - run:
           command: chmod +x ./gradlew
       - run:
-          command: ./gradlew testAndLintDebug
+          command: ./gradlew lintDebug
+      - run:
+          command: ./gradlew testDebug
       - store_artifacts:
           path: app/build/reports
           destination: reports

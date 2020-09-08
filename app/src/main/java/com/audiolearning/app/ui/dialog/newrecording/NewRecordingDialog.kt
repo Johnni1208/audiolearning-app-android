@@ -76,7 +76,6 @@ class NewRecordingDialog : RoundedBottomSheetDialogFragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.ThemeOverlay_FullScreenDialog)
 
         newRecording = viewModel.receiveNewRecordingFromArguments(
             arguments ?: throw MissingArgumentException(

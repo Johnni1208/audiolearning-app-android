@@ -81,11 +81,6 @@ class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChange
     }
 
     private fun setupRecyclerView() {
-        val subjectsAdapter =
-            SubjectsRecyclerViewAdapter(
-                this
-            )
-
         // Update adapters data
         viewModel.subjects.observe(viewLifecycleOwner, { subjects: List<Subject> ->
             if (subjectsAdapter.isDataInitialized) {

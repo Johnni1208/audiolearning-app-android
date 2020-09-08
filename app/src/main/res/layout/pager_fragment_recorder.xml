@@ -14,7 +14,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
+            android:id="@+id/ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -82,6 +82,6 @@
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+            app:layout_constraintTop_toBottomOf="@+id/ll" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

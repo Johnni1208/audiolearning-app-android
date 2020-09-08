@@ -6,13 +6,18 @@ import androidx.core.content.ContextCompat
 import com.audiolearning.app.R
 
 class ColorHelper(context: Context) {
-    val ripple = TypedValue().apply {
+    val ripple: Int = TypedValue().apply {
         context.theme.resolveAttribute(android.R.attr.selectableItemBackground, this, true)
     }.resourceId
 
     val yellow50: Int = ContextCompat.getColor(
         context,
         R.color.yellow_50
+    )
+
+    val yellow600: Int = ContextCompat.getColor(
+        context,
+        R.color.yellow_600
     )
 
     val yellow700: Int = ContextCompat.getColor(

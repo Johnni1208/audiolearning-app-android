@@ -23,7 +23,7 @@ import com.audiolearning.app.ui.fragment.pager.subjects.SubjectsPagerFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
-private const val POSITION_ABOUT_US_FRAGMENT = 0
+private const val POSITION_ACADEMY_FRAGMENT = 0
 private const val POSITION_RECORDER_FRAGMENT = 1
 private const val POSITION_SUBJECT_FRAGMENT = 2
 
@@ -74,7 +74,7 @@ class HomeFragment : BackPressableFragment(), HomeToolBarChangeListener {
         BottomNavigationView.OnNavigationItemSelectedListener {
         override fun onNavigationItemSelected(selectedItem: MenuItem): Boolean {
             when (selectedItem.itemId) {
-                R.id.navigation_about_us -> binding.pager.currentItem = POSITION_ABOUT_US_FRAGMENT
+                R.id.navigation_about_us -> binding.pager.currentItem = POSITION_ACADEMY_FRAGMENT
                 R.id.navigation_recorder -> binding.pager.currentItem = POSITION_RECORDER_FRAGMENT
                 R.id.navigation_subjects -> binding.pager.currentItem = POSITION_SUBJECT_FRAGMENT
                 else -> return false
@@ -115,7 +115,7 @@ class HomeFragment : BackPressableFragment(), HomeToolBarChangeListener {
 
     private fun changeTitleOfToolBar(position: Int) {
         when (position) {
-            POSITION_ABOUT_US_FRAGMENT -> binding.tbMain.setTitle(R.string.title_academy)
+            POSITION_ACADEMY_FRAGMENT -> binding.tbMain.setTitle(R.string.title_academy)
             POSITION_RECORDER_FRAGMENT -> binding.tbMain.setTitle(R.string.title_recorder)
             POSITION_SUBJECT_FRAGMENT -> binding.tbMain.setTitle(R.string.title_subjects)
             else -> throw IllegalStateException("No title for position: $position")

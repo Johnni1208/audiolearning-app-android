@@ -5,8 +5,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
-import androidx.core.content.ContextCompat
 import com.audiolearning.app.R
+import com.audiolearning.app.util.ColorHelper
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
@@ -39,7 +39,7 @@ class AudioNotificationManager(
             setFastForwardIncrementMs(SKIP_TIME)
             setUseChronometer(false)
             setUseNavigationActions(false)
-            setColor(ContextCompat.getColor(context, R.color.yellow_600))
+            setColor(ColorHelper(context).yellow700)
         }
     }
 
