@@ -21,6 +21,7 @@ import com.audiolearning.app.extension.title
 import com.audiolearning.app.service.audioplayer.AudioPlayerServiceConnection
 import com.audiolearning.app.service.audioplayer.EMPTY_PLAYBACK_STATE
 import com.audiolearning.app.service.audioplayer.NOTHING_PLAYING
+import com.audiolearning.app.util.NO_ID
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 class AudioPlayerDataViewModel @ViewModelInject constructor(
@@ -33,7 +34,9 @@ class AudioPlayerDataViewModel @ViewModelInject constructor(
         val subtitle: String?,
         val duration: Long,
         val date: String?
-    )
+    ) {
+        fun isNothingPlaying(): Boolean = this.id == NOTHING_PLAYING.id?.toInt()
+    }
 
     val mediaMetaData = MutableLiveData<AudioMetaData>()
     val mediaPosition = MutableLiveData<Long>().apply {
@@ -68,17 +71,15 @@ class AudioPlayerDataViewModel @ViewModelInject constructor(
         playbackState: PlaybackStateCompat,
         mediaMetadata: MediaMetadataCompat
     ) {
-        if (mediaMetadata.duration != 0L && mediaMetadata.id != null) {
-            val audioMetaData = AudioMetaData(
-                mediaMetadata.id!!.toInt(),
-                mediaMetadata.title,
-                mediaMetadata.subject,
-                mediaMetadata.duration,
-                mediaMetadata.date
-            )
+        val audioMetaData = AudioMetaData(
+            mediaMetadata.id?.toInt() ?: NO_ID,
+            mediaMetadata.title,
+            mediaMetadata.subject,
+            mediaMetadata.duration,
+            mediaMetadata.date
+        )
 
-            this.mediaMetaData.postValue(audioMetaData)
-        }
+        this.mediaMetaData.postValue(audioMetaData)
 
         mediaButtonRes.postValue(
             when (playbackState.isPlaying) {

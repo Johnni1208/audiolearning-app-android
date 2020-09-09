@@ -25,7 +25,7 @@ import org.mockito.Mockito.times
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class AudioRecyclerViewAdapterTest {
+class AudiosRecyclerViewAdapterTest {
     private val context = ApplicationProvider.getApplicationContext<Context>()
     private val realData = ArrayList<Audio>().apply {
         add(Audio("1", "", 0, 0, System.currentTimeMillis()))
@@ -85,12 +85,12 @@ class AudioRecyclerViewAdapterTest {
         )
         audioRecyclerViewAdapterWithRealData.onBindViewHolder(spyViewHolder, 0)
 
-        verify(spyViewHolder, times(1)).setViewDeselectedUi()
+        verify(spyViewHolder, times(1)).showViewDeselectedUi()
     }
 
     @Test
-    fun setViewSelectedUi_ShouldApplyCorrectStyleToCardView() {
-        audioViewHolder.setViewSelectedUi()
+    fun showViewSelectedUi_ShouldApplyCorrectStyleToCardView() {
+        audioViewHolder.showViewSelectedUi()
 
         verify((audioViewHolder.itemView as ConstraintLayout), times(1)).setBackgroundResource(
             R.drawable.audio_item_selected_background
@@ -101,8 +101,8 @@ class AudioRecyclerViewAdapterTest {
     }
 
     @Test
-    fun setViewDeselectedUi_ShouldApplyCorrectStyleToCardView() {
-        audioViewHolder.setViewDeselectedUi()
+    fun showViewDeselectedUi_ShouldApplyCorrectStyleToCardView() {
+        audioViewHolder.showViewDeselectedUi()
 
         verify((audioViewHolder.itemView as ConstraintLayout), times(1)).setBackgroundResource(
             colorHelper.ripple

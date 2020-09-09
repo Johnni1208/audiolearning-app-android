@@ -38,9 +38,9 @@ class BaseSelectableRecyclerViewAdapterTest {
                     mock(View::class.java),
                     mock(ItemSelectListener::class.java) as ItemSelectListener<BaseEntity>
                 ) {
-                override fun setViewSelectedUi() {}
+                override fun showViewSelectedUi() {}
 
-                override fun setViewDeselectedUi() {}
+                override fun showViewDeselectedUi() {}
             }
 
         override fun onBindViewHolder(holder: BaseSelectableViewHolder, position: Int) {}

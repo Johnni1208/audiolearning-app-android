@@ -21,7 +21,7 @@ inline val MediaMetadataCompat.title: String?
 inline val MediaMetadataCompat.mediaUri: Uri
     get() = getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI).toUri()
 
-inline val MediaMetadataCompat.duration
+inline val MediaMetadataCompat.duration: Long
     get() = getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
 
 inline val MediaMetadataCompat.date: String?

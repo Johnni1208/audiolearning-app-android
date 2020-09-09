@@ -9,6 +9,7 @@ import androidx.navigation.findNavController
 import com.audiolearning.app.R
 import com.audiolearning.app.databinding.ActivityMainBinding
 import com.audiolearning.app.extension.dp
+import com.audiolearning.app.extension.hide
 import com.audiolearning.app.extension.show
 import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerActivity
 import com.audiolearning.app.ui.activity.audioplayer.AudioPlayerControlsViewModel
@@ -35,6 +36,12 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomAudioBar() {
         // Texts and max. progress
         dataViewModel.mediaMetaData.observe(this, { metadata ->
+            // If no metadata is given, hide the bar
+            if (metadata.isNothingPlaying()) {
+                binding.bottomAudioBar.root.hide()
+                return@observe
+            }
+
             binding.bottomAudioBar.root.show()
             binding.bottomAudioBar.metadata = metadata
             binding.bottomAudioBar.plDuration.max = metadata.duration.toInt()

@@ -29,6 +29,7 @@ import kotlinx.android.synthetic.main.dialog_new_recording.et_audio_name
 import kotlinx.android.synthetic.main.dialog_new_recording.sp_select_subject
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.File
 
 /**
@@ -156,7 +157,7 @@ class NewRecordingDialog : RoundedBottomSheetDialogFragment(),
             val name = et_audio_name.editText?.text.toString()
             val subject = sp_select_subject.selectedItem as Subject
 
-            val inputValidation = viewModel.validateInput(name, subject)
+            val inputValidation = runBlocking { viewModel.validateInput(name, subject) }
             if (inputValidation != NewRecordingInputValidation.CORRECT) {
                 setError(inputValidation)
                 return@setOnClickListener
@@ -209,6 +210,10 @@ class NewRecordingDialog : RoundedBottomSheetDialogFragment(),
 
             NewRecordingInputValidation.NAME_CONTAINS_INVALID_CHARS -> et_audio_name.error =
                 getString(R.string.error_contains_not_allowed_character)
+
+            NewRecordingInputValidation.NAME_ALREADY_EXISTS_IN_SUBJECT -> et_audio_name.error =
+                getString(R.string.error_audio_already_exists)
+
             else -> {
             }
         }

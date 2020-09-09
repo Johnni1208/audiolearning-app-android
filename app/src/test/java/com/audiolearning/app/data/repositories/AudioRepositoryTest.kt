@@ -94,7 +94,7 @@ class AudioRepositoryTest {
 
         assertEquals(
             testAudio.name,
-            audioRepository.getAudiosOfSubject(testAudio.subjectId).getTestValue()[0].name
+            audioRepository.getAudiosOfSubjectLiveData(testAudio.subjectId).getTestValue()[0].name
         )
     }
 

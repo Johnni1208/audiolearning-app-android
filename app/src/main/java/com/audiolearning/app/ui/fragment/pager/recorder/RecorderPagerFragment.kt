@@ -87,12 +87,12 @@ class RecorderPagerFragment : Fragment() {
             viewLifecycleOwner,
             { newState: AudioRecorderState ->
                 when (newState) {
-                    AudioRecorderState.IDLING -> displayIdlingUiState(stateBefore)
+                    AudioRecorderState.IDLING -> showIdlingUiState(stateBefore)
                     AudioRecorderState.RECORDING -> {
                         audioPlayerControlsViewModel.stop()
-                        displayRecordingUiState()
+                        showRecordingUiState()
                     }
-                    AudioRecorderState.PAUSING -> displayPausingUiState()
+                    AudioRecorderState.PAUSING -> showPausingUiState()
                 }
 
                 stateBefore = newState
@@ -100,7 +100,7 @@ class RecorderPagerFragment : Fragment() {
         )
     }
 
-    private fun displayIdlingUiState(stateBefore: AudioRecorderState) {
+    private fun showIdlingUiState(stateBefore: AudioRecorderState) {
         audioRecordViewTimer?.cancel()
 
         binding.apply {
@@ -133,7 +133,7 @@ class RecorderPagerFragment : Fragment() {
         }
     }
 
-    private fun displayRecordingUiState() {
+    private fun showRecordingUiState() {
         startAudioRecordView()
 
         binding.apply {
@@ -169,7 +169,7 @@ class RecorderPagerFragment : Fragment() {
         }, 0, AUDIO_RECORD_VIEW_UPDATE_INTERVAL)
     }
 
-    private fun displayPausingUiState() {
+    private fun showPausingUiState() {
         audioRecordViewTimer?.cancel()
 
         binding.apply {
