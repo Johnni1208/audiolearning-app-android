@@ -34,8 +34,8 @@ class BaseSelectableViewHolderTest {
 
         inner class TestBaseSelectableViewHolder :
             BaseSelectableViewHolder(mockView, mockListener) {
-            override fun setViewSelectedUi() {}
-            override fun setViewDeselectedUi() {}
+            override fun showViewSelectedUi() {}
+            override fun showViewDeselectedUi() {}
         }
     }
 

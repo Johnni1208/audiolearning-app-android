@@ -30,6 +30,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
+private const val BOTTOM_AUDIO_BAR_HEIGHT = -48
+
 @AndroidEntryPoint
 class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChangeListener) :
     Fragment(),
@@ -44,8 +46,6 @@ class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChange
     private val audioPlayerDataViewModel: AudioPlayerDataViewModel by viewModels()
     private val subjectsAdapter = SubjectsRecyclerViewAdapter(this)
     private lateinit var binding: PagerFragmentSubjectsBinding
-
-    private val bottomAudioBarHeight = (-48f).dp()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -118,8 +118,9 @@ class SubjectsPagerFragment(private val toolBarChangeListener: HomeToolBarChange
         }
 
         // Higher when bottom-audio-bar is active
-        audioPlayerDataViewModel.mediaMetaData.observe(viewLifecycleOwner, {
-            binding.fabAddSubject.animate().translationY(bottomAudioBarHeight)
+        audioPlayerDataViewModel.mediaMetaData.observe(viewLifecycleOwner, { metadata ->
+            if (metadata.isNothingPlaying()) binding.fabAddSubject.animate().translationY(0.dp())
+            else binding.fabAddSubject.animate().translationY(BOTTOM_AUDIO_BAR_HEIGHT.dp())
         })
     }
 

@@ -8,6 +8,7 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.MutableLiveData
 import com.audiolearning.app.extension.id
+import com.audiolearning.app.util.NO_ID
 
 class AudioPlayerServiceConnection(context: Context, serviceComponent: ComponentName) {
     val playBackState = MutableLiveData<PlaybackStateCompat>().apply {
@@ -60,6 +61,6 @@ val EMPTY_PLAYBACK_STATE: PlaybackStateCompat = PlaybackStateCompat.Builder()
     .build()
 
 val NOTHING_PLAYING: MediaMetadataCompat = MediaMetadataCompat.Builder()
-    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, "")
+    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, "$NO_ID")
     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, 0)
     .build()

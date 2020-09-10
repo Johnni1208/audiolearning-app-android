@@ -27,6 +27,17 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding.dataViewModel = dataViewModel
         binding.controlsViewModel = controlsViewModel
 
+        dataViewModel.mediaMetaData.observe(this, { data ->
+            // Stop the activity when it is started, without anything playing (only edge-case)
+            if (data.isNothingPlaying()) {
+                onBackPressed()
+                return@observe
+            }
+
+            binding.seekBar.max = data.duration.toInt()
+            binding.tvDuration.text = data.duration.toTimeString()
+        })
+
         dataViewModel.mediaButtonRes.observe(this, { res ->
             binding.btnPlayPauseAudio.setImageResource(res)
         })
@@ -40,11 +51,6 @@ class AudioPlayerActivity : AppCompatActivity() {
         dataViewModel.mediaPosition.observe(this, { pos ->
             binding.tvCurrentAudioPosition.text = pos.toTimeString()
             binding.seekBar.progress = pos.toInt()
-        })
-
-        dataViewModel.mediaMetaData.observe(this, { data ->
-            binding.seekBar.max = data.duration.toInt()
-            binding.tvDuration.text = data.duration.toTimeString()
         })
 
         setupToolbar()

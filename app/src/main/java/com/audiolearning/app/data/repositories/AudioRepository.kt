@@ -39,7 +39,9 @@ class AudioRepository @Inject constructor(private val db: AudioLearningDatabase)
         db.getAudioDao().delete(audio)
     }
 
-    fun getAudiosOfSubject(subjectId: Int) = db.getAudioDao().getAudiosOfSubject(subjectId)
+    fun getAudiosOfSubjectLiveData(subjectId: Int) =
+        db.getAudioDao().getAudiosOfSubjectLiveData(subjectId)
 
     suspend fun getAudioById(id: Int) = db.getAudioDao().getAudioById(id)
+    suspend fun getAudiosOfSubject(subjectId: Int) = db.getAudioDao().getAudiosOfSubject(subjectId)
 }

@@ -12,6 +12,7 @@ import com.audiolearning.app.data.repositories.SubjectRepository
 import com.audiolearning.app.exception.MissingArgumentException
 import com.audiolearning.app.extension.isAllowedFileName
 import com.audiolearning.app.ui.dialog.createnewsubject.CreateNewSubjectDialog
+import com.audiolearning.app.util.NO_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -28,7 +29,7 @@ class NewRecordingDialogViewModel @ViewModelInject constructor(
             audioRepository.insert(file, name, subject)
         }
 
-    fun validateInput(name: String, subject: Subject): NewRecordingInputValidation {
+    suspend fun validateInput(name: String, subject: Subject): NewRecordingInputValidation {
         if (name.isEmpty()) {
             return NewRecordingInputValidation.NAME_IS_BLANK
         }
@@ -41,7 +42,15 @@ class NewRecordingDialogViewModel @ViewModelInject constructor(
             return NewRecordingInputValidation.SUBJECT_IS_BLANK
         }
 
+        getAudiosOfSubject(subject.id ?: NO_ID).forEach { audio ->
+            if (name == audio.name) return NewRecordingInputValidation.NAME_ALREADY_EXISTS_IN_SUBJECT
+        }
+
         return NewRecordingInputValidation.CORRECT
+    }
+
+    private suspend fun getAudiosOfSubject(subjectId: Int) = withContext(Dispatchers.IO) {
+        return@withContext audioRepository.getAudiosOfSubject(subjectId)
     }
 
     /**

@@ -18,12 +18,15 @@ interface AudioDao {
     @Query("SELECT * FROM audios")
     suspend fun getAllAudios(): List<Audio>
 
+    @Query("SELECT * FROM audios WHERE audio_id = :id")
+    suspend fun getAudioById(id: Int): Audio?
+
     @Query("SELECT * FROM audios WHERE audio_name = :name")
     suspend fun getAudioByName(name: String): Audio?
 
     @Query("SELECT * FROM audios WHERE audio_subject_id = :subjectId")
-    fun getAudiosOfSubject(subjectId: Int): LiveData<List<Audio>>
+    suspend fun getAudiosOfSubject(subjectId: Int): List<Audio>
 
-    @Query("SELECT * FROM audios WHERE audio_id = :id")
-    suspend fun getAudioById(id: Int): Audio?
+    @Query("SELECT * FROM audios WHERE audio_subject_id = :subjectId")
+    fun getAudiosOfSubjectLiveData(subjectId: Int): LiveData<List<Audio>>
 }

@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
+private const val SEEK_BUFFER = 1000
 class AudioPlayerControlsViewModel @ViewModelInject constructor(
     private val audioRepository: AudioRepository,
     private val subjectRepository: SubjectRepository,
@@ -88,7 +89,7 @@ class AudioPlayerControlsViewModel @ViewModelInject constructor(
         val audioDuration = audioPlayerServiceConnection.nowPlaying.value?.duration ?: 0
 
         if (seekTime > audioDuration) {
-            seekTime = audioDuration - ONE_SECOND
+            seekTime = audioDuration - SEEK_BUFFER
         }
 
         audioPlayerServiceConnection.transportControls.seekTo(seekTime)
@@ -115,5 +116,3 @@ class AudioPlayerControlsViewModel @ViewModelInject constructor(
             ?: throw IllegalArgumentException("No subject with id: $id")
     }
 }
-
-private const val ONE_SECOND = 1000

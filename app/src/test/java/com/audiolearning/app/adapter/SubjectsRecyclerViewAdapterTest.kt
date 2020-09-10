@@ -67,12 +67,12 @@ class SubjectsRecyclerViewAdapterTest {
 
         subjectsRecyclerViewAdapterWithRealData.onBindViewHolder(spyViewHolder, 0)
 
-        verify(spyViewHolder, times(1)).setViewDeselectedUi()
+        verify(spyViewHolder, times(1)).showViewDeselectedUi()
     }
 
     @Test
-    fun setViewSelectedUi_ShouldApplyCorrectStyleToCardView() {
-        subjectViewHolder.setViewSelectedUi()
+    fun showViewSelectedUi_ShouldApplyCorrectStyleToCardView() {
+        subjectViewHolder.showViewSelectedUi()
 
         verify((subjectViewHolder.itemView as MaterialCardView), times(1)).setCardBackgroundColor(
             colorHelper.yellow50
@@ -86,8 +86,8 @@ class SubjectsRecyclerViewAdapterTest {
     }
 
     @Test
-    fun setViewDeselectedUi_ShouldApplyCorrectStyleToCardView() {
-        subjectViewHolder.setViewDeselectedUi()
+    fun showViewDeselectedUi_ShouldApplyCorrectStyleToCardView() {
+        subjectViewHolder.showViewDeselectedUi()
 
         verify((subjectViewHolder.itemView as MaterialCardView), times(1)).setCardBackgroundColor(
             colorHelper.white

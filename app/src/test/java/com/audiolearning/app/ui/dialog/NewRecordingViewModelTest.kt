@@ -3,6 +3,7 @@ package com.audiolearning.app.ui.dialog
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.audiolearning.app.data.db.entities.Audio
 import com.audiolearning.app.data.db.entities.Subject
 import com.audiolearning.app.data.repositories.AudioRepository
 import com.audiolearning.app.data.repositories.SubjectRepository
@@ -47,7 +48,7 @@ class NewRecordingViewModelTest {
     }
 
     @Test
-    fun validateInput_ShouldReturnNAME_IS_BLANK_IfNameIsEmpty() {
+    fun validateInput_ShouldReturnNAME_IS_BLANK_IfNameIsEmpty() = runBlocking {
         assertTrue(
             viewModel.validateInput(
                 "",
@@ -57,36 +58,60 @@ class NewRecordingViewModelTest {
     }
 
     @Test
-    fun validateInput_ShouldReturnNAME_CONTAINS_INVALID_CHARS_IfNameContainsInvalidChars() {
-        val invalidChars = "\\|?*<\":>/'"
+    fun validateInput_ShouldReturnNAME_CONTAINS_INVALID_CHARS_IfNameContainsInvalidChars() =
+        runBlocking {
+            val invalidChars = "\\|?*<\":>/'"
 
-        for (char in invalidChars) {
-            assertTrue(
-                viewModel.validateInput(
-                    char.toString(),
-                    Subject("", "")
-                ) == NewRecordingInputValidation.NAME_CONTAINS_INVALID_CHARS
-            )
+            for (char in invalidChars) {
+                assertTrue(
+                    viewModel.validateInput(
+                        char.toString(),
+                        Subject("", "")
+                    ) == NewRecordingInputValidation.NAME_CONTAINS_INVALID_CHARS
+                )
+            }
         }
-    }
 
     @Test
-    fun validateInput_ShouldReturnSUBJECT_IS_BLANK_IfSubjectIsNoRealSubject() {
+    fun validateInput_ShouldReturnSUBJECT_IS_BLANK_IfSubjectIsNoRealSubject() = runBlocking {
         assertTrue(
             viewModel.validateInput(
                 "test",
                 Subject("", "").apply { isRealSubject = false }
-            ) == NewRecordingInputValidation.SUBJECT_IS_BLANK)
+            ) == NewRecordingInputValidation.SUBJECT_IS_BLANK
+        )
     }
 
     @Test
-    fun validateInput_ShouldReturnCORRECT_IfEverythingIsCorrect() {
+    fun validateInput_ShouldReturnNAME_ALREADY_EXISTS_IN_SUBJECT_IfNameAlreadyExists() =
+        runBlocking {
+            val testSubject = Subject("", "").apply { id = 1 }
+            val testAudio = Audio("test", "", 0, 1, 0)
+            whenever(mockAudioRepository.getAudiosOfSubject(testSubject.id!!)).thenReturn(
+                listOf(testAudio)
+            )
+
+            assertTrue(
+                viewModel.validateInput(
+                    testAudio.name,
+                    testSubject
+                ) == NewRecordingInputValidation.NAME_ALREADY_EXISTS_IN_SUBJECT
+            )
+        }
+
+    @Test
+    fun validateInput_ShouldReturnCORRECT_IfEverythingIsCorrect() = runBlocking {
+        val testSubject = Subject("", "").apply { id = 1 }
+        val testAudio = Audio("test", "", 0, 1, 0)
+        whenever(mockAudioRepository.getAudiosOfSubject(testSubject.id!!)).thenReturn(
+            listOf(testAudio)
+        )
+
         assertTrue(
             viewModel.validateInput(
-                "test",
-                Subject("", "").apply {
-                    isRealSubject = true
-                }) == NewRecordingInputValidation.CORRECT
+                "test1",
+                testSubject
+            ) == NewRecordingInputValidation.CORRECT
         )
     }
 

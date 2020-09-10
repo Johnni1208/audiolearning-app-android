@@ -21,7 +21,7 @@ class SubjectsRecyclerViewAdapter(private var listener: ItemSelectListener<Subje
 
     override fun onBindViewHolder(holder: BaseSelectableViewHolder, position: Int) {
         holder.itemView.tv_subject_name.text = (data[position]).name
-        holder.setViewDeselectedUi()
+        holder.showViewDeselectedUi()
     }
 
     inner class SubjectViewHolder(
@@ -30,14 +30,14 @@ class SubjectsRecyclerViewAdapter(private var listener: ItemSelectListener<Subje
     ) : BaseSelectableViewHolder(subjectCardView, listener) {
         private val colorHelper = ColorHelper(subjectCardView.context)
 
-        override fun setViewSelectedUi() {
+        override fun showViewSelectedUi() {
             this.subjectCardView.setCardBackgroundColor(colorHelper.yellow50)
             this.subjectCardView.strokeColor = colorHelper.yellow700
 
             this.subjectCardView.tv_subject_name.setTextColor(colorHelper.yellow700)
         }
 
-        override fun setViewDeselectedUi() {
+        override fun showViewDeselectedUi() {
             this.subjectCardView.setCardBackgroundColor(colorHelper.white)
             this.subjectCardView.strokeColor = colorHelper.colorDivider
 
