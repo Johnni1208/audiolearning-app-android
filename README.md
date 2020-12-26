@@ -33,22 +33,15 @@ Miscellaneous:
 * Slack for team communication
 * Notion for project management
 
-[HomeScreen]: docs/HomeScreen.png
-[RecordingDone]: docs/RecordingDone.png
-[SubjectsScreen]: docs/SubjectsScreen.png
-[SubjectsScreen-Selection]: docs/SubjectsScreen-Selection.png
-[RecordingsScreen]: docs/RecordingsScreen.png
-[AudioPlayerScreen]: docs/AudioPlayerScreen.png
-
 ## Screen shots
 | Home Screen      | Subjects Screen    |
 | ---------------- | ----------------- |
-| ![HomeScreen]    | ![SubjectsScreen] |
-| ![RecordingDone] | ![SubjectsScreen-Selection] |
+| ![HomeScreen](docs/HomeScreen.png)    | ![SubjectsScreen](docs/SubjectsScreen.png) |
+| ![RecordingDone](docs/RecordingDone.png) | ![SubjectsScreen-Selection](docs/SubjectsScreen-Selection.png) |
 
 | Recordings Screen   | Audio Player |
 | ------------------- | ------------ |
-| ![RecordingsScreen] | ![AudioPlayerScreen] |
+| ![RecordingsScreen](docs/RecordingsScreen.png) | ![AudioPlayerScreen](docs/AudioPlayerScreen.png) |
 
 ## Why this project is terminated
 **TL;DR** - We did not work lean enough, we were beaten by a competitor. 
