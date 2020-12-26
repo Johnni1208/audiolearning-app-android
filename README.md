@@ -36,12 +36,12 @@ Miscellaneous:
 ## Screen shots
 | Home Screen      | Subjects Screen    |
 | ---------------- | ----------------- |
-| ![HomeScreen](docs/HomeScreen.png)    | ![SubjectsScreen](docs/SubjectsScreen.png) |
-| ![RecordingDone](docs/RecordingDone.png) | ![SubjectsScreen-Selection](docs/SubjectsScreen-Selection.png) |
+| ![HomeScreen](docs/HomeScreen.PNG)    | ![SubjectsScreen](docs/SubjectsScreen.PNG) |
+| ![RecordingDone](docs/RecordingDone.PNG) | ![SubjectsScreen-Selection](docs/SubjectsScreen-Selection.PNG) |
 
 | Recordings Screen   | Audio Player |
 | ------------------- | ------------ |
-| ![RecordingsScreen](docs/RecordingsScreen.png) | ![AudioPlayerScreen](docs/AudioPlayerScreen.png) |
+| ![RecordingsScreen](docs/RecordingsScreen.PNG) | ![AudioPlayerScreen](docs/AudioPlayerScreen.PNG) |
 
 ## Why this project is terminated
 **TL;DR** - We did not work lean enough, we were beaten by a competitor. 
